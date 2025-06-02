@@ -1,262 +1,3 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مثال على استخدام شريط التنقل التلقائي</title>
-    <!-- أي CSS موجود مسبقاً -->
-</head>
-<body>
-    <!-- محتوى الصفحة الأصلي -->
-    <div class="content">
-    </div>
-
-    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
-    <script>
-        // إزالة أي شريط تنقل موجود
-        function removeExistingNavbars() {
-            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
-            existingNavbars.forEach(navbar => {
-                navbar.remove();
-            });
-        }
-
-        // إضافة CSS للشريط الجديد
-        function injectNavbarStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                :root {
-                    --primary-color: #ff0000;
-                    --primary-light: #ff6666;
-                    --primary-dark: #cc0000;
-                    --text-color: #333;
-                    --bg-color: #f9f9f9;
-                }
-
-                body {
-                    font-family: 'Tajawal', sans-serif;
-                    margin: 0;
-                }
-
-                .egy-navbar {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 0.75rem;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    position: sticky;
-                    top: 0;
-                    z-index: 10;
-                }
-
-                .egy-notification-panel {
-                    position: fixed;
-                    bottom: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: white;
-                    z-index: 50;
-                    transform: translateY(100%);
-                    transition: transform 0.3s ease;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .egy-notification-panel.active {
-                    transform: translateY(0);
-                }
-
-                .egy-notification-header {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 1rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-
-                .egy-notification-content {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 2rem;
-                }
-
-                .egy-notification-icon {
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
-                    background-color: #f2f2f2;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-bottom: 1rem;
-                }
-
-                .egy-notification-icon i {
-                    font-size: 2.5rem;
-                    color: var(--primary-color);
-                }
-
-                .egy-nav-btn {
-                    background: none;
-                    border: none;
-                    color: white;
-                    padding: 0.375rem;
-                    margin-right: 0.375rem;
-                    cursor: pointer;
-                    border-radius: 4px;
-                    transition: background-color 0.3s;
-                    position: relative;
-                }
-
-                .egy-nav-btn:hover {
-                    background-color: rgba(255,255,255,0.1);
-                }
-
-                .egy-notification-badge {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background-color: #fbbf24;
-                    color: #000;
-                    font-size: 0.75rem;
-                    width: 1rem;
-                    height: 1rem;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // إضافة Font Awesome و Google Fonts
-        function loadExternalResources() {
-            // Font Awesome
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const fontAwesome = document.createElement('link');
-                fontAwesome.rel = 'stylesheet';
-                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
-                document.head.appendChild(fontAwesome);
-            }
-
-            // Google Fonts - Tajawal
-            if (!document.querySelector('link[href*="Tajawal"]')) {
-                const googleFonts = document.createElement('link');
-                googleFonts.rel = 'stylesheet';
-                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
-                document.head.appendChild(googleFonts);
-            }
-        }
-
-        // إنشاء شريط التنقل الجديد
-        function createNavbar() {
-            const navbar = document.createElement('nav');
-            navbar.className = 'egy-navbar';
-            navbar.innerHTML = `
-                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
-                <div style="display: flex; align-items: center;">
-                    <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
-                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
-                    </a>
-                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
-                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
-                        <span class="egy-notification-badge">0</span>
-                    </button>
-                </div>
-            `;
-            return navbar;
-        }
-
-        // إنشاء لوحة الإشعارات
-        function createNotificationPanel() {
-            const panel = document.createElement('div');
-            panel.id = 'egyNotificationPanel';
-            panel.className = 'egy-notification-panel';
-            panel.innerHTML = `
-                <div class="egy-notification-header">
-                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
-                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
-                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
-                    </button>
-                </div>
-                <div class="egy-notification-content">
-                    <div class="egy-notification-icon">
-                        <i class="fas fa-bell-slash"></i>
-                    </div>
-                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
-                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
-                </div>
-            `;
-            return panel;
-        }
-
-        // إضافة وظائف التفاعل
-        function addEventListeners() {
-            const notificationBtn = document.getElementById('egyNotificationBtn');
-            const notificationPanel = document.getElementById('egyNotificationPanel');
-            const closeNotifications = document.getElementById('egyCloseNotifications');
-
-            if (notificationBtn && notificationPanel && closeNotifications) {
-                notificationBtn.addEventListener('click', () => {
-                    notificationPanel.classList.add('active');
-                });
-
-                closeNotifications.addEventListener('click', () => {
-                    notificationPanel.classList.remove('active');
-                });
-
-                // إغلاق اللوحة عند النقر خارجها
-                notificationPanel.addEventListener('click', (e) => {
-                    if (e.target === notificationPanel) {
-                        notificationPanel.classList.remove('active');
-                    }
-                });
-            }
-        }
-
-        // التشغيل الرئيسي
-        function initEgyNavbar() {
-            // إزالة شريط التنقل القديم
-            removeExistingNavbars();
-            
-            // تحميل الموارد الخارجية
-            loadExternalResources();
-            
-            // إضافة CSS
-            injectNavbarStyles();
-            
-            // إنشاء وإضافة شريط التنقل الجديد
-            const navbar = createNavbar();
-            document.body.insertBefore(navbar, document.body.firstChild);
-            
-            // إنشاء وإضافة لوحة الإشعارات
-            const notificationPanel = createNotificationPanel();
-            document.body.appendChild(notificationPanel);
-            
-            // إضافة وظائف التفاعل
-            setTimeout(addEventListeners, 100);
-        }
-
-        // تشغيل الكود عند تحميل الصفحة
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initEgyNavbar);
-        } else {
-            initEgyNavbar();
-        }
-    </script>
-    <!-- انتهاء الكود - انسخ حتى هنا -->
-
-</body>
-</html>
 
 
 <!DOCTYPE html>
@@ -322,7 +63,7 @@
             box-shadow: var(--box-shadow);
         }
 
-        .promo-banner h2 {
+        .promo-banner h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
         }
@@ -335,7 +76,7 @@
         .recharge-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .recharge-button {
@@ -349,7 +90,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
         }
 
         .recharge-button:hover {
@@ -359,12 +100,12 @@
 
         .recharge-button-img {
             width: 100%;
-            height: 150px;
+            height: 120px;
             background-color: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             position: relative;
             overflow: hidden;
         }
@@ -377,15 +118,15 @@
 
         .recharge-button-title {
             font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
         }
 
         .recharge-button-desc {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #666;
             text-align: center;
-            padding: 0 1rem;
+            padding: 0 0.5rem;
         }
 
         /* ===== النافذة المنبثقة ===== */
@@ -415,12 +156,15 @@
             background-color: var(--card-bg);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem;
             z-index: 201;
             transform: translateY(100%);
             transition: transform 0.3s ease;
             max-height: 90vh;
             overflow-y: auto;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .popup-container.active {
@@ -431,11 +175,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .popup-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary-color);
         }
@@ -443,7 +187,7 @@
         .popup-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             color: #777;
             transition: color 0.3s;
@@ -457,26 +201,27 @@
         .recharge-form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .form-label {
             font-weight: 600;
             color: var(--text-color);
+            font-size: 0.95rem;
         }
 
         .form-input {
-            padding: 1rem;
+            padding: 0.8rem;
             border: 1px solid #ddd;
             border-radius: var(--border-radius);
             font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: border-color 0.3s;
         }
 
@@ -491,7 +236,7 @@
 
         .error-message {
             color: var(--danger-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             display: none;
         }
 
@@ -503,14 +248,14 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: var(--border-radius);
             font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 1rem;
+            margin-top: 0.8rem;
         }
 
         .form-button:hover {
@@ -528,50 +273,50 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background-color: var(--success-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
 
         .success-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--success-color);
         }
 
         .success-amount {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             background-color: #f0f0f0;
-            padding: 0.5rem 1.5rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 50px;
             color: var(--primary-color);
         }
 
         .wallet-container {
             background-color: #f0f0f0;
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: var(--border-radius);
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .wallet-number {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             letter-spacing: 1px;
         }
 
@@ -579,13 +324,14 @@
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: background-color 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            font-size: 0.9rem;
         }
 
         .copy-button:hover {
@@ -595,18 +341,19 @@
         .auto-detect-note {
             background-color: #f8f9fa;
             border-right: 4px solid var(--success-color);
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 5px;
             text-align: right;
-            margin: 1rem 0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
         }
 
         /* ===== المؤقت الدائري ===== */
         .timer-container {
             position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 1.5rem auto;
+            width: 100px;
+            height: 100px;
+            margin: 1rem auto;
         }
 
         .circle-timer {
@@ -630,7 +377,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--primary-color);
         }
@@ -641,23 +388,23 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .failure-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background-color: var(--danger-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
 
         .failure-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--danger-color);
         }
@@ -666,10 +413,10 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             border-radius: var(--border-radius);
             font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.3s;
@@ -677,6 +424,89 @@
 
         .retry-button:hover {
             background-color: var(--primary-dark);
+        }
+
+        /* ===== التنبيه ===== */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 300;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .alert-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .alert-overlay.active .alert-container {
+            transform: translateY(0);
+        }
+
+        .alert-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+        }
+
+        .alert-message {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .alert-button {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .alert-button-cancel {
+            background-color: #f0f0f0;
+            color: #666;
+            border: none;
+        }
+
+        .alert-button-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .alert-button-confirm {
+            background-color: var(--warning-color);
+            color: white;
+            border: none;
+        }
+
+        .alert-button-confirm:hover {
+            background-color: #e67e22;
         }
 
         /* ===== التأثيرات والأنيميشن ===== */
@@ -729,22 +559,50 @@
         @media (max-width: 1024px) {
             .recharge-grid {
                 grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
             }
         }
 
         @media (max-width: 768px) {
             .recharge-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+            }
+            
+            .recharge-button-img {
+                height: 100px;
+            }
+            
+            .recharge-button-title {
+                font-size: 0.9rem;
+            }
+            
+            .recharge-button-desc {
+                font-size: 0.7rem;
             }
         }
 
         @media (max-width: 480px) {
             .recharge-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
             }
-
+            
+            .recharge-button-img {
+                height: 80px;
+            }
+            
+            .recharge-button-title {
+                font-size: 0.8rem;
+            }
+            
+            .recharge-button-desc {
+                font-size: 0.65rem;
+                padding: 0 0.3rem;
+            }
+            
             .popup-container {
-                padding: 1.5rem;
+                padding: 1.2rem;
             }
         }
     </style>
@@ -755,7 +613,7 @@
         <h1 class="page-title">خدمات الشحن والدفع</h1>
         
         <div class="promo-banner">
-            <h2>عرض خاص لفترة محدودة!</h2>
+            <h4>عرض خاص لفترة محدودة!</h4>
             <p>الإيداع بدون رسوم - السحب 1 جنيه / الألف فقط</p>
         </div>
         
@@ -847,7 +705,7 @@
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup-container" id="popupContainer">
             <div class="popup-header">
-                <h2 class="popup-title" id="popupTitle">شحن رصيد</h2>
+                <h3 class="popup-title" id="popupTitle">شحن رصيد</h3>
                 <button class="popup-close" id="popupClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -876,14 +734,14 @@
                     <i class="fas fa-check"></i>
                 </div>
                 
-                <h2 class="success-title">تم إنشاء الطلب بنجاح</h2>
+                <h4 class="success-title">تم إنشاء الطلب بنجاح</h4>
                 
                 <p>قم بتحويل مبلغ</p>
                 <div class="success-amount" id="finalAmount">495 جنيه</div>
                 <p>لرقم المحفظة التالي:</p>
                 
                 <div class="wallet-container">
-                    <span class="wallet-number" id="walletNumber">01098765432</span>
+                    <span class="wallet-number" id="walletNumber">01023520619</span>
                     <button class="copy-button" id="copyButton">
                         <i class="fas fa-copy"></i>
                         <span>نسخ</span>
@@ -894,7 +752,7 @@
                     <p><i class="fas fa-info-circle"></i> يتم اكتشاف التحويل تلقائياً وعند تحويلك للمبلغ سيتم إيداع الرصيد بنجاح</p>
                 </div>
                 
-                <p>سيتم تنفيذ طلبك خلال:</p>
+                <p>قم بتحويل مبلغ الايداع من محفظتك قبل انتهاء الوقت/p>
                 
                 <div class="timer-container">
                     <div class="circle-timer" id="circleTimer">
@@ -911,11 +769,23 @@
                     <i class="fas fa-times"></i>
                 </div>
                 
-                <h2 class="failure-title">فشلت العملية</h2>
+                <h4 class="failure-title">فشلت العملية</h4>
                 
-                <p>لم نتمكن من إتمام عملية الشحن. يرجى المحاولة مرة أخرى.</p>
+                <p>لم نتمكن من إتمام عملية الايداع يرجى المحاولة مرة أخرى.</p>
                 
                 <button class="retry-button" id="retryButton">إعادة المحاولة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التنبيه -->
+    <div class="alert-overlay" id="alertOverlay">
+        <div class="alert-container">
+            <h3 class="alert-title">تنبيه!</h3>
+            <p class="alert-message">العملية قيد التنفيذ. هل أنت متأكد من إغلاق النافذة؟</p>
+            <div class="alert-buttons">
+                <button class="alert-button alert-button-cancel" id="alertCancel">إلغاء</button>
+                <button class="alert-button alert-button-confirm" id="alertConfirm">تأكيد</button>
             </div>
         </div>
     </div>
@@ -927,6 +797,12 @@
         const popupClose = document.getElementById('popupClose');
         const popupTitle = document.getElementById('popupTitle');
         const rechargeButtons = document.querySelectorAll('[data-popup="recharge"]');
+        const alertOverlay = document.getElementById('alertOverlay');
+        const alertCancel = document.getElementById('alertCancel');
+        const alertConfirm = document.getElementById('alertConfirm');
+
+        // متغير للتحقق من حالة المؤقت
+        let isTimerRunning = false;
 
         // فتح النافذة المنبثقة عند الضغط على أزرار الشحن
         rechargeButtons.forEach(button => {
@@ -937,22 +813,22 @@
                 // تعيين عنوان النافذة حسب الخدمة
                 switch(service) {
                     case 'vodafone':
-                        popupTitle.textContent = 'شحن رصيد فودافون كاش';
+                        popupTitle.textContent = ' إيداع فودافون كاش';
                         break;
                     case 'orange':
-                        popupTitle.textContent = 'شحن رصيد أورانج كاش';
+                        popupTitle.textContent = 'إيداع أورانج كاش';
                         break;
                     case 'etisalat':
-                        popupTitle.textContent = 'شحن رصيد اتصالات كاش';
+                        popupTitle.textContent = 'إيداع اتصالات كاش';
                         break;
                     case 'we':
-                        popupTitle.textContent = 'شحن رصيد وي باي';
+                        popupTitle.textContent = 'إيداع وي باي';
                         break;
                     case 'instapay':
-                        popupTitle.textContent = 'شحن رصيد انستا باي';
+                        popupTitle.textContent = 'إيداع انستا باي';
                         break;
                     default:
-                        popupTitle.textContent = 'شحن رصيد';
+                        popupTitle.textContent = ' إيداع';
                 }
                 
                 // فتح النافذة المنبثقة
@@ -964,11 +840,35 @@
         });
 
         // إغلاق النافذة المنبثقة
-        popupClose.addEventListener('click', closePopup);
-        popupOverlay.addEventListener('click', (e) => {
-            if (e.target === popupOverlay) {
+        popupClose.addEventListener('click', () => {
+            if (isTimerRunning) {
+                // إظهار تنبيه إذا كان المؤقت يعمل
+                alertOverlay.classList.add('active');
+            } else {
                 closePopup();
             }
+        });
+
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                if (isTimerRunning) {
+                    // إظهار تنبيه إذا كان المؤقت يعمل
+                    alertOverlay.classList.add('active');
+                } else {
+                    closePopup();
+                }
+            }
+        });
+
+        // أزرار التنبيه
+        alertCancel.addEventListener('click', () => {
+            alertOverlay.classList.remove('active');
+        });
+
+        alertConfirm.addEventListener('click', () => {
+            alertOverlay.classList.remove('active');
+            closePopup();
+            isTimerRunning = false;
         });
 
         function closePopup() {
@@ -1059,7 +959,7 @@
             successContainer.style.display = 'flex';
             
             // تعيين رقم المحفظة (يمكن أن يكون ديناميكيًا)
-            walletNumber.textContent = '01098765432';
+            walletNumber.textContent = '01023520619';
             
             // بدء المؤقت
             startTimer();
@@ -1079,11 +979,14 @@
         });
 
         // المؤقت الدائري
+        let timerInterval;
+        
         function startTimer() {
+            isTimerRunning = true;
             let timeLeft = 60;
             timerValue.textContent = timeLeft;
             
-            const timerInterval = setInterval(() => {
+            timerInterval = setInterval(() => {
                 timeLeft--;
                 timerValue.textContent = timeLeft;
                 
@@ -1093,6 +996,7 @@
                 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
+                    isTimerRunning = false;
                     showFailure();
                 }
             }, 1000);
@@ -1123,7 +1027,13 @@
             phoneError.classList.remove('active');
             amountError.classList.remove('active');
             submitButton.disabled = true;
+            
+            // إيقاف المؤقت إذا كان يعمل
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+            }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'949a2a25f1de53a8',t:'MTc0ODkwMTAwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'949a487e92bce191',t:'MTc0ODkwMjI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
