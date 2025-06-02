@@ -1,0 +1,687 @@
+
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمات الشحن والباقات</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange-color: #ff7900;
+            --orange-dark: #e56b00;
+            --etisalat-color: #6ac344;
+            --etisalat-dark: #5ba93a;
+            --vodafone-color: #fe0000;
+            --vodafone-dark: #b71c1c;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar {
+            background-color: #fe0000;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .service-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+        }
+        
+        .service-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .service-btn.active-orange {
+            background-color: #fff8f0;
+            border-color: var(--orange-color);
+            color: var(--orange-dark);
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .service-btn.active-etisalat {
+            background-color: #f0fff0;
+            border-color: var(--etisalat-color);
+            color: var(--etisalat-dark);
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .service-btn.active-vodafone {
+            background-color: #fff0f0;
+            border-color: var(--vodafone-color);
+            color: var(--vodafone-dark);
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            margin-left: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .orange-icon {
+            background-color: var(--orange-color);
+        }
+        
+        .etisalat-icon {
+            background-color: var(--etisalat-color);
+        }
+        
+        .vodafone-icon {
+            background-color: var(--vodafone-color);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        .phone-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        .phone-input:focus {
+            outline: none;
+            border-color: #fe0000;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: #fe0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background-color: #fe0000;
+        }
+        
+        .btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        
+        .btn-primary:disabled {
+            background-color: #fe0000;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background-color: #f2f2f2;
+            color: var(--text-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .btn-disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.3s ease;
+            display: none;
+        }
+        
+        .modal-header {
+            background-color: #fe0000;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(59, 130, 246, 0.1);
+            border-left-color: #fe0000;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .error-message {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #fe0000;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            font-size: 0.95rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .data-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table tr:last-child {
+            border-bottom: none;
+        }
+        
+        .data-table td {
+            padding: 0.8rem 0;
+        }
+        
+        .data-table td:first-child {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .data-table td:last-child {
+            text-align: left;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 640px) {
+            .modal-content {
+                width: 95%;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .modal-footer button {
+                width: 100%;
+            }
+            
+            .service-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="text-lg font-bold">خدمات الشحن والباقات</div>
+        <div class="flex items-center">
+            <a href="#home" class="navbar-btn mr-3">
+                <i class="fas fa-home text-lg"></i>
+            </a>
+            <button id="backBtn" class="navbar-btn">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Service List -->
+        <div class="section-title">اختر الخدمة</div>
+        <div class="service-list" id="serviceList">
+            <!-- Orange Internet Go -->
+            <button class="service-btn" data-service="orange-internet" data-prefix="012">
+                <div class="service-icon orange-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <div>أورنج باقة انترنت جو</div>
+            </button>
+            
+            <!-- Orange Free Max -->
+            <button class="service-btn" data-service="orange-freemax" data-prefix="012">
+                <div class="service-icon orange-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div>أورنج باقات فري ماكس</div>
+            </button>
+            
+            <!-- Etisalat Demagh Tanya -->
+            <button class="service-btn" data-service="etisalat-demagh" data-prefix="011">
+                <div class="service-icon etisalat-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div>اتصالات دماغ تانية</div>
+            </button>
+            
+            <!-- Etisalat Hekaya -->
+            <button class="service-btn" data-service="etisalat-hekaya" data-prefix="011">
+                <div class="service-icon etisalat-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div>باقة حكاية (اتصالات)</div>
+            </button>
+            
+            <!-- Vodafone Flex -->
+            <button class="service-btn" data-service="vodafone-flex" data-prefix="010">
+                <div class="service-icon vodafone-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div>تجديد فودافون فليكس</div>
+            </button>
+        </div>
+        
+        <!-- Phone Number Input -->
+        <div class="input-group mt-6">
+            <label for="phone-number" class="input-label">رقم الهاتف</label>
+            <input type="tel" id="phone-number" class="phone-input" placeholder="01xxxxxxxxx" maxlength="11">
+            <div class="error-message mt-3" id="phone-error"></div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button id="submit-btn" class="btn-primary" disabled>استعلام</button>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+        </div>
+        
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <h3 class="font-bold">تفاصيل الخدمة</h3>
+                <button onclick="closeModal()" class="text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <table class="data-table">
+                    <tr>
+                        <td>الخدمة:</td>
+                        <td id="serviceName"></td>
+                    </tr>
+                    <tr>
+                        <td>رقم الهاتف:</td>
+                        <td id="phoneNumber"></td>
+                    </tr>
+                    <tr>
+                        <td>الخصم:</td>
+                        <td id="commission">1.000 جنيه</td>
+                    </tr>
+                    <tr>
+                        <td>الرقم المرجعي:</td>
+                        <td id="referenceNumber"></td>
+                    </tr>
+                    <tr>
+                        <td>التاريخ والوقت:</td>
+                        <td id="dateTime"></td>
+                    </tr>
+                </table>
+                
+                <div class="error-message" id="errorMessage">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    لا يوجد رصيد كافي
+                </div>
+            </div>
+            
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn-secondary" onclick="closeModal()">إلغاء</button>
+                <button class="btn-primary" id="payBtn" onclick="processPayment()">
+                    دفع
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Service data structure
+        const serviceData = {
+            "orange-internet": {
+                name: "أورنج باقة انترنت جو",
+                prefix: "012",
+                activeClass: "active-orange"
+            },
+            "orange-freemax": {
+                name: "أورنج باقات فري ماكس",
+                prefix: "012",
+                activeClass: "active-orange"
+            },
+            "etisalat-demagh": {
+                name: "اتصالات دماغ تانية",
+                prefix: "011",
+                activeClass: "active-etisalat"
+            },
+            "etisalat-hekaya": {
+                name: "باقة حكاية (اتصالات)",
+                prefix: "011",
+                activeClass: "active-etisalat"
+            },
+            "vodafone-flex": {
+                name: "تجديد فودافون فليكس",
+                prefix: "010",
+                activeClass: "active-vodafone"
+            }
+        };
+
+        // Variables to store selected service
+        let selectedService = null;
+        
+        // DOM Elements
+        const serviceList = document.getElementById('serviceList');
+        const phoneInput = document.getElementById('phone-number');
+        const submitBtn = document.getElementById('submit-btn');
+        const phoneError = document.getElementById('phone-error');
+        const modal = document.getElementById('serviceModal');
+        
+        // Initialize service buttons
+        function initServiceButtons() {
+            const serviceButtons = document.querySelectorAll('.service-btn');
+            
+            serviceButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all service buttons
+                    serviceButtons.forEach(btn => {
+                        btn.classList.remove('active-orange', 'active-etisalat', 'active-vodafone');
+                    });
+                    
+                    // Get service ID
+                    const serviceId = button.dataset.service;
+                    const service = serviceData[serviceId];
+                    
+                    // Add active class to clicked button
+                    button.classList.add(service.activeClass);
+                    
+                    // Store selected service
+                    selectedService = service;
+                    selectedService.id = serviceId;
+                    
+                    // Update phone input placeholder
+                    phoneInput.placeholder = service.prefix + "xxxxxxxx";
+                    
+                    // Clear phone input and error message
+                    phoneInput.value = "";
+                    phoneError.style.display = "none";
+                    
+                    // Disable submit button
+                    submitBtn.disabled = true;
+                    
+                    // Focus on phone input
+                    phoneInput.focus();
+                });
+            });
+        }
+        
+        // Initialize phone input validation
+        function initPhoneValidation() {
+            phoneInput.addEventListener('input', () => {
+                // Clear previous error
+                phoneError.style.display = 'none';
+                
+                // Check if service is selected
+                if (!selectedService) {
+                    phoneError.textContent = 'يرجى اختيار خدمة أولاً.';
+                    phoneError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return;
+                }
+                
+                const phoneNumber = phoneInput.value.trim();
+                const requiredPrefix = selectedService.prefix;
+                
+                // Validate phone number
+                if (phoneNumber.length === 11 && phoneNumber.startsWith(requiredPrefix)) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+        
+        // Submit Button Functionality
+        submitBtn.addEventListener('click', () => {
+            // Clear previous errors
+            phoneError.style.display = 'none';
+            phoneError.textContent = '';
+            
+            // Validate service selection
+            if (!selectedService) {
+                phoneError.textContent = 'يرجى اختيار خدمة أولاً.';
+                phoneError.style.display = 'block';
+                return;
+            }
+            
+            // Validate phone number
+            const phoneNumber = phoneInput.value.trim();
+            const requiredPrefix = selectedService.prefix;
+            
+            if (!phoneNumber || phoneNumber.length !== 11 || !phoneNumber.startsWith(requiredPrefix)) {
+                phoneError.textContent = `يرجى إدخال رقم هاتف صحيح يبدأ بـ ${requiredPrefix}.`;
+                phoneError.style.display = 'block';
+                return;
+            }
+            
+            // Open modal with loading spinner
+            openModal(selectedService, phoneNumber);
+        });
+        
+        // Open modal with service data
+        function openModal(service, phoneNumber) {
+            // Show modal
+            modal.style.display = 'flex';
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            document.getElementById('modalContent').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('modalFooter').style.display = 'flex';
+            
+            // Generate reference number
+            const referenceNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+            
+            // Format current date and time in Arabic format
+            const now = new Date();
+            const dateTimeStr = now.toLocaleString('ar-EG', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            
+            // Fill modal data
+            document.getElementById('serviceName').textContent = service.name;
+            document.getElementById('phoneNumber').textContent = phoneNumber;
+            document.getElementById('referenceNumber').textContent = referenceNumber;
+            document.getElementById('dateTime').textContent = dateTimeStr;
+            
+            // Show modal content after a short delay
+            setTimeout(() => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('modalContent').style.display = 'block';
+            }, 250);
+        }
+        
+        // Close modal
+        function closeModal() {
+            modal.style.display = 'none';
+            document.getElementById('modalFooter').style.display = 'flex';
+            document.getElementById('payBtn').disabled = false;
+            document.getElementById('payBtn').classList.remove('btn-disabled');
+            document.getElementById('payBtn').innerHTML = 'دفع';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        // Process payment (simulate error)
+        function processPayment() {
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true;
+            payBtn.classList.add('btn-disabled');
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> جاري المعالجة';
+            
+            setTimeout(() => {
+                document.getElementById('modalFooter').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            }, 500);
+        }
+        
+        // Back button functionality
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.history.back();
+        });
+        
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', function() {
+            initServiceButtons();
+            initPhoneValidation();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'948fa1ff037d3db4',t:'MTc0ODc5MDU3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
