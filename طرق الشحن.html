@@ -3,68 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة الشحن - EGY MY WIRE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>مثال على استخدام شريط التنقل التلقائي</title>
+    <!-- أي CSS موجود مسبقاً -->
 </head>
 <body>
     <!-- محتوى الصفحة الأصلي -->
     <div class="content">
-        <!-- أزرار الشحن -->
-        <div class="container">
-            <div class="row">
-                <a href="#" class="button charging-btn" data-action="charge">
-                    <img src="https://i.postimg.cc/ZKPQmqjp/3.png" alt="زر 1">
-                </a>
-                <a href="#" class="button charging-btn" data-action="charge">
-                    <img src="https://i.postimg.cc/fTQP1d7M/2.png" alt="زر 2">
-                </a>
-                <a href="#" class="button charging-btn" data-action="charge">
-                    <img src="https://i.postimg.cc/g2NBwBC0/5.png" alt="زر 3">
-                </a>
-                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-copy-of-%D8%A7%D9%8A%D8%AF%D8%A7%D8%B9" class="button">
-                    <img src="https://i.postimg.cc/6p9mpN1S/4.png" alt="زر 4">
-                </a>
-            </div>
-            <div class="row">
-                <a href="#" class="button charging-btn" data-action="charge">
-                    <img src="https://i.postimg.cc/SKR1cf4f/6.png" alt="زر 5">
-                </a>
-                <a href="#" class="button charging-btn" data-action="charge">
-                    <img src="https://i.postimg.cc/G3yNMKyM/1.png" alt="زر 6">
-                </a>
-                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-%D8%A7%D9%84%D8%AD%D8%B3%D8%A7%D8%A8" class="button">
-                    <img src="https://i.postimg.cc/FK6Wpks5/7.png" alt="زر 7">
-                </a>
-                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-%D8%B3%D8%AD%D8%A8-%D8%AA%D8%A7%D9%84%D9%82%D8%A7%D9%8Ae4af06fc" class="button">
-                    <img src="https://i.postimg.cc/wvsWGx7t/8.png" alt="زر 8">
-                </a>
-            </div>
-            <div class="row">
-                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/%D8%A8%D8%B1%D9%8A%D8%AF" class="button">
-                    <img src="https://i.postimg.cc/0jRtRgwV/9.png" alt="زر 9">
-                </a>
-                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/atm" class="button">
-                    <img src="https://i.postimg.cc/VvqKz79m/10.png" alt="زر 10">
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- النافذة المنبثقة لنموذج الشحن -->
-    <div id="chargingModal" class="charging-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>نموذج الشحن</h2>
-                <button id="closeModal" class="close-btn">&times;</button>
-            </div>
-            <div class="container slide-in" id="formContainer">
-                <input type="text" id="phone" placeholder="رقم الهاتف">
-                <div id="phoneError" class="error hidden">رقم غير صحيح</div>
-                <input type="number" id="amount" placeholder="مبلغ الشحن">
-                <div id="amountError" class="error hidden">يجب أن يكون بين 200 و1000</div>
-                <button onclick="handleSubmit()">استكمال</button>
-            </div>
-        </div>
     </div>
 
     <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
@@ -92,8 +36,6 @@
                 body {
                     font-family: 'Tajawal', sans-serif;
                     margin: 0;
-                    padding: 10px;
-                    background: #f5f5f5;
                 }
 
                 .egy-navbar {
@@ -107,7 +49,6 @@
                     position: sticky;
                     top: 0;
                     z-index: 10;
-                    margin: -10px -10px 20px -10px;
                 }
 
                 .egy-notification-panel {
@@ -193,329 +134,6 @@
                     align-items: center;
                     justify-content: center;
                 }
-
-                /* أزرار الشحن */
-                .container {
-                    width: 100%;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-
-                .row {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 12px;
-                    margin-bottom: 12px;
-                }
-
-                .button {
-                    aspect-ratio: 1/1;
-                    background-color: #fdd432;
-                    border-radius: 10px;
-                    text-align: center;
-                    padding: 10px;
-                    box-sizing: border-box;
-                    cursor: pointer;
-                    transition: background-color 0.3s, transform 0.1s ease;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    text-decoration: none;
-                }
-
-                .button:hover {
-                    background-color: #e6c12d;
-                }
-
-                .button:active {
-                    transform: scale(0.95);
-                }
-
-                .button img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    max-width: 100%;
-                    max-height: 100%;
-                }
-
-                /* النافذة المنبثقة */
-                .charging-modal {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    z-index: 100;
-                    display: none;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .charging-modal.active {
-                    display: flex;
-                    animation: modalSlideUp 0.5s ease-out;
-                }
-
-                .modal-content {
-                    background: #f5f5f5;
-                    width: 90%;
-                    max-width: 450px;
-                    max-height: 80%;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    position: relative;
-                    animation: modalContentSlide 0.5s ease-out;
-                }
-
-                .modal-header {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 1rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .modal-header h2 {
-                    margin: 0;
-                    font-size: 1.25rem;
-                }
-
-                .close-btn {
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                    padding: 0;
-                    width: 30px;
-                    height: 30px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                /* نموذج الشحن */
-                .fade-in {
-                    animation: fadeIn 0.8s ease forwards;
-                }
-
-                .fade-out {
-                    animation: fadeOut 0.8s ease forwards;
-                }
-
-                .slide-in {
-                    animation: slideIn 0.6s ease forwards;
-                }
-
-                .slide-out {
-                    animation: slideOut 0.6s ease forwards;
-                }
-
-                .modal-content .container {
-                    width: 100%;
-                    max-width: 450px;
-                    opacity: 1;
-                    position: relative;
-                    padding: 20px;
-                    text-align: center;
-                }
-
-                .modal-content input {
-                    display: block;
-                    width: 100%;
-                    max-width: 400px;
-                    margin: 15px auto;
-                    padding: 12px;
-                    font-size: 16px;
-                    text-align: center;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    background-color: #fafafa;
-                    transition: border-color 0.3s ease;
-                    box-sizing: border-box;
-                }
-
-                .modal-content input:focus {
-                    border-color: #f7c107;
-                    outline: none;
-                }
-
-                .error {
-                    color: #e63946;
-                    font-size: 13px;
-                    margin-top: 5px;
-                    margin-bottom: 10px;
-                    text-align: center;
-                }
-
-                .modal-content button {
-                    background: #f7c107;
-                    color: white;
-                    border: none;
-                    padding: 12px 30px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    margin: 20px auto;
-                    cursor: pointer;
-                    width: 100%;
-                    max-width: 400px;
-                    display: block;
-                    transition: background 0.3s ease;
-                }
-
-                .modal-content button:hover {
-                    background: #e0a800;
-                }
-
-                .hidden {
-                    display: none;
-                }
-
-                .logo {
-                    width: 80px;
-                    margin: 20px auto;
-                    display: block;
-                    animation: fadeIn 1s ease-in-out;
-                }
-
-                .copy-button {
-                    display: block;
-                    margin: 15px auto;
-                    padding: 10px 20px;
-                    background-color: #fff3cd;
-                    color: #f7c107;
-                    font-weight: bold;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    transition: background 0.3s ease;
-                    border: none;
-                    font-size: 14px;
-                }
-
-                .copy-button:hover {
-                    background-color: #ffecb3;
-                }
-
-                .copy-confirm {
-                    color: #e63946;
-                    font-size: 14px;
-                    margin: 10px 0;
-                    text-align: center;
-                }
-
-                .green {
-                    color: #2ecc71;
-                    margin-top: 15px;
-                    font-size: 18px;
-                    text-align: center;
-                }
-
-                .loader {
-                    border: 4px solid #f3f3f3;
-                    border-top: 4px solid #f7c107;
-                    border-radius: 50%;
-                    width: 30px;
-                    height: 30px;
-                    animation: spin 1s linear infinite;
-                    margin: 20px auto;
-                }
-
-                .circle-timer {
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 50%;
-                    background: conic-gradient(#f7c107 calc(var(--progress) * 1%), #eee 0);
-                    position: relative;
-                    margin: 20px auto 0;
-                }
-
-                .circle-timer::before {
-                    content: "";
-                    position: absolute;
-                    width: 70px;
-                    height: 70px;
-                    background: white;
-                    border-radius: 50%;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                }
-
-                .circle-timer span {
-                    position: absolute;
-                    font-size: 16px;
-                    color: #333;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                }
-
-                .fail-message {
-                    color: #e63946;
-                    font-size: 18px;
-                    margin-top: 20px;
-                    text-align: center;
-                }
-
-                @keyframes modalSlideUp {
-                    from {
-                        opacity: 0;
-                    }
-                    to {
-                        opacity: 1;
-                    }
-                }
-
-                @keyframes modalContentSlide {
-                    from {
-                        transform: translateY(100%);
-                    }
-                    to {
-                        transform: translateY(0);
-                    }
-                }
-
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-
-                @keyframes fadeOut {
-                    from { opacity: 1; }
-                    to { opacity: 0; }
-                }
-
-                @keyframes slideIn {
-                    from { transform: translateY(-30px); opacity: 0; }
-                    to { transform: translateY(0); opacity: 1; }
-                }
-
-                @keyframes slideOut {
-                    from { transform: translateY(0); opacity: 1; }
-                    to { transform: translateY(-30px); opacity: 0; }
-                }
-
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-
-                @media (max-width: 768px) {
-                    .row {
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 10px;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .row {
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 8px;
-                    }
-                }
             `;
             document.head.appendChild(style);
         }
@@ -546,7 +164,7 @@
             navbar.innerHTML = `
                 <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
                 <div style="display: flex; align-items: center;">
-                    <a href="https://accounegy.netlify.app/" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                    <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
                         <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
                     </a>
                     <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
@@ -603,131 +221,6 @@
                     }
                 });
             }
-
-            // إضافة أحداث أزرار الشحن
-            const chargingBtns = document.querySelectorAll('.charging-btn');
-            const chargingModal = document.getElementById('chargingModal');
-            const closeModal = document.getElementById('closeModal');
-
-            chargingBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    chargingModal.classList.add('active');
-                });
-            });
-
-            closeModal.addEventListener('click', () => {
-                chargingModal.classList.remove('active');
-                resetForm();
-            });
-
-            chargingModal.addEventListener('click', (e) => {
-                if (e.target === chargingModal) {
-                    chargingModal.classList.remove('active');
-                    resetForm();
-                }
-            });
-        }
-
-        // إعادة تعيين النموذج
-        function resetForm() {
-            const formContainer = document.getElementById("formContainer");
-            formContainer.innerHTML = `
-                <input type="text" id="phone" placeholder="رقم الهاتف">
-                <div id="phoneError" class="error hidden">رقم غير صحيح</div>
-                <input type="number" id="amount" placeholder="مبلغ الشحن">
-                <div id="amountError" class="error hidden">يجب أن يكون بين 200 و1000</div>
-                <button onclick="handleSubmit()">استكمال</button>
-            `;
-        }
-
-        // وظائف نموذج الشحن
-        function handleSubmit() {
-            const phone = document.getElementById("phone").value;
-            const amount = parseInt(document.getElementById("amount").value);
-            const phoneError = document.getElementById("phoneError");
-            const amountError = document.getElementById("amountError");
-            
-            phoneError.classList.add("hidden");
-            amountError.classList.add("hidden");
-            
-            const phoneValid = /^(010|011|012|015)\d{8}$/.test(phone);
-            const amountValid = amount >= 200 && amount <= 1000;
-            
-            if (!phoneValid) phoneError.classList.remove("hidden");
-            if (!amountValid) amountError.classList.remove("hidden");
-            
-            if (!phoneValid || !amountValid) return;
-            
-            const formContainer = document.getElementById("formContainer");
-            formContainer.classList.remove("slide-in");
-            formContainer.classList.add("fade-out");
-            
-            setTimeout(() => {
-                formContainer.classList.remove("fade-out");
-                let logo = "";
-                if (phone.startsWith("010")) {
-                    logo = "https://postimg.cc/9487xg6p";
-                } else if (phone.startsWith("011")) {
-                    logo = "https://postimg.cc/ygDS2XBz";
-                } else if (phone.startsWith("012")) {
-                    logo = "https://postimg.cc/QFq57dSv";
-                } else if (phone.startsWith("015")) {
-                    logo = "https://postimg.cc/y39381kQ";
-                }
-                
-                formContainer.innerHTML = `
-                    <img src="${logo}" class="logo">
-                    <div style="text-align: center;">قم بتحويل مبلغ ${(amount - 5)} جنيه لرقم محفظة النظام التالي</div>
-                    <button class="copy-button" onclick="copyToClipboard(this, '01023520619')">نسخ رقم المحفظة</button>
-                    <div id="copyConfirm" class="copy-confirm hidden">تم نسخ رقم المحفظة</div>
-                    <div class="green">سيكون رصيد حسابك ${amount} جنيه</div>
-                    <div class="loader"></div>
-                    <div style="margin-top: 5px; text-align: center;">أرسل الان مبلغ الشحن لرقم المحفظة الذي تم نسخة وبعد التحويل سيتم اضافة الايداع مباشر خلالي ثواني</div>
-                    <div class="circle-timer" id="circleTimer"><span id="timerText"></span></div>
-                `;
-                formContainer.classList.add("fade-in");
-                startCircleCountdown(60);
-            }, 800);
-        }
-
-        function copyToClipboard(element, text) {
-            navigator.clipboard.writeText(text).then(() => {
-                document.getElementById("copyConfirm").classList.remove("hidden");
-                setTimeout(() => {
-                    document.getElementById("copyConfirm").classList.add("hidden");
-                }, 2000);
-            });
-        }
-
-        function startCircleCountdown(duration) {
-            const timerEl = document.getElementById("circleTimer");
-            const textEl = document.getElementById("timerText");
-            let timer = duration;
-            
-            const interval = setInterval(() => {
-                const progress = ((duration - timer) / duration) * 100;
-                timerEl.style.setProperty('--progress', progress);
-                const minutes = Math.floor(timer / 60);
-                const seconds = timer % 60;
-                textEl.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-                
-                if (--timer < 0) {
-                    clearInterval(interval);
-                    const formContainer = document.getElementById("formContainer");
-                    formContainer.classList.remove("fade-in");
-                    formContainer.classList.add("slide-out");
-                    setTimeout(() => {
-                        formContainer.innerHTML = `<div class="fail-message">فشلت العملية</div>`;
-                        formContainer.classList.remove("slide-out");
-                        formContainer.classList.add("fade-in");
-                        setTimeout(() => {
-                            document.getElementById('chargingModal').classList.remove('active');
-                            resetForm();
-                        }, 2000);
-                    }, 600);
-                }
-            }, 1000);
         }
 
         // التشغيل الرئيسي
@@ -763,4 +256,874 @@
     <!-- انتهاء الكود - انسخ حتى هنا -->
 
 </body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGY MY WIRE - خدمات الشحن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --primary-light: #ff6666;
+            --primary-dark: #c0392b;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px 0 60px;
+        }
+
+        /* ===== أزرار الشحن ===== */
+        .container {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 2rem;
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .promo-banner h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .promo-banner p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .recharge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .recharge-button {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 1rem;
+        }
+
+        .recharge-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .recharge-button-img {
+            width: 100%;
+            height: 150px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recharge-button-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recharge-button-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .recharge-button-desc {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        /* ===== النافذة المنبثقة ===== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 2rem;
+            z-index: 201;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup-container.active {
+            transform: translateY(0);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .popup-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+
+        .popup-close:hover {
+            color: var(--danger-color);
+        }
+
+        /* ===== نموذج الشحن ===== */
+        .recharge-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-input {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .form-input.error {
+            border-color: var(--danger-color);
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .form-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        .form-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .form-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* ===== حالة النجاح ===== */
+        .success-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+        }
+
+        .success-amount {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background-color: #f0f0f0;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            color: var(--primary-color);
+        }
+
+        .wallet-container {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .wallet-number {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .copy-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-button:hover {
+            background-color: #2980b9;
+        }
+
+        .auto-detect-note {
+            background-color: #f8f9fa;
+            border-right: 4px solid var(--success-color);
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: right;
+            margin: 1rem 0;
+        }
+
+        /* ===== المؤقت الدائري ===== */
+        .timer-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 1.5rem auto;
+        }
+
+        .circle-timer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-color) 0%, #f0f0f0 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-inner {
+            width: 80%;
+            height: 80%;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* ===== حالة الفشل ===== */
+        .failure-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.5rem;
+        }
+
+        .failure-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--danger-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .failure-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--danger-color);
+        }
+
+        .retry-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .retry-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* ===== التأثيرات والأنيميشن ===== */
+        @keyframes slide-in {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-out {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* ===== الاستجابة (Responsive) ===== */
+        @media (max-width: 1024px) {
+            .recharge-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .recharge-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .recharge-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .popup-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <h1 class="page-title">خدمات الشحن والدفع</h1>
+        
+        <div class="promo-banner">
+            <h2>عرض خاص لفترة محدودة!</h2>
+            <p>الإيداع بدون رسوم - السحب 1 جنيه / الألف فقط</p>
+        </div>
+        
+        <div class="recharge-grid">
+            <!-- زر 1: فودافون كاش -->
+            <a href="#" class="recharge-button" data-popup="recharge" data-service="vodafone">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/8Km9tLL.jpg" alt="فودافون كاش">
+                </div>
+                <h3 class="recharge-button-title">فودافون كاش</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 2: أورانج كاش -->
+            <a href="#" class="recharge-button" data-popup="recharge" data-service="orange">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/JqtgQ3z.jpg" alt="أورانج كاش">
+                </div>
+                <h3 class="recharge-button-title">أورانج كاش</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 3: اتصالات كاش -->
+            <a href="#" class="recharge-button" data-popup="recharge" data-service="etisalat">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/Yjw10g3.jpg" alt="اتصالات كاش">
+                </div>
+                <h3 class="recharge-button-title">اتصالات كاش</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 4: وي باي -->
+            <a href="#" class="recharge-button" data-popup="recharge" data-service="we">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/QZm8cGG.jpg" alt="وي باي">
+                </div>
+                <h3 class="recharge-button-title">وي باي</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 5: انستا باي -->
+            <a href="#" class="recharge-button" data-popup="recharge" data-service="instapay">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/7Vd4YQj.jpg" alt="انستا باي">
+                </div>
+                <h3 class="recharge-button-title">انستا باي</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 6: فوري بلس -->
+            <a href="https://example.com/fawry" class="recharge-button">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/pYuXRxH.jpg" alt="فوري بلس">
+                </div>
+                <h3 class="recharge-button-title">فوري بلس</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 7: البريد المصري -->
+            <a href="https://example.com/egyptpost" class="recharge-button">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/L8qwBoc.jpg" alt="البريد المصري">
+                </div>
+                <h3 class="recharge-button-title">البريد المصري</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 8: كارت بنكي -->
+            <a href="https://example.com/bankcard" class="recharge-button">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/JHq4Ief.jpg" alt="كارت بنكي">
+                </div>
+                <h3 class="recharge-button-title">كارت بنكي</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+            
+            <!-- زر 9: ATM -->
+            <a href="https://example.com/atm" class="recharge-button">
+                <div class="recharge-button-img">
+                    <img src="https://i.imgur.com/xJCRMOz.jpg" alt="ATM">
+                </div>
+                <h3 class="recharge-button-title">ATM</h3>
+                <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- النافذة المنبثقة -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-container" id="popupContainer">
+            <div class="popup-header">
+                <h2 class="popup-title" id="popupTitle">شحن رصيد</h2>
+                <button class="popup-close" id="popupClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- نموذج الشحن -->
+            <div class="recharge-form" id="rechargeForm">
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-input" id="phoneNumber" placeholder="أدخل رقم الهاتف">
+                    <div class="error-message" id="phoneError">يرجى إدخال رقم هاتف صحيح (يبدأ بـ 010 أو 011 أو 012 أو 015)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">المبلغ (جنيه)</label>
+                    <input type="number" class="form-input" id="amount" placeholder="أدخل المبلغ">
+                    <div class="error-message" id="amountError">يجب أن يكون المبلغ بين 200 و 10000 جنيه</div>
+                </div>
+                
+                <button class="form-button" id="submitButton">استكمال</button>
+            </div>
+            
+            <!-- حالة النجاح -->
+            <div class="success-container" id="successContainer">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                
+                <h2 class="success-title">تم إنشاء الطلب بنجاح</h2>
+                
+                <p>قم بتحويل مبلغ</p>
+                <div class="success-amount" id="finalAmount">495 جنيه</div>
+                <p>لرقم المحفظة التالي:</p>
+                
+                <div class="wallet-container">
+                    <span class="wallet-number" id="walletNumber">01098765432</span>
+                    <button class="copy-button" id="copyButton">
+                        <i class="fas fa-copy"></i>
+                        <span>نسخ</span>
+                    </button>
+                </div>
+                
+                <div class="auto-detect-note">
+                    <p><i class="fas fa-info-circle"></i> يتم اكتشاف التحويل تلقائياً وعند تحويلك للمبلغ سيتم إيداع الرصيد بنجاح</p>
+                </div>
+                
+                <p>سيتم تنفيذ طلبك خلال:</p>
+                
+                <div class="timer-container">
+                    <div class="circle-timer" id="circleTimer">
+                        <div class="timer-inner">
+                            <span id="timerValue">60</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- حالة الفشل -->
+            <div class="failure-container" id="failureContainer">
+                <div class="failure-icon">
+                    <i class="fas fa-times"></i>
+                </div>
+                
+                <h2 class="failure-title">فشلت العملية</h2>
+                
+                <p>لم نتمكن من إتمام عملية الشحن. يرجى المحاولة مرة أخرى.</p>
+                
+                <button class="retry-button" id="retryButton">إعادة المحاولة</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تفعيل النافذة المنبثقة
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupContainer = document.getElementById('popupContainer');
+        const popupClose = document.getElementById('popupClose');
+        const popupTitle = document.getElementById('popupTitle');
+        const rechargeButtons = document.querySelectorAll('[data-popup="recharge"]');
+
+        // فتح النافذة المنبثقة عند الضغط على أزرار الشحن
+        rechargeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const service = button.getAttribute('data-service');
+                
+                // تعيين عنوان النافذة حسب الخدمة
+                switch(service) {
+                    case 'vodafone':
+                        popupTitle.textContent = 'شحن رصيد فودافون كاش';
+                        break;
+                    case 'orange':
+                        popupTitle.textContent = 'شحن رصيد أورانج كاش';
+                        break;
+                    case 'etisalat':
+                        popupTitle.textContent = 'شحن رصيد اتصالات كاش';
+                        break;
+                    case 'we':
+                        popupTitle.textContent = 'شحن رصيد وي باي';
+                        break;
+                    case 'instapay':
+                        popupTitle.textContent = 'شحن رصيد انستا باي';
+                        break;
+                    default:
+                        popupTitle.textContent = 'شحن رصيد';
+                }
+                
+                // فتح النافذة المنبثقة
+                popupOverlay.classList.add('active');
+                setTimeout(() => {
+                    popupContainer.classList.add('active');
+                }, 10);
+            });
+        });
+
+        // إغلاق النافذة المنبثقة
+        popupClose.addEventListener('click', closePopup);
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                closePopup();
+            }
+        });
+
+        function closePopup() {
+            popupContainer.classList.remove('active');
+            setTimeout(() => {
+                popupOverlay.classList.remove('active');
+                // إعادة تعيين النموذج
+                resetForm();
+            }, 300);
+        }
+
+        // التحقق من النموذج
+        const phoneInput = document.getElementById('phoneNumber');
+        const amountInput = document.getElementById('amount');
+        const phoneError = document.getElementById('phoneError');
+        const amountError = document.getElementById('amountError');
+        const submitButton = document.getElementById('submitButton');
+        const rechargeForm = document.getElementById('rechargeForm');
+        const successContainer = document.getElementById('successContainer');
+        const failureContainer = document.getElementById('failureContainer');
+        const walletNumber = document.getElementById('walletNumber');
+        const copyButton = document.getElementById('copyButton');
+        const circleTimer = document.getElementById('circleTimer');
+        const timerValue = document.getElementById('timerValue');
+        const retryButton = document.getElementById('retryButton');
+        const finalAmount = document.getElementById('finalAmount');
+
+        // التحقق من رقم الهاتف
+        phoneInput.addEventListener('input', validatePhone);
+        
+        function validatePhone() {
+            const phoneRegex = /^(010|011|012|015)\d{8}$/;
+            const isValid = phoneRegex.test(phoneInput.value);
+            
+            if (!isValid) {
+                phoneInput.classList.add('error');
+                phoneError.classList.add('active');
+            } else {
+                phoneInput.classList.remove('error');
+                phoneError.classList.remove('active');
+            }
+            
+            validateForm();
+        }
+
+        // التحقق من المبلغ
+        amountInput.addEventListener('input', validateAmount);
+        
+        function validateAmount() {
+            const amount = parseInt(amountInput.value);
+            const isValid = amount >= 200 && amount <= 10000;
+            
+            if (!isValid) {
+                amountInput.classList.add('error');
+                amountError.classList.add('active');
+            } else {
+                amountInput.classList.remove('error');
+                amountError.classList.remove('active');
+            }
+            
+            validateForm();
+        }
+
+        // التحقق من النموذج بالكامل
+        function validateForm() {
+            const phoneRegex = /^(010|011|012|015)\d{8}$/;
+            const isPhoneValid = phoneRegex.test(phoneInput.value);
+            
+            const amount = parseInt(amountInput.value);
+            const isAmountValid = amount >= 200 && amount <= 10000;
+            
+            submitButton.disabled = !(isPhoneValid && isAmountValid);
+        }
+
+        // إرسال النموذج
+        submitButton.addEventListener('click', submitForm);
+        
+        function submitForm() {
+            // حساب المبلغ النهائي (المبلغ المدخل - 5 جنيه)
+            const originalAmount = parseInt(amountInput.value);
+            const discountedAmount = originalAmount - 5;
+            
+            // تعيين المبلغ النهائي في صفحة النجاح
+            finalAmount.textContent = discountedAmount + " جنيه";
+            
+            // إخفاء النموذج وإظهار حالة النجاح
+            rechargeForm.style.display = 'none';
+            successContainer.style.display = 'flex';
+            
+            // تعيين رقم المحفظة (يمكن أن يكون ديناميكيًا)
+            walletNumber.textContent = '01098765432';
+            
+            // بدء المؤقت
+            startTimer();
+        }
+
+        // نسخ رقم المحفظة
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(walletNumber.textContent)
+                .then(() => {
+                    const originalText = copyButton.innerHTML;
+                    copyButton.innerHTML = '<i class="fas fa-check"></i><span>تم النسخ</span>';
+                    
+                    setTimeout(() => {
+                        copyButton.innerHTML = originalText;
+                    }, 2000);
+                });
+        });
+
+        // المؤقت الدائري
+        function startTimer() {
+            let timeLeft = 60;
+            timerValue.textContent = timeLeft;
+            
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                timerValue.textContent = timeLeft;
+                
+                // تحديث المؤقت الدائري
+                const percentage = (timeLeft / 60) * 100;
+                circleTimer.style.background = `conic-gradient(var(--primary-color) ${percentage}%, #f0f0f0 0%)`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showFailure();
+                }
+            }, 1000);
+        }
+
+        // إظهار حالة الفشل
+        function showFailure() {
+            successContainer.style.display = 'none';
+            failureContainer.style.display = 'flex';
+        }
+
+        // إعادة المحاولة
+        retryButton.addEventListener('click', () => {
+            // إعادة تحميل الصفحة
+            window.location.reload();
+        });
+
+        // إعادة تعيين النموذج
+        function resetForm() {
+            rechargeForm.style.display = 'flex';
+            successContainer.style.display = 'none';
+            failureContainer.style.display = 'none';
+            
+            phoneInput.value = '';
+            amountInput.value = '';
+            phoneInput.classList.remove('error');
+            amountInput.classList.remove('error');
+            phoneError.classList.remove('active');
+            amountError.classList.remove('active');
+            submitButton.disabled = true;
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'949a2a25f1de53a8',t:'MTc0ODkwMTAwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
