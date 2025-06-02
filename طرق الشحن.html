@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مثال على استخدام شريط التنقل التلقائي</title>
+    <!-- أي CSS موجود مسبقاً -->
+</head>
+<body>
+    <!-- محتوى الصفحة الأصلي -->
+    <div class="content">
+    </div>
+
+    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
+    <script>
+        // إزالة أي شريط تنقل موجود
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        // إضافة CSS للشريط الجديد
+        function injectNavbarStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                :root {
+                    --primary-color: #ff0000;
+                    --primary-light: #ff6666;
+                    --primary-dark: #cc0000;
+                    --text-color: #333;
+                    --bg-color: #f9f9f9;
+                }
+
+                body {
+                    font-family: 'Tajawal', sans-serif;
+                    margin: 0;
+                }
+
+                .egy-navbar {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 0.75rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 50;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+
+                .egy-nav-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    padding: 0.375rem;
+                    margin-right: 0.375rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background-color 0.3s;
+                    position: relative;
+                }
+
+                .egy-nav-btn:hover {
+                    background-color: rgba(255,255,255,0.1);
+                }
+
+                .egy-notification-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #fbbf24;
+                    color: #000;
+                    font-size: 0.75rem;
+                    width: 1rem;
+                    height: 1rem;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // إضافة Font Awesome و Google Fonts
+        function loadExternalResources() {
+            // Font Awesome
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            // Google Fonts - Tajawal
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        // إنشاء شريط التنقل الجديد
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://accounegy.netlify.app/" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        // إنشاء لوحة الإشعارات
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        // إضافة وظائف التفاعل
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+
+                // إغلاق اللوحة عند النقر خارجها
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // التشغيل الرئيسي
+        function initEgyNavbar() {
+            // إزالة شريط التنقل القديم
+            removeExistingNavbars();
+            
+            // تحميل الموارد الخارجية
+            loadExternalResources();
+            
+            // إضافة CSS
+            injectNavbarStyles();
+            
+            // إنشاء وإضافة شريط التنقل الجديد
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            
+            // إنشاء وإضافة لوحة الإشعارات
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            
+            // إضافة وظائف التفاعل
+            setTimeout(addEventListeners, 100);
+        }
+
+        // تشغيل الكود عند تحميل الصفحة
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+    </script>
+    <!-- انتهاء الكود - انسخ حتى هنا -->
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أزرار الشحن - EGY MY WIRE</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe0000;
+            --primary-light: #ff3333;
+            --primary-dark: #e50000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --button-bg: #fdd432;
+            --button-hover: #e6c12d;
+            --modal-bg: #f5f5f5;
+            --input-border: #ddd;
+            --input-focus: #f7c107;
+            --error-color: #e63946;
+            --success-color: #2ecc71;
+            --loader-color: #f7c107;
+            --copy-bg: #fff3cd;
+            --copy-hover: #ffecb3;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.6rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .navbar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .navbar-btn:active {
+            transform: scale(0.95);
+        }
+
+        .main-content {
+            margin-top: 70px;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 70px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .payment-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .button {
+            aspect-ratio: 1/1;
+            background-color: var(--button-bg);
+            border-radius: 10px;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            max-width: 80px;
+            margin: 0 auto;
+        }
+
+        .button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            transform: translateY(100%);
+            transition: transform 0.6s ease;
+            text-align: center;
+        }
+
+        .modal-content.active {
+            transform: translateY(0);
+        }
+
+        .modal-content.fade-out {
+            transform: translateY(100%);
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 15px auto;
+            padding: 12px;
+            font-size: 16px;
+            text-align: center;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--input-focus);
+            outline: none;
+        }
+
+        .error {
+            color: var(--error-color);
+            font-size: 13px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .copy-button {
+            display: block;
+            margin: 15px auto;
+            padding: 10px 20px;
+            background-color: var(--copy-bg);
+            color: var(--input-focus);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: fit-content;
+            text-align: center;
+        }
+
+        .copy-button:hover {
+            background-color: var(--copy-hover);
+        }
+
+        .copy-confirm {
+            color: var(--error-color);
+            font-size: 14px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .green {
+            color: var(--success-color);
+            margin-top: 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--loader-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        .circle-timer {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--loader-color) calc(var(--progress) * 1%), #eee 0);
+            position: relative;
+            margin: 20px auto 0;
+        }
+
+        .circle-timer::before {
+            content: "";
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .circle-timer span {
+            position: absolute;
+            font-size: 16px;
+            color: var(--text-color);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .fail-message {
+            color: var(--error-color);
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .button {
+                max-width: 70px;
+                padding: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .row {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 4px;
+            }
+            .button {
+                max-width: 60px;
+                padding: 5px;
+            }
+            .payment-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-title">أزرار الشحن</div>
+        <div class="flex items-center">
+            <a href="#home" class="navbar-btn mr-2" aria-label="الصفحة الرئيسية">
+                <i class="fas fa-home"></i>
+            </a>
+            <button id="backBtn" class="navbar-btn" aria-label="رجوع">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <h4 class="payment-title">اختر طريقة الدفع المناسبة</h4>
+            <div class="row">
+                <a href="#" class="button" data-modal="recharge" aria-label="زر شحن 1">
+                    <img src="https://i.postimg.cc/ZKPQmqjp/3.png" alt="زر شحن 1">
+                </a>
+                <a href="#" class="button" data-modal="recharge" aria-label="زر شحن 2">
+                    <img src="https://i.postimg.cc/fTQP1d7M/2.png" alt="زر شحن 2">
+                </a>
+                <a href="#" class="button" data-modal="recharge" aria-label="زر شحن 3">
+                    <img src="https://i.postimg.cc/g2NBwBC0/5.png" alt="زر شحن 3">
+                </a>
+                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-copy-of-%D8%A7%D9%8A%D8%AF%D8%A7%D8%B9" class="button" aria-label="زر شحن 4">
+                    <img src="https://i.postimg.cc/6p9mpN1S/4.png" alt="زر شحن 4">
+                </a>
+            </div>
+            <div class="row">
+                <a href="#" class="button" data-modal="recharge" aria-label="زر شحن 5">
+                    <img src="https://i.postimg.cc/SKR1cf4f/6.png" alt="زر شحن 5">
+                </a>
+                <a href="#" class="button" data-modal="recharge" aria-label="زر شحن 6">
+                    <img src="https://i.postimg.cc/G3yNMKyM/1.png" alt="زر شحن 6">
+                </a>
+                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-%D8%A7%D9%84%D8%AD%D8%B3%D8%A7%D8%A8" class="button" aria-label="زر شحن 7">
+                    <img src="https://i.postimg.cc/FK6Wpks5/7.png" alt="زر شحن 7">
+                </a>
+                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/copy-of-%D8%B3%D8%AD%D8%A8-%D8%AA%D8%A7%D9%84%D9%82%D8%A7%D9%8Ae4af06fc" class="button" aria-label="زر شحن 8">
+                    <img src="https://i.postimg.cc/wvsWGx7t/8.png" alt="زر شحن 8">
+                </a>
+            </div>
+            <div class="row">
+                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/%D8%A8%D8%B1%D9%8A%D8%AF" class="button" aria-label="زر شحن 9">
+                    <img src="https://i.postimg.cc/0jRtRgwV/9.png" alt="زر شحن 9">
+                </a>
+                <a href="https://c2cb1e77bf9f4f.site.godaddyarabicwsbonline.com/atm" class="button" aria-label="زر شحن 10">
+                    <img src="https://i.postimg.cc/VvqKz79m/10.png" alt="زر شحن 10">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="rechargeModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <div class="container" id="formContainer">
+                <input type="text" id="phone" placeholder="رقم الهاتف">
+                <div id="phoneError" class="error hidden">رقم غير صحيح</div>
+                <input type="number" id="amount" placeholder="مبلغ الشحن">
+                <div id="amountError" class="error hidden">يجب أن يكون بين 200 و1000</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal handling
+        const modal = document.getElementById('rechargeModal');
+        const modalContent = document.getElementById('modalContent');
+        const formContainer = document.getElementById('formContainer');
+
+        document.querySelectorAll('.button[data-modal="recharge"]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.style.display = 'flex';
+                setTimeout(() => modalContent.classList.add('active'), 10);
+            });
+        });
+
+        // Handle form submission
+        function handleSubmit() {
+            const phone = document.getElementById('phone').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const phoneError = document.getElementById('phoneError');
+            const amountError = document.getElementById('amountError');
+
+            phoneError.classList.add('hidden');
+            amountError.classList.add('hidden');
+
+            const phoneValid = /^(010|011|012|015)\d{8}$/.test(phone);
+            const amountValid = amount >= 200 && amount <= 1000;
+
+            if (!phoneValid) {
+                phoneError.classList.remove('hidden');
+                showAlert('رقم الهاتف غير صحيح');
+            }
+            if (!amountValid) {
+                amountError.classList.remove('hidden');
+                showAlert('المبلغ يجب أن يكون بين 200 و1000 جنيه');
+            }
+            if (!phoneValid || !amountValid) return;
+
+            modalContent.classList.remove('active');
+            setTimeout(() => {
+                let logo = '';
+                if (phone.startsWith('010')) {
+                    logo = 'https://postimg.cc/9487af6p';
+                } else if (phone.startsWith('011')) {
+                    logo = 'https://i.postimg.cc/ygDS2XBz';
+                } else if (phone.startsWith('012')) {
+                    logo = 'https://i.postimg.cc/QFq57dSv';
+                } else if (phone.startsWith('015')) {
+                    logo = 'https://i.postimg.cc/y393d81k';
+                }
+
+                formContainer.innerHTML = `
+                    <img src="${logo}" class="logo">
+                    <div class="text-center">قم بتحويل مبلغ ${(amount - 5)} جنيه لرقم محفظة النظامي</div>
+                    <div class="copy-button" onclick="copyToClipboard('01023526319')">01023526319</div>
+                    <div id="copyConfirm" class="copy-confirm hidden">تم نسخ رقم المحفظة</div>
+                    <div class="green">سيكون رصيد حسابك ${amount} جنيه</div>
+                    <div class="loader"></div>
+                    <div style="margin-top: 5px; text-align: center;">أرسل الآن مبلغ الشحن إلى رقم المحفظة الذي تم نسخه وبعد التحويل سيتم إضافة الإيداع خلال ثوانٍ</div>
+                    <div class="circle-timer" id="circleTimer"><span id="timerText"></span></div>
+                `;
+                modalContent.classList.add('active');
+                startCircleCountdown(60);
+            }, 600);
+        }
+
+        // Auto-submit on valid input
+        document.getElementById('phone').addEventListener('input', checkForm);
+        document.getElementById('amount').addEventListener('input', checkForm);
+
+        function checkForm() {
+            const phone = document.getElementById('phone').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const phoneValid = /^(010|011|012|015)\d{8}$/.test(phone);
+            const amountValid = amount >= 200 && amount <= 1000;
+
+            if (phoneValid && amountValid) {
+                handleSubmit();
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const text = '01023526319';
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('copyConfirm').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('copyConfirm').classList.add('hidden');
+                }, 2000);
+            });
+        }
+
+        // Alert notification
+        function showAlert(message) {
+            alert(message);
+        }
+
+        // Circle countdown timer
+        function startCircleCountdown(duration) {
+            const timerEl = document.getElementById('circleTimer');
+            const textEl = document.getElementById('timerText');
+            let timer = duration;
+
+            const interval = setInterval(() => {
+                const progress = ((duration - timer) / duration) * 100;
+                timerEl.style.setProperty('--progress', progress);
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                textEl.textContent = ${minutes}:${seconds < 10 ? '0' : ''}${seconds};
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    modalContent.classList.remove('active');
+                    setTimeout(() => {
+                        formContainer.innerHTML = `<div class="fail-message">فشلت العملية</div>`;
+                        modalContent.classList.add('active');
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            modalContent.classList.remove('active');
+                            location.reload();
+                        }, 2000);
+                    }, 600);
+                }
+            }, 1000);
+        }
+
+        // Close modal on click outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modalContent.classList.remove('active');
+                setTimeout(() => modal.style.display = 'none', 600);
+            }
+        });
+
+        // Back button functionality
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+    </script>
+</body>
+</html>

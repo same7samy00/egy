@@ -1,0 +1,1735 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGY MY WIRE - الصفحة الرئيسية</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe0000;
+            --primary-dark: #c00000;
+            --primary-light: #ff5252;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .welcome-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff3131;stop-opacity:0.8' /%3E%3Cstop offset='100%25' style='stop-color:%23750000;stop-opacity:0.9' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23grad1)' /%3E%3Ccircle cx='200' cy='200' r='80' fill='%23ffffff' fill-opacity='0.1' /%3E%3Ccircle cx='1000' cy='600' r='150' fill='%23ffffff' fill-opacity='0.1' /%3E%3Ccircle cx='600' cy='400' r='200' fill='%23ffffff' fill-opacity='0.05' /%3E%3Cpath d='M0,0 L1200,800' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.1' /%3E%3Cpath d='M1200,0 L0,800' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.1' /%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            filter: blur(8px);
+            transform: scale(1.1);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+            backdrop-filter: blur(5px);
+        }
+        
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .app-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            animation: slideDown 1s ease-out;
+        }
+        
+        .app-slogan {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: #fff;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+            animation: slideUp 1s ease-out;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .btn {
+            padding: 0.85rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 6px 20px rgba(254, 0, 0, 0.4);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            color: #333;
+            margin: auto;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(254, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        
+        .input-field.error {
+            border-color: #e53935;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        
+        .error-message {
+            color: #e53935;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .forgot-password {
+            text-align: left;
+            margin-top: 0.5rem;
+        }
+        
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(254, 0, 0, 0.3);
+        }
+        
+        .submit-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .submit-btn:hover:not(:disabled):before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            box-shadow: 0 6px 20px rgba(254, 0, 0, 0.4);
+        }
+        
+        .submit-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .success-message {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            color: #2e7d32;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            text-align: center;
+            display: none;
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            color: #2e7d32;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .name-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .password-strength {
+            height: 6px;
+            border-radius: 5px;
+            margin-top: 0.8rem;
+            transition: all 0.5s ease;
+            background-color: #ddd;
+        }
+        
+        .password-strength-text {
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+        
+        .strength-weak {
+            width: 33%;
+            background-color: #f44336;
+            animation: slideRight 0.5s ease-out;
+        }
+        
+        .strength-medium {
+            width: 66%;
+            background-color: #ff9800;
+            animation: slideRight 0.5s ease-out;
+        }
+        
+        .strength-strong {
+            width: 100%;
+            background-color: #4caf50;
+            animation: slideRight 0.5s ease-out;
+        }
+        
+        .info-tooltip {
+            display: inline-block;
+            position: relative;
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .tooltip-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 1.2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            display: none;
+            font-size: 0.85rem;
+            color: #333;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .info-tooltip:hover .tooltip-content {
+            display: block;
+        }
+        
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+        }
+        
+        .tooltip-list {
+            padding-right: 1.2rem;
+            margin: 0.8rem 0;
+        }
+        
+        .tooltip-list li {
+            margin-bottom: 0.4rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideRight {
+            from { width: 0; }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        
+        /* Floating elements animation */
+        .floating {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .floating-circle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .floating-circle:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+        
+        .floating-circle:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 20%;
+            animation-duration: 18s;
+            animation-delay: 2s;
+        }
+        
+        .floating-circle:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 10%;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+        
+        .floating-circle:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            bottom: 25%;
+            left: 15%;
+            animation-duration: 22s;
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, 15px) rotate(90deg); }
+            50% { transform: translate(5px, -10px) rotate(180deg); }
+            75% { transform: translate(-10px, 5px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        @media (max-width: 640px) {
+            .app-title {
+                font-size: 2.5rem;
+            }
+            
+            .app-slogan {
+                font-size: 1.2rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .name-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Image with Blur -->
+    <div class="welcome-bg"></div>
+    <div class="overlay"></div>
+    
+    <!-- Floating Elements -->
+    <div class="floating">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+    
+    <!-- Welcome Container -->
+    <div class="welcome-container">
+        <h1 class="app-title">EGY MY WIRE</h1>
+        <p class="app-slogan">نحن ندعم تجار مصر</p>
+        
+        <div class="btn-container">
+            <button id="loginBtn" class="btn btn-primary">تسجيل الدخول</button>
+            <button id="registerBtn" class="btn btn-outline">إنشاء حساب</button>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                تسجيل الدخول
+                <button class="close-modal" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <!-- Phone Number -->
+                    <div class="input-group">
+                        <label for="loginPhone" class="input-label">رقم الهاتف</label>
+                        <input type="tel" id="loginPhone" class="input-field" placeholder="01xxxxxxxxx" maxlength="11">
+                        <div id="loginPhoneError" class="error-message"></div>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="input-group">
+                        <label for="loginPassword" class="input-label">كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="input-field" placeholder="أدخل كلمة المرور">
+                        <div id="loginPasswordError" class="error-message"></div>
+                        <div class="forgot-password">
+                            <a href="#" id="forgotPasswordLink">نسيت كلمة المرور؟</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" id="loginSubmitBtn" class="submit-btn">تسجيل الدخول</button>
+                    
+                    <!-- Error Message -->
+                    <div id="loginErrorMessage" class="error-message" style="display: none; text-align: center; margin-top: 1rem;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                إنشاء حساب جديد
+                <button class="close-modal" id="closeRegisterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="registrationForm">
+                    <!-- Full Name (4 parts) -->
+                    <div class="input-group">
+                        <label class="input-label">الاسم الرباعي</label>
+                        <div class="name-inputs">
+                            <div>
+                                <input type="text" id="firstName" class="input-field" placeholder="الاسم الأول">
+                                <div id="firstNameError" class="error-message"></div>
+                            </div>
+                            <div>
+                                <input type="text" id="secondName" class="input-field" placeholder="اسم الأب">
+                                <div id="secondNameError" class="error-message"></div>
+                            </div>
+                            <div>
+                                <input type="text" id="thirdName" class="input-field" placeholder="اسم الجد">
+                                <div id="thirdNameError" class="error-message"></div>
+                            </div>
+                            <div>
+                                <input type="text" id="lastName" class="input-field" placeholder="اسم العائلة">
+                                <div id="lastNameError" class="error-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone Number -->
+                    <div class="input-group">
+                        <label for="phoneNumber" class="input-label">رقم الهاتف</label>
+                        <input type="tel" id="phoneNumber" class="input-field" placeholder="01xxxxxxxxx" maxlength="11">
+                        <div id="phoneError" class="error-message"></div>
+                    </div>
+                    
+                    <!-- National ID -->
+                    <div class="input-group">
+                        <label for="nationalId" class="input-label">
+                            الرقم القومي
+                            <div class="info-tooltip">
+                                <i class="fas fa-info-circle"></i>
+                                <div class="tooltip-content">
+                                    <div class="tooltip-title">شروط الرقم القومي (14 رقمًا):</div>
+                                    <ul class="tooltip-list">
+                                        <li>الرقم الأول: يدل على القرن الميلادي (2: 1900-1999، 3: 2000-2099)</li>
+                                        <li>الأرقام (2-3): سنة الميلاد</li>
+                                        <li>الأرقام (4-5): شهر الميلاد</li>
+                                        <li>الأرقام (6-7): يوم الميلاد</li>
+                                        <li>الأرقام (8-9): كود المحافظة</li>
+                                        <li>الأرقام (10-12): أرقام خاصة بالسجل المدني</li>
+                                        <li>الرقم (13): الجنس (فردي: ذكر، زوجي: أنثى)</li>
+                                        <li>الرقم (14): رقم التحقق</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </label>
+                        <input type="text" id="nationalId" class="input-field" placeholder="الرقم القومي المكون من 14 رقم" maxlength="14">
+                        <div id="nationalIdError" class="error-message"></div>
+                        <div id="nationalIdInfo" class="mt-2 text-sm text-gray-600"></div>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="input-group">
+                        <label for="password" class="input-label">كلمة المرور</label>
+                        <input type="password" id="password" class="input-field" placeholder="أدخل كلمة المرور">
+                        <div class="password-strength" id="passwordStrength"></div>
+                        <div class="password-strength-text" id="passwordStrengthText"></div>
+                        <div id="passwordError" class="error-message"></div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" class="submit-btn" disabled>إنشاء الحساب</button>
+                    
+                    <!-- Success Message -->
+                    <div id="successMessage" class="success-message">
+                        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="success-text">تم إنشاء الحساب بنجاح!</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reset Password Modal -->
+    <div id="resetPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                إعادة تعيين كلمة المرور
+                <button class="close-modal" id="closeResetModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="resetPasswordForm">
+                    <!-- Step 1: Verify Identity -->
+                    <div id="resetStep1">
+                        <!-- Phone Number -->
+                        <div class="input-group">
+                            <label for="resetPhone" class="input-label">رقم الهاتف</label>
+                            <input type="tel" id="resetPhone" class="input-field" placeholder="01xxxxxxxxx" maxlength="11">
+                            <div id="resetPhoneError" class="error-message"></div>
+                        </div>
+                        
+                        <!-- National ID -->
+                        <div class="input-group">
+                            <label for="resetNationalId" class="input-label">الرقم القومي</label>
+                            <input type="text" id="resetNationalId" class="input-field" placeholder="الرقم القومي المكون من 14 رقم" maxlength="14">
+                            <div id="resetNationalIdError" class="error-message"></div>
+                        </div>
+                        
+                        <!-- Verify Button -->
+                        <button type="button" id="verifyIdentityBtn" class="submit-btn">التحقق</button>
+                        
+                        <!-- Error Message -->
+                        <div id="resetErrorMessage" class="error-message" style="display: none; text-align: center; margin-top: 1rem;"></div>
+                    </div>
+                    
+                    <!-- Step 2: Set New Password -->
+                    <div id="resetStep2" style="display: none;">
+                        <!-- New Password -->
+                        <div class="input-group">
+                            <label for="newPassword" class="input-label">كلمة المرور الجديدة</label>
+                            <input type="password" id="newPassword" class="input-field" placeholder="أدخل كلمة المرور الجديدة">
+                            <div class="password-strength" id="newPasswordStrength"></div>
+                            <div class="password-strength-text" id="newPasswordStrengthText" style="font-size: 0.8rem; margin-top: 0.25rem;"></div>
+                            <div id="newPasswordError" class="error-message"></div>
+                        </div>
+                        
+                        <!-- Confirm New Password -->
+                        <div class="input-group">
+                            <label for="confirmPassword" class="input-label">تأكيد كلمة المرور</label>
+                            <input type="password" id="confirmPassword" class="input-field" placeholder="أعد إدخال كلمة المرور الجديدة">
+                            <div id="confirmPasswordError" class="error-message"></div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="button" id="resetPasswordBtn" class="submit-btn">تغيير كلمة المرور</button>
+                        
+                        <!-- Success Message -->
+                        <div id="resetSuccessMessage" class="success-message">
+                            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="success-text">تم تغيير كلمة المرور بنجاح!</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Governorate codes mapping
+        const governorateCodes = {
+            "01": "القاهرة",
+            "02": "الإسكندرية",
+            "03": "بورسعيد",
+            "04": "السويس",
+            "11": "دمياط",
+            "12": "الدقهلية",
+            "13": "الشرقية",
+            "14": "القليوبية",
+            "15": "كفر الشيخ",
+            "16": "الغربية",
+            "17": "المنوفية",
+            "18": "البحيرة",
+            "19": "الإسماعيلية",
+            "21": "الجيزة",
+            "22": "بني سويف",
+            "23": "الفيوم",
+            "24": "المنيا",
+            "25": "أسيوط",
+            "26": "سوهاج",
+            "27": "قنا",
+            "28": "أسوان",
+            "29": "الأقصر",
+            "31": "البحر الأحمر",
+            "32": "الوادي الجديد",
+            "33": "مطروح",
+            "34": "شمال سيناء",
+            "35": "جنوب سيناء",
+            "88": "مولود خارج مصر"
+        };
+
+        // DOM Elements - Welcome Page
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        // DOM Elements - Login Modal
+        const loginModal = document.getElementById('loginModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const loginForm = document.getElementById('loginForm');
+        const loginPhone = document.getElementById('loginPhone');
+        const loginPassword = document.getElementById('loginPassword');
+        const loginPhoneError = document.getElementById('loginPhoneError');
+        const loginPasswordError = document.getElementById('loginPasswordError');
+        const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        
+        // DOM Elements - Register Modal
+        const registerModal = document.getElementById('registerModal');
+        const closeRegisterModal = document.getElementById('closeRegisterModal');
+        const registrationForm = document.getElementById('registrationForm');
+        const firstName = document.getElementById('firstName');
+        const secondName = document.getElementById('secondName');
+        const thirdName = document.getElementById('thirdName');
+        const lastName = document.getElementById('lastName');
+        const phoneNumber = document.getElementById('phoneNumber');
+        const nationalId = document.getElementById('nationalId');
+        const password = document.getElementById('password');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const nationalIdInfo = document.getElementById('nationalIdInfo');
+        
+        // Error message elements for registration
+        const firstNameError = document.getElementById('firstNameError');
+        const secondNameError = document.getElementById('secondNameError');
+        const thirdNameError = document.getElementById('thirdNameError');
+        const lastNameError = document.getElementById('lastNameError');
+        const phoneError = document.getElementById('phoneError');
+        const nationalIdError = document.getElementById('nationalIdError');
+        const passwordError = document.getElementById('passwordError');
+        
+        // DOM Elements - Reset Password Modal
+        const resetPasswordModal = document.getElementById('resetPasswordModal');
+        const closeResetModal = document.getElementById('closeResetModal');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+        const resetPhone = document.getElementById('resetPhone');
+        const resetNationalId = document.getElementById('resetNationalId');
+        const resetPhoneError = document.getElementById('resetPhoneError');
+        const resetNationalIdError = document.getElementById('resetNationalIdError');
+        const verifyIdentityBtn = document.getElementById('verifyIdentityBtn');
+        const resetErrorMessage = document.getElementById('resetErrorMessage');
+        const resetStep1 = document.getElementById('resetStep1');
+        const resetStep2 = document.getElementById('resetStep2');
+        const newPassword = document.getElementById('newPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const newPasswordError = document.getElementById('newPasswordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+        const resetSuccessMessage = document.getElementById('resetSuccessMessage');
+        const newPasswordStrength = document.getElementById('newPasswordStrength');
+        const newPasswordStrengthText = document.getElementById('newPasswordStrengthText');
+        
+        // Enhanced Modal Show/Hide Functions
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+        
+        function hideModal(modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Event Listeners - Welcome Page with Animation
+        loginBtn.addEventListener('click', () => {
+            showModal(loginModal);
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            showModal(registerModal);
+        });
+        
+        // Event Listeners - Login Modal
+        closeLoginModal.addEventListener('click', () => {
+            hideModal(loginModal);
+            setTimeout(resetLoginForm, 300);
+        });
+        
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            hideModal(loginModal);
+            setTimeout(() => {
+                showModal(resetPasswordModal);
+            }, 300);
+        });
+        
+        // Event Listeners - Register Modal
+        closeRegisterModal.addEventListener('click', () => {
+            hideModal(registerModal);
+            setTimeout(resetRegistrationForm, 300);
+        });
+        
+        // Event Listeners - Reset Password Modal
+        closeResetModal.addEventListener('click', () => {
+            hideModal(resetPasswordModal);
+            setTimeout(resetResetPasswordForm, 300);
+        });
+        
+        // Close modals when clicking outside with animation
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                hideModal(loginModal);
+                setTimeout(resetLoginForm, 300);
+            }
+            if (e.target === registerModal) {
+                hideModal(registerModal);
+                setTimeout(resetRegistrationForm, 300);
+            }
+            if (e.target === resetPasswordModal) {
+                hideModal(resetPasswordModal);
+                setTimeout(resetResetPasswordForm, 300);
+            }
+        });
+        
+        // Button ripple effect
+        document.querySelectorAll('.btn, .submit-btn').forEach(button => {
+            button.addEventListener('mousedown', function(e) {
+                const x = e.clientX - this.getBoundingClientRect().left;
+                const y = e.clientY - this.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '1px';
+                ripple.style.height = '1px';
+                ripple.style.borderRadius = '50%';
+                ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.animation = 'ripple 0.6s linear';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+        
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(100);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Validate name field
+        function validateName(nameField, errorField) {
+            const name = nameField.value.trim();
+            errorField.style.display = 'none';
+            nameField.classList.remove('error');
+            
+            if (!name) {
+                errorField.textContent = 'هذا الحقل مطلوب';
+                errorField.style.display = 'block';
+                nameField.classList.add('error');
+                return false;
+            }
+            
+            if (name.length < 2) {
+                errorField.textContent = 'يجب أن يكون الاسم حرفين على الأقل';
+                errorField.style.display = 'block';
+                nameField.classList.add('error');
+                return false;
+            }
+            
+            // Check if name contains only Arabic or English letters
+            const nameRegex = /^[\u0600-\u06FFa-zA-Z\s]+$/;
+            if (!nameRegex.test(name)) {
+                errorField.textContent = 'يجب أن يحتوي الاسم على حروف فقط';
+                errorField.style.display = 'block';
+                nameField.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate phone number
+        function validatePhone() {
+            const phone = phoneNumber.value.trim();
+            phoneError.style.display = 'none';
+            phoneNumber.classList.remove('error');
+            
+            if (!phone) {
+                phoneError.textContent = 'رقم الهاتف مطلوب';
+                phoneError.style.display = 'block';
+                phoneNumber.classList.add('error');
+                return false;
+            }
+            
+            if (phone.length !== 11) {
+                phoneError.textContent = 'رقم الهاتف يجب أن يكون 11 رقم';
+                phoneError.style.display = 'block';
+                phoneNumber.classList.add('error');
+                return false;
+            }
+            
+            // Check if phone number starts with valid prefix
+            const validPrefixes = ['010', '011', '012', '015'];
+            const prefix = phone.substring(0, 3);
+            if (!validPrefixes.includes(prefix)) {
+                phoneError.textContent = 'رقم الهاتف يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015';
+                phoneError.style.display = 'block';
+                phoneNumber.classList.add('error');
+                return false;
+            }
+            
+            // Check if phone number contains only digits
+            const phoneRegex = /^\d+$/;
+            if (!phoneRegex.test(phone)) {
+                phoneError.textContent = 'رقم الهاتف يجب أن يحتوي على أرقام فقط';
+                phoneError.style.display = 'block';
+                phoneNumber.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate national ID
+        function validateNationalId() {
+            const id = nationalId.value.trim();
+            nationalIdError.style.display = 'none';
+            nationalId.classList.remove('error');
+            nationalIdInfo.textContent = '';
+            
+            if (!id) {
+                nationalIdError.textContent = 'الرقم القومي مطلوب';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            if (id.length !== 14) {
+                nationalIdError.textContent = 'الرقم القومي يجب أن يكون 14 رقم';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Check if national ID contains only digits
+            const idRegex = /^\d+$/;
+            if (!idRegex.test(id)) {
+                nationalIdError.textContent = 'الرقم القومي يجب أن يحتوي على أرقام فقط';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Validate century digit
+            const centuryDigit = parseInt(id.charAt(0));
+            if (centuryDigit !== 2 && centuryDigit !== 3) {
+                nationalIdError.textContent = 'الرقم الأول يجب أن يكون 2 أو 3';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Validate birth date
+            const birthYear = parseInt(id.substring(1, 3));
+            const birthMonth = parseInt(id.substring(3, 5));
+            const birthDay = parseInt(id.substring(5, 7));
+            
+            if (birthMonth < 1 || birthMonth > 12) {
+                nationalIdError.textContent = 'شهر الميلاد غير صحيح';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Check days in month
+            const daysInMonth = new Date(2000, birthMonth, 0).getDate();
+            if (birthDay < 1 || birthDay > daysInMonth) {
+                nationalIdError.textContent = 'يوم الميلاد غير صحيح';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Validate governorate code
+            const governorateCode = id.substring(7, 9);
+            if (!governorateCodes[governorateCode]) {
+                nationalIdError.textContent = 'كود المحافظة غير صحيح';
+                nationalIdError.style.display = 'block';
+                nationalId.classList.add('error');
+                return false;
+            }
+            
+            // Show national ID info with animation
+            const century = centuryDigit === 2 ? '19' : '20';
+            const fullYear = century + birthYear.toString().padStart(2, '0');
+            const gender = parseInt(id.charAt(12)) % 2 === 0 ? 'أنثى' : 'ذكر';
+            
+            nationalIdInfo.innerHTML = `
+                <div class="p-3 bg-gray-50 rounded-lg mt-3" style="animation: fadeIn 0.5s ease-out;">
+                    <div class="mb-1"><strong>تاريخ الميلاد:</strong> ${birthDay}/${birthMonth}/${fullYear}</div>
+                    <div class="mb-1"><strong>المحافظة:</strong> ${governorateCodes[governorateCode]}</div>
+                    <div><strong>النوع:</strong> ${gender}</div>
+                </div>
+            `;
+            
+            return true;
+        }
+        
+        // Validate password with enhanced animation
+        function validatePassword() {
+            const pass = password.value;
+            passwordError.style.display = 'none';
+            password.classList.remove('error');
+            
+            if (!pass) {
+                passwordError.textContent = 'كلمة المرور مطلوبة';
+                passwordError.style.display = 'block';
+                password.classList.add('error');
+                passwordStrength.className = 'password-strength';
+                passwordStrengthText.textContent = '';
+                return false;
+            }
+            
+            if (pass.length < 6) {
+                passwordError.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                passwordError.style.display = 'block';
+                password.classList.add('error');
+                return false;
+            }
+            
+            // Check password strength
+            let strength = 0;
+            
+            // Has lowercase letters
+            if (pass.match(/[a-z]+/)) {
+                strength += 1;
+            }
+            
+            // Has uppercase letters
+            if (pass.match(/[A-Z]+/)) {
+                strength += 1;
+            }
+            
+            // Has numbers
+            if (pass.match(/[0-9]+/)) {
+                strength += 1;
+            }
+            
+            // Has special characters
+            if (pass.match(/[^a-zA-Z0-9]+/)) {
+                strength += 1;
+            }
+            
+            // Update password strength indicator with animation
+            passwordStrength.className = 'password-strength';
+            
+            if (strength === 1) {
+                passwordStrength.classList.add('strength-weak');
+                passwordStrengthText.textContent = 'ضعيفة';
+                passwordStrengthText.style.color = '#f44336';
+                return pass.length >= 6;
+            } else if (strength === 2) {
+                passwordStrength.classList.add('strength-medium');
+                passwordStrengthText.textContent = 'متوسطة';
+                passwordStrengthText.style.color = '#ff9800';
+                return true;
+            } else if (strength >= 3) {
+                passwordStrength.classList.add('strength-strong');
+                passwordStrengthText.textContent = 'قوية';
+                passwordStrengthText.style.color = '#4caf50';
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // Validate login phone
+        function validateLoginPhone() {
+            const phone = loginPhone.value.trim();
+            loginPhoneError.style.display = 'none';
+            loginPhone.classList.remove('error');
+            
+            if (!phone) {
+                loginPhoneError.textContent = 'رقم الهاتف مطلوب';
+                loginPhoneError.style.display = 'block';
+                loginPhone.classList.add('error');
+                return false;
+            }
+            
+            if (phone.length !== 11) {
+                loginPhoneError.textContent = 'رقم الهاتف يجب أن يكون 11 رقم';
+                loginPhoneError.style.display = 'block';
+                loginPhone.classList.add('error');
+                return false;
+            }
+            
+            // Check if phone number starts with valid prefix
+            const validPrefixes = ['010', '011', '012', '015'];
+            const prefix = phone.substring(0, 3);
+            if (!validPrefixes.includes(prefix)) {
+                loginPhoneError.textContent = 'رقم الهاتف يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015';
+                loginPhoneError.style.display = 'block';
+                loginPhone.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate login password
+        function validateLoginPassword() {
+            const pass = loginPassword.value;
+            loginPasswordError.style.display = 'none';
+            loginPassword.classList.remove('error');
+            
+            if (!pass) {
+                loginPasswordError.textContent = 'كلمة المرور مطلوبة';
+                loginPasswordError.style.display = 'block';
+                loginPassword.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate reset phone
+        function validateResetPhone() {
+            const phone = resetPhone.value.trim();
+            resetPhoneError.style.display = 'none';
+            resetPhone.classList.remove('error');
+            
+            if (!phone) {
+                resetPhoneError.textContent = 'رقم الهاتف مطلوب';
+                resetPhoneError.style.display = 'block';
+                resetPhone.classList.add('error');
+                return false;
+            }
+            
+            if (phone.length !== 11) {
+                resetPhoneError.textContent = 'رقم الهاتف يجب أن يكون 11 رقم';
+                resetPhoneError.style.display = 'block';
+                resetPhone.classList.add('error');
+                return false;
+            }
+            
+            // Check if phone number starts with valid prefix
+            const validPrefixes = ['010', '011', '012', '015'];
+            const prefix = phone.substring(0, 3);
+            if (!validPrefixes.includes(prefix)) {
+                resetPhoneError.textContent = 'رقم الهاتف يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015';
+                resetPhoneError.style.display = 'block';
+                resetPhone.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate reset national ID
+        function validateResetNationalId() {
+            const id = resetNationalId.value.trim();
+            resetNationalIdError.style.display = 'none';
+            resetNationalId.classList.remove('error');
+            
+            if (!id) {
+                resetNationalIdError.textContent = 'الرقم القومي مطلوب';
+                resetNationalIdError.style.display = 'block';
+                resetNationalId.classList.add('error');
+                return false;
+            }
+            
+            if (id.length !== 14) {
+                resetNationalIdError.textContent = 'الرقم القومي يجب أن يكون 14 رقم';
+                resetNationalIdError.style.display = 'block';
+                resetNationalId.classList.add('error');
+                return false;
+            }
+            
+            // Check if national ID contains only digits
+            const idRegex = /^\d+$/;
+            if (!idRegex.test(id)) {
+                resetNationalIdError.textContent = 'الرقم القومي يجب أن يحتوي على أرقام فقط';
+                resetNationalIdError.style.display = 'block';
+                resetNationalId.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate new password
+        function validateNewPassword() {
+            const pass = newPassword.value;
+            newPasswordError.style.display = 'none';
+            newPassword.classList.remove('error');
+            
+            if (!pass) {
+                newPasswordError.textContent = 'كلمة المرور مطلوبة';
+                newPasswordError.style.display = 'block';
+                newPassword.classList.add('error');
+                newPasswordStrength.className = 'password-strength';
+                newPasswordStrengthText.textContent = '';
+                return false;
+            }
+            
+            if (pass.length < 6) {
+                newPasswordError.textContent = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                newPasswordError.style.display = 'block';
+                newPassword.classList.add('error');
+                return false;
+            }
+            
+            // Check password strength
+            let strength = 0;
+            
+            // Has lowercase letters
+            if (pass.match(/[a-z]+/)) {
+                strength += 1;
+            }
+            
+            // Has uppercase letters
+            if (pass.match(/[A-Z]+/)) {
+                strength += 1;
+            }
+            
+            // Has numbers
+            if (pass.match(/[0-9]+/)) {
+                strength += 1;
+            }
+            
+            // Has special characters
+            if (pass.match(/[^a-zA-Z0-9]+/)) {
+                strength += 1;
+            }
+            
+            // Update password strength indicator
+            newPasswordStrength.className = 'password-strength';
+            
+            if (strength === 1) {
+                newPasswordStrength.classList.add('strength-weak');
+                newPasswordStrengthText.textContent = 'ضعيفة';
+                newPasswordStrengthText.style.color = '#f44336';
+                return pass.length >= 6;
+            } else if (strength === 2) {
+                newPasswordStrength.classList.add('strength-medium');
+                newPasswordStrengthText.textContent = 'متوسطة';
+                newPasswordStrengthText.style.color = '#ff9800';
+                return true;
+            } else if (strength >= 3) {
+                newPasswordStrength.classList.add('strength-strong');
+                newPasswordStrengthText.textContent = 'قوية';
+                newPasswordStrengthText.style.color = '#4caf50';
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // Validate confirm password
+        function validateConfirmPassword() {
+            const pass = newPassword.value;
+            const confirmPass = confirmPassword.value;
+            confirmPasswordError.style.display = 'none';
+            confirmPassword.classList.remove('error');
+            
+            if (!confirmPass) {
+                confirmPasswordError.textContent = 'تأكيد كلمة المرور مطلوب';
+                confirmPasswordError.style.display = 'block';
+                confirmPassword.classList.add('error');
+                return false;
+            }
+            
+            if (pass !== confirmPass) {
+                confirmPasswordError.textContent = 'كلمات المرور غير متطابقة';
+                confirmPasswordError.style.display = 'block';
+                confirmPassword.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate all registration form fields
+        function validateRegistrationForm() {
+            const isFirstNameValid = validateName(firstName, firstNameError);
+            const isSecondNameValid = validateName(secondName, secondNameError);
+            const isThirdNameValid = validateName(thirdName, thirdNameError);
+            const isLastNameValid = validateName(lastName, lastNameError);
+            const isPhoneValid = validatePhone();
+            const isNationalIdValid = validateNationalId();
+            const isPasswordValid = validatePassword();
+            
+            // Enable submit button if all fields are valid
+            submitBtn.disabled = !(isFirstNameValid && isSecondNameValid && isThirdNameValid && 
+                                  isLastNameValid && isPhoneValid && isNationalIdValid && isPasswordValid);
+        }
+        
+        // Reset login form
+        function resetLoginForm() {
+            loginForm.reset();
+            loginPhoneError.style.display = 'none';
+            loginPasswordError.style.display = 'none';
+            loginErrorMessage.style.display = 'none';
+            loginPhone.classList.remove('error');
+            loginPassword.classList.remove('error');
+        }
+        
+        // Reset registration form
+        function resetRegistrationForm() {
+            registrationForm.reset();
+            firstNameError.style.display = 'none';
+            secondNameError.style.display = 'none';
+            thirdNameError.style.display = 'none';
+            lastNameError.style.display = 'none';
+            phoneError.style.display = 'none';
+            nationalIdError.style.display = 'none';
+            passwordError.style.display = 'none';
+            successMessage.style.display = 'none';
+            firstName.classList.remove('error');
+            secondName.classList.remove('error');
+            thirdName.classList.remove('error');
+            lastName.classList.remove('error');
+            phoneNumber.classList.remove('error');
+            nationalId.classList.remove('error');
+            password.classList.remove('error');
+            nationalIdInfo.innerHTML = '';
+            passwordStrength.className = 'password-strength';
+            passwordStrengthText.textContent = '';
+            submitBtn.disabled = true;
+        }
+        
+        // Reset password reset form
+        function resetResetPasswordForm() {
+            resetPasswordForm.reset();
+            resetPhoneError.style.display = 'none';
+            resetNationalIdError.style.display = 'none';
+            resetErrorMessage.style.display = 'none';
+            newPasswordError.style.display = 'none';
+            confirmPasswordError.style.display = 'none';
+            resetSuccessMessage.style.display = 'none';
+            resetPhone.classList.remove('error');
+            resetNationalId.classList.remove('error');
+            newPassword.classList.remove('error');
+            confirmPassword.classList.remove('error');
+            resetStep1.style.display = 'block';
+            resetStep2.style.display = 'none';
+            newPasswordStrength.className = 'password-strength';
+            newPasswordStrengthText.textContent = '';
+        }
+        
+        // Save registration data to local storage
+        function saveToLocalStorage() {
+            const userData = {
+                firstName: firstName.value.trim(),
+                secondName: secondName.value.trim(),
+                thirdName: thirdName.value.trim(),
+                lastName: lastName.value.trim(),
+                phoneNumber: phoneNumber.value.trim(),
+                nationalId: nationalId.value.trim(),
+                password: password.value, // In a real app, you would hash the password
+                passwordStrength: passwordStrengthText.textContent,
+                registrationDate: new Date().toISOString()
+            };
+            
+            // Get existing users or create empty array
+            const existingUsers = JSON.parse(localStorage.getItem('egyMyWireUsers')) || [];
+            
+            // Add new user
+            existingUsers.push(userData);
+            
+            // Save back to local storage
+            localStorage.setItem('egyMyWireUsers', JSON.stringify(existingUsers));
+            
+            // Also save current user as logged in
+            localStorage.setItem('egyMyWireCurrentUser', JSON.stringify(userData));
+        }
+        
+        // Check if user exists
+        function userExists(phone) {
+            const users = JSON.parse(localStorage.getItem('egyMyWireUsers')) || [];
+            return users.some(user => user.phoneNumber === phone);
+        }
+        
+        // Get user by phone
+        function getUserByPhone(phone) {
+            const users = JSON.parse(localStorage.getItem('egyMyWireUsers')) || [];
+            return users.find(user => user.phoneNumber === phone);
+        }
+        
+        // Update user password
+        function updateUserPassword(phone, newPassword) {
+            const users = JSON.parse(localStorage.getItem('egyMyWireUsers')) || [];
+            const userIndex = users.findIndex(user => user.phoneNumber === phone);
+            
+            if (userIndex !== -1) {
+                // In a real app, you would hash the password
+                users[userIndex].password = newPassword;
+                localStorage.setItem('egyMyWireUsers', JSON.stringify(users));
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // Event Listeners - Form Validation
+        firstName.addEventListener('input', () => {
+            validateName(firstName, firstNameError);
+            validateRegistrationForm();
+        });
+        
+        secondName.addEventListener('input', () => {
+            validateName(secondName, secondNameError);
+            validateRegistrationForm();
+        });
+        
+        thirdName.addEventListener('input', () => {
+            validateName(thirdName, thirdNameError);
+            validateRegistrationForm();
+        });
+        
+        lastName.addEventListener('input', () => {
+            validateName(lastName, lastNameError);
+            validateRegistrationForm();
+        });
+        
+        phoneNumber.addEventListener('input', () => {
+            validatePhone();
+            validateRegistrationForm();
+        });
+        
+        nationalId.addEventListener('input', () => {
+            validateNationalId();
+            validateRegistrationForm();
+        });
+        
+        password.addEventListener('input', () => {
+            validatePassword();
+            validateRegistrationForm();
+        });
+        
+        loginPhone.addEventListener('input', validateLoginPhone);
+        loginPassword.addEventListener('input', validateLoginPassword);
+        resetPhone.addEventListener('input', validateResetPhone);
+        resetNationalId.addEventListener('input', validateResetNationalId);
+        newPassword.addEventListener('input', () => {
+            validateNewPassword();
+            if (confirmPassword.value) {
+                validateConfirmPassword();
+            }
+        });
+        confirmPassword.addEventListener('input', validateConfirmPassword);
+        
+        // Registration Form Submission with enhanced animation
+        registrationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validate form again
+            validateRegistrationForm();
+            
+            if (!submitBtn.disabled) {
+                // Check if phone number already exists
+                if (userExists(phoneNumber.value.trim())) {
+                    phoneError.textContent = 'رقم الهاتف مسجل بالفعل';
+                    phoneError.style.display = 'block';
+                    phoneNumber.classList.add('error');
+                    return;
+                }
+                
+                // Save data to local storage
+                saveToLocalStorage();
+                
+                // Show success message with animation
+                successMessage.style.display = 'block';
+                
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                // Disable submit button
+                submitBtn.disabled = true;
+                
+                // After 2 seconds, redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'https://homeegy.netlify.app/';
+                }, 2000);
+            }
+        });
+        
+        // Login Form Submission with enhanced animation
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const isPhoneValid = validateLoginPhone();
+            const isPasswordValid = validateLoginPassword();
+            
+            if (isPhoneValid && isPasswordValid) {
+                const phone = loginPhone.value.trim();
+                const password = loginPassword.value;
+                
+                // Check if user exists
+                if (!userExists(phone)) {
+                    loginErrorMessage.textContent = 'رقم الهاتف غير مسجل';
+                    loginErrorMessage.style.display = 'block';
+                    loginErrorMessage.style.animation = 'fadeIn 0.3s ease';
+                    return;
+                }
+                
+                // Get user
+                const user = getUserByPhone(phone);
+                
+                // Check password (in a real app, you would compare hashed passwords)
+                if (user.password !== password) {
+                    loginErrorMessage.textContent = 'كلمة المرور غير صحيحة';
+                    loginErrorMessage.style.display = 'block';
+                    loginErrorMessage.style.animation = 'fadeIn 0.3s ease';
+                    return;
+                }
+                
+                // Login successful - show success animation
+                loginSubmitBtn.innerHTML = '<i class="fas fa-check-circle"></i> تم تسجيل الدخول';
+                loginSubmitBtn.style.backgroundColor = '#4caf50';
+                
+                // Login successful
+                localStorage.setItem('egyMyWireCurrentUser', JSON.stringify(user));
+                
+                // Redirect to dashboard after animation
+                setTimeout(() => {
+                    window.location.href = 'https://homeegy.netlify.app/';
+                }, 1000);
+            }
+        });
+        
+        // Verify Identity Button Click with animation
+        verifyIdentityBtn.addEventListener('click', () => {
+            const isPhoneValid = validateResetPhone();
+            const isNationalIdValid = validateResetNationalId();
+            
+            if (isPhoneValid && isNationalIdValid) {
+                const phone = resetPhone.value.trim();
+                const nationalId = resetNationalId.value.trim();
+                
+                // Check if user exists
+                if (!userExists(phone)) {
+                    resetErrorMessage.textContent = 'رقم الهاتف غير مسجل';
+                    resetErrorMessage.style.display = 'block';
+                    resetErrorMessage.style.animation = 'fadeIn 0.3s ease';
+                    return;
+                }
+                
+                // Get user
+                const user = getUserByPhone(phone);
+                
+                // Check national ID
+                if (user.nationalId !== nationalId) {
+                    resetErrorMessage.textContent = 'الرقم القومي غير مطابق للسجلات';
+                    resetErrorMessage.style.display = 'block';
+                    resetErrorMessage.style.animation = 'fadeIn 0.3s ease';
+                    return;
+                }
+                
+                // Identity verified, show step 2 with animation
+                resetStep1.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    resetStep1.style.display = 'none';
+                    resetStep2.style.display = 'block';
+                    resetStep2.style.animation = 'fadeIn 0.3s ease';
+                    resetErrorMessage.style.display = 'none';
+                }, 300);
+            }
+        });
+        
+        // Add fadeOut animation
+        const fadeOutStyle = document.createElement('style');
+        fadeOutStyle.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(fadeOutStyle);
+        
+        // Reset Password Button Click with animation
+        resetPasswordBtn.addEventListener('click', () => {
+            const isNewPasswordValid = validateNewPassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            
+            if (isNewPasswordValid && isConfirmPasswordValid) {
+                const phone = resetPhone.value.trim();
+                const newPass = newPassword.value;
+                
+                // Update password
+                if (updateUserPassword(phone, newPass)) {
+                    // Show success message with animation
+                    resetSuccessMessage.style.display = 'block';
+                    
+                    // Disable reset button
+                    resetPasswordBtn.disabled = true;
+                    resetPasswordBtn.innerHTML = '<i class="fas fa-check-circle"></i> تم التغيير';
+                    resetPasswordBtn.style.backgroundColor = '#4caf50';
+                    
+                    // After 2 seconds, close reset modal and open login modal
+                    setTimeout(() => {
+                        hideModal(resetPasswordModal);
+                        setTimeout(() => {
+                            resetResetPasswordForm();
+                            showModal(loginModal);
+                        }, 300);
+                    }, 2000);
+                }
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94904bd19157e238',t:'MTc0ODc5NzUzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

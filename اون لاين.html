@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مثال على استخدام شريط التنقل التلقائي</title>
+    <!-- أي CSS موجود مسبقاً -->
+</head>
+<body>
+    <!-- محتوى الصفحة الأصلي -->
+    <div class="content">
+    </div>
+
+    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
+    <script>
+        // إزالة أي شريط تنقل موجود
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        // إضافة CSS للشريط الجديد
+        function injectNavbarStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                :root {
+                    --primary-color: #ff0000;
+                    --primary-light: #ff6666;
+                    --primary-dark: #cc0000;
+                    --text-color: #333;
+                    --bg-color: #f9f9f9;
+                }
+
+                body {
+                    font-family: 'Tajawal', sans-serif;
+                    margin: 0;
+                }
+
+                .egy-navbar {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 0.75rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 50;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+
+                .egy-nav-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    padding: 0.375rem;
+                    margin-right: 0.375rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background-color 0.3s;
+                    position: relative;
+                }
+
+                .egy-nav-btn:hover {
+                    background-color: rgba(255,255,255,0.1);
+                }
+
+                .egy-notification-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #fbbf24;
+                    color: #000;
+                    font-size: 0.75rem;
+                    width: 1rem;
+                    height: 1rem;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // إضافة Font Awesome و Google Fonts
+        function loadExternalResources() {
+            // Font Awesome
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            // Google Fonts - Tajawal
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        // إنشاء شريط التنقل الجديد
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://accounegy.netlify.app/" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        // إنشاء لوحة الإشعارات
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        // إضافة وظائف التفاعل
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+
+                // إغلاق اللوحة عند النقر خارجها
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // التشغيل الرئيسي
+        function initEgyNavbar() {
+            // إزالة شريط التنقل القديم
+            removeExistingNavbars();
+            
+            // تحميل الموارد الخارجية
+            loadExternalResources();
+            
+            // إضافة CSS
+            injectNavbarStyles();
+            
+            // إنشاء وإضافة شريط التنقل الجديد
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            
+            // إنشاء وإضافة لوحة الإشعارات
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            
+            // إضافة وظائف التفاعل
+            setTimeout(addEventListeners, 100);
+        }
+
+        // تشغيل الكود عند تحميل الصفحة
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+    </script>
+    <!-- انتهاء الكود - انسخ حتى هنا -->
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خدمات الألعاب والترفيه - EGY MY WIRE</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe0000;
+            --primary-light: #ff3333;
+            --primary-dark: #e50000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .navbar-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .navbar-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .main-content {
+            margin-top: 70px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 100%;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+        
+        .button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            height: 90px;
+            text-align: center;
+        }
+        
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+        }
+        
+        .icon-img {
+            width: 22px;
+            height: auto;
+            margin-bottom: 4px;
+        }
+        
+        .button-text {
+            text-align: center;
+            line-height: 1.2;
+            font-size: 0.75em;
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0.8rem 0.5rem;
+            }
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+            .main-content {
+                margin-top: 60px;
+                padding: 0.5rem;
+            }
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 0 0.3rem;
+            }
+            .button {
+                font-size: 0.8em;
+                height: 85px;
+                padding: 6px;
+            }
+            .button-text {
+                font-size: 0.7em;
+            }
+            .icon-img {
+                width: 20px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .grid-container {
+                gap: 6px;
+            }
+            .button {
+                height: 80px;
+            }
+            .button-text {
+                font-size: 0.65em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-title">خدمات الاون لاين</div>
+        <div class="flex items-center">
+            <a href="#home" class="navbar-btn mr-2" aria-label="الصفحة الرئيسية">
+                <i class="fas fa-home"></i>
+            </a>
+            <button id="backBtn" class="navbar-btn" aria-label="رجوع">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="grid-container">
+            <!-- Button Grid -->
+            <button class="button" aria-label="PUBG">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">PUBG</span>
+            </button>
+            <button class="button" aria-label="Playstation">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Playstation</span>
+            </button>
+            <button class="button" aria-label="CrossFire">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">CrossFire</span>
+            </button>
+            <button class="button" aria-label="Fortnite">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Fortnite</span>
+            </button>
+            <button class="button" aria-label="Nintendo">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Nintendo</span>
+            </button>
+            <button class="button" aria-label="Wolf Team">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Wolf Team</span>
+            </button>
+            <button class="button" aria-label="Razer Gold">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Razer Gold</span>
+            </button>
+            <button class="button" aria-label="Roblox">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Roblox</span>
+            </button>
+            <button class="button" aria-label="Free Fire شحن بابجي موبيل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">Free Fire شحن بابجي موبيل</span>
+            </button>
+            <button class="button" aria-label="كروت بابجي موبيل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">كروت بابجي موبيل</span>
+            </button>
+            <button class="button" aria-label="كروت جميع الالعاب">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">كروت جميع الالعاب</span>
+            </button>
+            <button class="button" aria-label="تحصيلات طلبات">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات طلبات</span>
+            </button>
+            <button class="button" aria-label="طلبات دوت كوم">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">طلبات دوت كوم</span>
+            </button>
+            <button class="button" aria-label="تطبيق حريف">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">تطبيق حريف</span>
+            </button>
+            <button class="button" aria-label="أنغامى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">أنغامى</span>
+            </button>
+            <button class="button" aria-label="اشتراك شاهد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة ألعاب" onerror="handleImageLoadError(this)">
+                <span class="button-text">اشتراك شاهد</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Handle image load error
+        function handleImageLoadError(img) {
+            img.src = 'https://via.placeholder.com/22?text=Icon';
+            img.alt = 'أيقونة بديلة';
+        }
+
+        // Button click redirection
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', () => {
+                window.location.href = 'https://cheerful-mooncake-b58586.netlify.app/';
+            });
+        });
+
+        // Back button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('backBtn');
+            backBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

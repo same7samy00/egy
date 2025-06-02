@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مثال على استخدام شريط التنقل التلقائي</title>
+    <!-- أي CSS موجود مسبقاً -->
+</head>
+<body>
+    <!-- محتوى الصفحة الأصلي -->
+    <div class="content">
+    </div>
+
+    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
+    <script>
+        // إزالة أي شريط تنقل موجود
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        // إضافة CSS للشريط الجديد
+        function injectNavbarStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                :root {
+                    --primary-color: #ff0000;
+                    --primary-light: #ff6666;
+                    --primary-dark: #cc0000;
+                    --text-color: #333;
+                    --bg-color: #f9f9f9;
+                }
+
+                body {
+                    font-family: 'Tajawal', sans-serif;
+                    margin: 0;
+                }
+
+                .egy-navbar {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 0.75rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 50;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+
+                .egy-nav-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    padding: 0.375rem;
+                    margin-right: 0.375rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background-color 0.3s;
+                    position: relative;
+                }
+
+                .egy-nav-btn:hover {
+                    background-color: rgba(255,255,255,0.1);
+                }
+
+                .egy-notification-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #fbbf24;
+                    color: #000;
+                    font-size: 0.75rem;
+                    width: 1rem;
+                    height: 1rem;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // إضافة Font Awesome و Google Fonts
+        function loadExternalResources() {
+            // Font Awesome
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            // Google Fonts - Tajawal
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        // إنشاء شريط التنقل الجديد
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://accounegy.netlify.app/" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        // إنشاء لوحة الإشعارات
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        // إضافة وظائف التفاعل
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+
+                // إغلاق اللوحة عند النقر خارجها
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // التشغيل الرئيسي
+        function initEgyNavbar() {
+            // إزالة شريط التنقل القديم
+            removeExistingNavbars();
+            
+            // تحميل الموارد الخارجية
+            loadExternalResources();
+            
+            // إضافة CSS
+            injectNavbarStyles();
+            
+            // إنشاء وإضافة شريط التنقل الجديد
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            
+            // إنشاء وإضافة لوحة الإشعارات
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            
+            // إضافة وظائف التفاعل
+            setTimeout(addEventListeners, 100);
+        }
+
+        // تشغيل الكود عند تحميل الصفحة
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+    </script>
+    <!-- انتهاء الكود - انسخ حتى هنا -->
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خدمات التمويل والتحصيلات - EGY MY WIRE</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe0000;
+            --primary-light: #ff3333;
+            --primary-dark: #e50000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .navbar-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .navbar-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .main-content {
+            margin-top: 70px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 100%;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+        
+        .button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            height: 100px;
+            text-align: center;
+        }
+        
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+        }
+        
+        .icon-img {
+            width: 22px;
+            height: auto;
+            margin-bottom: 4px;
+        }
+        
+        .button-text {
+            text-align: center;
+            line-height: 1.2;
+            font-size: 0.75em;
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0.8rem 0.5rem;
+            }
+            .navbar-title {
+                font-size: 1.1rem;
+            }
+            .main-content {
+                margin-top: 60px;
+                padding: 0.5rem;
+            }
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 0 0.3rem;
+            }
+            .button {
+                font-size: 0.8em;
+                height: 90px;
+                padding: 6px;
+            }
+            .button-text {
+                font-size: 0.7em;
+            }
+            .icon-img {
+                width: 20px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .grid-container {
+                gap: 6px;
+            }
+            .button {
+                height: 85px;
+            }
+            .button-text {
+                font-size: 0.65em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-title">أقساط وقروض</div>
+        <div class="flex items-center">
+            <a href="#home" class="navbar-btn mr-2" aria-label="الصفحة الرئيسية">
+                <i class="fas fa-home"></i>
+            </a>
+            <button id="backBtn" class="navbar-btn" aria-label="رجوع">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="grid-container">
+            <!-- Button Grid -->
+            <button class="button" aria-label="كونتكت">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">كونتكت</span>
+            </button>
+            <button class="button" aria-label="e-Khales">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">e-Khales</span>
+            </button>
+            <button class="button" aria-label="مايلو - بى تك للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مايلو - بى تك للتمويل</span>
+            </button>
+            <button class="button" aria-label="تحصيلات أور">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات أور</span>
+            </button>
+            <button class="button" aria-label="جمعية الشرقية للتمويل الأصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية الشرقية للتمويل الأصغر</span>
+            </button>
+            <button class="button" aria-label="مؤسسة انا المصرى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مؤسسة انا المصرى</span>
+            </button>
+            <button class="button" aria-label="رجال اعمال اسكندرية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال اعمال اسكندرية</span>
+            </button>
+            <button class="button" aria-label="تنمية متحصلات الكترونيه">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تنمية متحصلات الكترونيه</span>
+            </button>
+            <button class="button" aria-label="اقساط ريفي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط ريفي</span>
+            </button>
+            <button class="button" aria-label="مؤسسة التضامن">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مؤسسة التضامن</span>
+            </button>
+            <button class="button" aria-label="تحصيلات يو (فاليو)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات يو (فاليو)</span>
+            </button>
+            <button class="button" aria-label="اقساط لييد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط لييد</span>
+            </button>
+            <button class="button" aria-label="رجال الأعمال بالدقهلية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال الأعمال بالدقهلية</span>
+            </button>
+            <button class="button" aria-label="شركة تمويلي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شركة تمويلي</span>
+            </button>
+            <button class="button" aria-label="بدايتي للتمويل (72927)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بدايتي للتمويل (72927)</span>
+            </button>
+            <button class="button" aria-label="قسط المبادرة 7125">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">قسط المبادرة 7125</span>
+            </button>
+            <button class="button" aria-label="ارادة للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ارادة للتمويل</span>
+            </button>
+            <button class="button" aria-label="سداد معجل تنمية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سداد معجل تنمية</span>
+            </button>
+            <button class="button" aria-label="اقساط سهولة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط سهولة</span>
+            </button>
+            <button class="button" aria-label="رجال اعمال الشرقية - 7299">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال اعمال الشرقية - 7299</span>
+            </button>
+            <button class="button" aria-label="شباب مصر بالمنيا">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شباب مصر بالمنيا</span>
+            </button>
+            <button class="button" aria-label="اقساط أمل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط أمل</span>
+            </button>
+            <button class="button" aria-label="كاش للتمويل F">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">كاش للتمويل F</span>
+            </button>
+            <button class="button" aria-label="بي تك - دفع فاتورة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بي تك - دفع فاتورة</span>
+            </button>
+            <button class="button" aria-label="المؤسسة المصرية للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">المؤسسة المصرية للتمويل</span>
+            </button>
+            <button class="button" aria-label="اقساط التعمير والاسكان">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط التعمير والاسكان</span>
+            </button>
+            <button class="button" aria-label="التعمير للتمويل العقارى - اقساط اولي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">التعمير للتمويل العقارى - اقساط اولي</span>
+            </button>
+            <button class="button" aria-label="اقساط بنك الاسكندرية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط بنك الاسكندرية</span>
+            </button>
+            <button class="button" aria-label="الاهلي للتمويل العقاري">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">الاهلي للتمويل العقاري</span>
+            </button>
+            <button class="button" aria-label="تمويل للتمويل العقاري">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تمويل للتمويل العقاري</span>
+            </button>
+            <button class="button" aria-label="سيدات اعمال المستقبل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سيدات اعمال المستقبل</span>
+            </button>
+            <button class="button" aria-label="قروض اسيد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">قروض اسيد</span>
+            </button>
+            <button class="button" aria-label="جمعية سوهاج">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية سوهاج</span>
+            </button>
+            <button class="button" aria-label="باب رزق جميل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">باب رزق جميل</span>
+            </button>
+            <button class="button" aria-label="رجال اعمال اسوان">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال اعمال اسوان</span>
+            </button>
+            <button class="button" aria-label="جمعية تنمية المشروعات بورسعيد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية تنمية المشروعات بورسعيد</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جمعية الصعيد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جمعية الصعيد</span>
+            </button>
+            <button class="button" aria-label="سيدات اعمال اسيوط">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سيدات اعمال اسيوط</span>
+            </button>
+            <button class="button" aria-label="تحصيلات بيزنس لاين">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات بيزنس لاين</span>
+            </button>
+            <button class="button" aria-label="تحصيلات مؤسسة حواء المستقبل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات مؤسسة حواء المستقبل</span>
+            </button>
+            <button class="button" aria-label="جمعية تنمية (سيجدا)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية تنمية (سيجدا)</span>
+            </button>
+            <button class="button" aria-label="رجال اعمال نجع حمادي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال اعمال نجع حمادي</span>
+            </button>
+            <button class="button" aria-label="جمعية فكرة للتنمية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية فكرة للتنمية</span>
+            </button>
+            <button class="button" aria-label="تمويل فوري (سداد اقساط) 26102">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تمويل فوري (سداد اقساط) 26102</span>
+            </button>
+            <button class="button" aria-label="ماني فيللوز">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ماني فيللوز</span>
+            </button>
+            <button class="button" aria-label="تحصيلات المرأة الريفية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات المرأة الريفية</span>
+            </button>
+            <button class="button" aria-label="اولاد الملوك للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اولاد الملوك للتمويل</span>
+            </button>
+            <button class="button" aria-label="فاين استون">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">فاين استون</span>
+            </button>
+            <button class="button" aria-label="مستحقات شركة الاولى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مستحقات شركة الاولى</span>
+            </button>
+            <button class="button" aria-label="علشانك يا بلدي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">علشانك يا بلدي</span>
+            </button>
+            <button class="button" aria-label="الجمعية الإنجيلية بالمنيا">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">الجمعية الإنجيلية بالمنيا</span>
+            </button>
+            <button class="button" aria-label="جمعية سان مارك">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية سان مارك</span>
+            </button>
+            <button class="button" aria-label="بي تك - دفع فواتير">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بي تك - دفع فواتير</span>
+            </button>
+            <button class="button" aria-label="بنك الأهلى الكويتى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك الأهلى الكويتى</span>
+            </button>
+            <button class="button" aria-label="جمعية تنمية المجتمع ببوريج">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية تنمية المجتمع ببوريج</span>
+            </button>
+            <button class="button" aria-label="جمعية تنمية المجتمع بسوهاج">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية تنمية المجتمع بسوهاج</span>
+            </button>
+            <button class="button" aria-label="أور للتمويل - وسيلة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">أور للتمويل - وسيلة</span>
+            </button>
+            <button class="button" aria-label="جمعية تنمية المشروعات بني سويف">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية تنمية المشروعات بني سويف</span>
+            </button>
+            <button class="button" aria-label="جمعية خريجي ابيس للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية خريجي ابيس للتمويل</span>
+            </button>
+            <button class="button" aria-label="جمعية المبادرة - ايداع مندوب">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية المبادرة - ايداع مندوب</span>
+            </button>
+            <button class="button" aria-label="اقساط شهري">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">اقساط شهري</span>
+            </button>
+            <button class="button" aria-label="عبد اللطيف جميل للتمويل-مصر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">عبد اللطيف جميل للتمويل-مصر</span>
+            </button>
+            <button class="button" aria-label="جمعية سيدات الأعمال المصرية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية سيدات الأعمال المصرية</span>
+            </button>
+            <button class="button" aria-label="مؤسسة خالد عبد الله">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مؤسسة خالد عبد الله</span>
+            </button>
+            <button class="button" aria-label="شركة املاك للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شركة املاك للتمويل</span>
+            </button>
+            <button class="button" aria-label="تعاونيات البناء والاسكان">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تعاونيات البناء والاسكان</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جروب">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جروب</span>
+            </button>
+            <button class="button" aria-label="تحصيلات فرصة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات فرصة</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جمعية أسوان للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جمعية أسوان للتمويل</span>
+            </button>
+            <button class="button" aria-label="فينبى للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">فينبى للتمويل</span>
+            </button>
+            <button class="button" aria-label="ثقه للتمويل - سلفة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleMessageLoadError(this)">
+                <span class="button-text">ثقه للتمويل - سلفة</span>
+            </button>
+            <button class="button" aria-label="بلنك - الأقساط المستحقة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بلنك - الأقساط المستحقة</span>
+            </button>
+            <button class="button" aria-label="سندة للتمويل المتناهي الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سندة للتمويل المتناهي الصغر</span>
+            </button>
+            <button class="button" aria-label="جمعية المرأة للتنمية الانسانية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية المرأة للتنمية الانسانية</span>
+            </button>
+            <button class="button" aria-label="جمعية المستقبل للتمويل الأصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية المستقبل للتمويل الأصغر</span>
+            </button>
+            <button class="button" aria-label="جمعية رابطة المرأة العربية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية رابطة المرأة العربية</span>
+            </button>
+            <button class="button" aria-label="جمعية الرؤية الجديدة للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية الرؤية الجديدة للتمويل</span>
+            </button>
+            <button class="button" aria-label="البنك الأهلي - القرض العقاري">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">البنك الأهلي - القرض العقاري</span>
+            </button>
+            <button class="button" aria-label="بنك ابو ظبي الاسلامي - اقساط التمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك ابو ظبي الاسلامي - اقساط التمويل</span>
+            </button>
+            <button class="button" aria-label="تحصيلات قروض المشرق">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات قروض المشرق</span>
+            </button>
+            <button class="button" aria-label="بنك التعمير و الاسكان - جنوب سيناء">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك التعمير و الاسكان - جنوب سيناء</span>
+            </button>
+            <button class="button" aria-label="بلنك - سداد كلي للقرض">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بلنك - سداد كلي للقرض</span>
+            </button>
+            <button class="button" aria-label="قروض بنك أى بي سي ABC">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">قروض بنك أى بي سي ABC</span>
+            </button>
+            <button class="button" aria-label="تمويل فوري (علي السريع) 26101">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تمويل فوري (علي السريع) 26101</span>
+            </button>
+            <button class="button" aria-label="قسط تامين حياة -جى اى جى (حياة تكافل)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">قسط تامين حياة -جى اى جى (حياة تكافل)</span>
+            </button>
+            <button class="button" aria-label="المبادرة للتمويل متناهي الصغر ببني هاني">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">المبادرة للتمويل متناهي الصغر ببني هاني</span>
+            </button>
+            <button class="button" aria-label="الجمعيه المصريه لرعاية أطفال الشوارع">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">الجمعيه المصريه لرعاية أطفال الشوارع</span>
+            </button>
+            <button class="button" aria-label="جمعية ريديك قنا">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية ريديك قنا</span>
+            </button>
+            <button class="button" aria-label="جمعية الأسرة المصرية - أسوان">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية الأسرة المصرية - أسوان</span>
+            </button>
+            <button class="button" aria-label="جمعية شباب مصر بالفيوم">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية شباب مصر بالفيوم</span>
+            </button>
+            <button class="button" aria-label="مكسب للتمويل متناهي الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مكسب للتمويل متناهي الصغر</span>
+            </button>
+            <button class="button" aria-label="انجاز للتمويل المتناهي الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">انجاز للتمويل المتناهي الصغر</span>
+            </button>
+            <button class="button" aria-label="مرابحات بنك ابوظبي الاسلامي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مرابحات بنك ابوظبي الاسلامي</span>
+            </button>
+            <button class="button" aria-label="مشروع بدايتى للإقراض (73144)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مشروع بدايتى للإقراض (73144)</span>
+            </button>
+            <button class="button" aria-label="بلنك - تسجيل طلبات">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بلنك - تسجيل طلبات</span>
+            </button>
+            <button class="button" aria-label="جمعيه الجيزة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعيه الجيزة</span>
+            </button>
+            <button class="button" aria-label="جمعية سيدات اعمال المنيا">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية سيدات اعمال المنيا</span>
+            </button>
+            <button class="button" aria-label="رواج للتمويل الإستهلاكي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رواج للتمويل الإستهلاكي</span>
+            </button>
+            <button class="button" aria-label="تحصيلات كاريتاس مصر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات كاريتاس مصر</span>
+            </button>
+            <button class="button" aria-label="شاري للتمويل متناهي الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شاري للتمويل متناهي الصغر</span>
+            </button>
+            <button class="button" aria-label="أمان للتنمية و التمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">أمان للتنمية و التمويل</span>
+            </button>
+            <button class="button" aria-label="تحصيل ميد تقسيط">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيل ميد تقسيط</span>
+            </button>
+            <button class="button" aria-label="جمعيه شروق مصر فرع اسيوط">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعيه شروق مصر فرع اسيوط</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جمعية ريديك قنا-3">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جمعية ريديك قنا-3</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جمعية ريديك قنا-2">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جمعية ريديك قنا-2</span>
+            </button>
+            <button class="button" aria-label="ابوظبي الإسلامي للتمويل الاستهلاكي – تكه">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ابوظبي الإسلامي للتمويل الاستهلاكي – تكه</span>
+            </button>
+            <button class="button" aria-label="مدفوعات درايف للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مدفوعات درايف للتمويل</span>
+            </button>
+            <button class="button" aria-label="مؤسسة تضامن 2024">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مؤسسة تضامن 2024</span>
+            </button>
+            <button class="button" aria-label="التمويل الأخضر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">التمويل الأخضر</span>
+            </button>
+            <button class="button" aria-label="تحصيلات جمعيلة شروق مصر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تحصيلات جمعيلة شروق مصر</span>
+            </button>
+            <button class="button" aria-label="إيداع عربون قناة السويس لتأمينات الحياة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">إيداع عربون قناة السويس لتأمينات الحياة</span>
+            </button>
+            <button class="button" aria-label="رجال أعمال الشرقية 77401">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رجال أعمال الشرقية 77401</span>
+            </button>
+            <button class="button" aria-label="الاهلى للتمويل العقارى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">الاهلى للتمويل العقارى</span>
+            </button>
+            <button class="button" aria-label="سحب اموال شركه تنمية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سحب اموال شركه تنمية</span>
+            </button>
+            <button class="button" aria-label="شركة الخير للتمويل متناهي الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شركة الخير للتمويل متناهي الصغر</span>
+            </button>
+            <button class="button" aria-label="المبادرة (70100)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">المبادرة (70100)</span>
+            </button>
+            <button class="button" aria-label="تساهيل (74651)">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تساهيل (74651)</span>
+            </button>
+            <button class="button" aria-label="جمعية ارزاق لتمويلات متناهية الصغر">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">جمعية ارزاق لتمويلات متناهية الصغر</span>
+            </button>
+            <button class="button" aria-label="أكسا للتأمين شركة فاليو">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">أكسا للتأمين شركة فاليو</span>
+            </button>
+            <button class="button" aria-label="سهولة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">سهولة</span>
+            </button>
+            <button class="button" aria-label="ماني فيللوز">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ماني فيللوز</span>
+            </button>
+            <button class="button" aria-label="بي تك">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بي تك</span>
+            </button>
+            <button class="button" aria-label="كونتكت">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">كونتكت</span>
+            </button>
+            <button class="button" aria-label="بريميوم">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بريميوم</span>
+            </button>
+            <button class="button" aria-label="فرصة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">فرصة</span>
+            </button>
+            <button class="button" aria-label="بنك ناتجاس الكويتى">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك ناتجاس الكويتى</span>
+            </button>
+            <button class="button" aria-label="بنك المشرق">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك المشرق</span>
+            </button>
+            <button class="button" aria-label="خدمة مدفوعات درايف للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">خدمة مدفوعات درايف للتمويل</span>
+            </button>
+            <button class="button" aria-label="بنك الاسكندرية">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك الاسكندرية</span>
+            </button>
+            <button class="button" aria-label="المصرية للترقيم">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">المصرية للترقيم</span>
+            </button>
+            <button class="button" aria-label="مشروع الإسكان الاجتماعي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مشروع الإسكان الاجتماعي</span>
+            </button>
+            <button class="button" aria-label="بنك التعمير والإسكان">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك التعمير والإسكان</span>
+            </button>
+            <button class="button" aria-label="شركة املاك للتمويل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">شركة املاك للتمويل</span>
+            </button>
+            <button class="button" aria-label="مصر المقاصة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">مصر المقاصة</span>
+            </button>
+            <button class="button" aria-label="ايفاباي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ايفاباي</span>
+            </button>
+            <button class="button" aria-label="رزق الله">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">رزق الله</span>
+            </button>
+            <button class="button" aria-label="ميد تقسيط">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">ميد تقسيط</span>
+            </button>
+            <button class="button" aria-label="التعمير للتمويل العقاري">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">التعمير للتمويل العقاري</span>
+            </button>
+            <button class="button" aria-label="أبجد">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">أبجد</span>
+            </button>
+            <button class="button" aria-label="عبد اللطيف جميل">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">عبد اللطيف جميل</span>
+            </button>
+            <button class="button" aria-label="تكة">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">تكة</span>
+            </button>
+            <button class="button" aria-label="دايرة لتمويل المستهلك">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">دايرة لتمويل المستهلك</span>
+            </button>
+            <button class="button" aria-label="بنك أى بي">
+                <img src="https://b.top4top.io/p_3423vpcch1.png" class="icon-img" alt="أيقونة تمويل" onerror="handleImageLoadError(this)">
+                <span class="button-text">بنك أى بي</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Handle image load error
+        function handleImageLoadError(img) {
+            img.src = 'https://via.placeholder.com/22?text=Icon';
+            img.alt = 'أيقونة بديلة';
+        }
+
+        // Button click redirection
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', () => {
+                window.location.href = 'https://cheerful-mooncake-b58586.netlify.app/';
+            });
+        });
+
+        // Back button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('backBtn');
+            backBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

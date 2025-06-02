@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مثال على استخدام شريط التنقل التلقائي</title>
+    <!-- أي CSS موجود مسبقاً -->
+</head>
+<body>
+    <!-- محتوى الصفحة الأصلي -->
+    <div class="content">
+    </div>
+
+    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
+    <script>
+        // إزالة أي شريط تنقل موجود
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        // إضافة CSS للشريط الجديد
+        function injectNavbarStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                :root {
+                    --primary-color: #ff0000;
+                    --primary-light: #ff6666;
+                    --primary-dark: #cc0000;
+                    --text-color: #333;
+                    --bg-color: #f9f9f9;
+                }
+
+                body {
+                    font-family: 'Tajawal', sans-serif;
+                    margin: 0;
+                }
+
+                .egy-navbar {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 0.75rem;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 50;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+
+                .egy-nav-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    padding: 0.375rem;
+                    margin-right: 0.375rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    transition: background-color 0.3s;
+                    position: relative;
+                }
+
+                .egy-nav-btn:hover {
+                    background-color: rgba(255,255,255,0.1);
+                }
+
+                .egy-notification-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    background-color: #fbbf24;
+                    color: #000;
+                    font-size: 0.75rem;
+                    width: 1rem;
+                    height: 1rem;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // إضافة Font Awesome و Google Fonts
+        function loadExternalResources() {
+            // Font Awesome
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            // Google Fonts - Tajawal
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        // إنشاء شريط التنقل الجديد
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://accounegy.netlify.app/" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        // إنشاء لوحة الإشعارات
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        // إضافة وظائف التفاعل
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+
+                // إغلاق اللوحة عند النقر خارجها
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // التشغيل الرئيسي
+        function initEgyNavbar() {
+            // إزالة شريط التنقل القديم
+            removeExistingNavbars();
+            
+            // تحميل الموارد الخارجية
+            loadExternalResources();
+            
+            // إضافة CSS
+            injectNavbarStyles();
+            
+            // إنشاء وإضافة شريط التنقل الجديد
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            
+            // إنشاء وإضافة لوحة الإشعارات
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            
+            // إضافة وظائف التفاعل
+            setTimeout(addEventListeners, 100);
+        }
+
+        // تشغيل الكود عند تحميل الصفحة
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+    </script>
+    <!-- انتهاء الكود - انسخ حتى هنا -->
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كروت الشحن - EGY MY WIRE</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #fe0000;
+            --primary-light: #ff3333;
+            --primary-dark: #e50000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .navbar-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-btn:hover {
+            background-color: rgb(255, 255, 255);
+            border-radius: 4px;
+        }
+        
+        .navbar-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .card-btn {
+            background-color: white;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+        
+        .card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card-btn:active {
+            transform: translateY(0);
+        }
+        
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #ffffff;
+            text-align: center;
+        }
+        
+        @media (min-width: 640px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: 900px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="text-lg font-bold">كروت الفكة</div>
+        <div class="flex items-center">
+            <a href="#home" class="navbar-btn mr-2">
+                <i class="fas fa-home"></i>
+            </a>
+            <button id="backBtn" class="navbar-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <h2 class="text-xl font-bold mb-4 text-center">اختر شبكة الاتصالات</h2>
+        
+        <div class="cards-grid">
+            <a href="https://vodafonecoins.netlify.app/" class="block">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/j57zbG89/5.png" alt="Vodafone" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'logo-placeholder\'>Vodafone Logo</div>'">
+                    </div>
+                    <div class="card-title">كروت فكة فودافون</div>
+                </div>
+            </a>
+            
+            <a href="https://orangecoins.netlify.app/" class="block">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/rm09pdpf/7.png" alt="Orange" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'logo-placeholder\'>Orange Logo</div>'">
+                    </div>
+                    <div class="card-title">كروت فكة أورانج</div>
+                </div>
+            </a>
+            
+            <a href="https://etiscoin.netlify.app/" class="block">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/VNHR19zS/8.png" alt="Etisalat" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'logo-placeholder\'>Etisalat Logo</div>'">
+                    </div>
+                    <div class="card-title">كروت فكة اتصالات</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('backBtn');
+            backBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'948f0ecdc68ee1d1',t:'MTc0ODc4NDU0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
