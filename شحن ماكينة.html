@@ -135,20 +135,29 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 4rem 0.5rem 0.5rem;
+            padding: 4rem 0.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
         .provider-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
             width: 100%;
-            max-width: 300px;
+            max-width: 100%;
+            padding: 0 0.5rem;
         }
 
         .provider-btn {
-            padding: 8px;
-            font-size: 13px;
+            padding: 7px;
+            font-size: 12px;
             cursor: pointer;
             background-color: var(--primary-color);
             color: white;
@@ -191,7 +200,7 @@
             max-width: 280px;
             padding: 1rem;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .modal-title {
@@ -215,7 +224,7 @@
             width: 100%;
             box-sizing: border-box;
             transition: border-color 0.3s ease;
-            font-family: 'Tajawal', sans-serif;
+            font-family: inherit;
         }
 
         input:focus {
@@ -232,7 +241,7 @@
             color: white;
             border: none;
             border-radius: 6px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color inese-actions 0.3s ease, transform 0.2s ease;
         }
 
         .modal-btn:hover:not(:disabled) {
@@ -258,15 +267,15 @@
             width: 90%;
             max-width: 280px;
             padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .spinner {
-            border: 4px solid rgba(255, 0, 0, 0.1);
+            border: 3px solid rgba(255, 0, 0, 0.1);
             border-left-color: var(--primary-color);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             animation: spin 1s linear infinite;
             margin-bottom: 1rem;
         }
@@ -308,14 +317,19 @@
         }
 
         @media (max-width: 600px) {
+            .section-title {
+                font-size: 1.1rem;
+            }
+
             .provider-grid {
                 grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                max-width: 280px;
+                gap: 6px;
+                padding: 0 0.25rem;
             }
 
             .provider-btn {
-                padding: 7px;
-                font-size: 12px;
+                padding: 6px;
+                font-size: 11px;
             }
 
             .modal-content, .loading-modal-content {
@@ -338,34 +352,46 @@
             }
 
             .spinner {
-                width: 25px;
-                height: 25px;
+                width: 24px;
+                height: 24px;
             }
 
             .loading-text, .error-text {
                 font-size: 0.85rem;
             }
         }
+
+        @media (min-width: 1200px) {
+            .provider-grid {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            }
+
+            .provider-btn {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="main-content">
+        <h2 class="section-title">اختر مزود الخدمة</h2>
         <div class="provider-grid">
-            <button class="provider-btn" onclick="showProviderModal('فوري')">فوري</button>
-            <button class="provider-btn" onclick="showProviderModal('أمان')">أمان</button>
-            <button class="provider-btn" onclick="showProviderModal('مصري')">مصري</button>
-            <button class="provider-btn" onclick="showProviderModal('بساطة')">بساطة</button>
-            <button class="provider-btn" onclick="showProviderModal('بي')">بي</button>
-            <button class="provider-btn" onclick="showProviderModal('كاش مصر')">كاش مصر</button>
-            <button class="provider-btn" onclick="showProviderModal('سوبر باي')">سوبر باي</button>
-            <button class="provider-btn" onclick="showProviderModal('جيديا')">جيديا</button>
-            <button class="provider-btn" onclick="showProviderModal('إنجاز')">إنجاز</button>
-            <button class="provider-btn" onclick="showProviderModal('أو باي')">أو باي</button>
-            <button class="provider-btn" onclick="showProviderModal('مكسب')">مكسب</button>
-            <button class="provider-btn" onclick="showProviderModal('الأهلي ممكن')">الأهلي ممكن</button>
-            <button class="provider-btn" onclick="showProviderModal('الهرم')">الهرم</button>
-            <button class="provider-btn" onclick="showProviderModal('فلاي باي')">فلاي باي</button>
-            <button class="provider-btn" onclick="showProviderModal('حوالي باي')">حوالي باي</button>
+            <button class="provider-btn" onclick="showModal('فوري')">فوري</button>
+            <button class="provider-btn" onclick="showModal('أمان')">أمان</button>
+            <button class="provider-btn" onclick="showModal('مصري')">مصري</button>
+            <button class="provider-btn" onclick="showModal('بساطة')">بساطة</button>
+            <button class="provider-btn" onclick="showModal('بي')">بي</button>
+            <button class="provider-btn" onclick="showModal('كاش مصر')">كاش مصر</button>
+            <button class="provider-btn" onclick="showModal('سوبر باي')">سوبر باي</button>
+            <button class="provider-btn" onclick="showModal('جيديا')">جيديا</button>
+            <button class="provider-btn" onclick="showModal('إنجاز')">إنجاز</button>
+            <button class="provider-btn" onclick="showModal('أو باي')">أو باي</button>
+            <button class="provider-btn" onclick="showModal('مكسب')">مكسب</button>
+            <button class="provider-btn" onclick="showModal('الأهلي ممكن')">الأهلي ممكن</button>
+            <button class="provider-btn" onclick="showModal('الهرم')">الهرم</button>
+            <button class="provider-btn" onclick="showModal('فلاي باي')">فلاي باي</button>
+            <button class="provider-btn" onclick="showModal('حوالي باي')">حوالي باي</button>
         </div>
     </div>
 
@@ -377,7 +403,7 @@
                 <input type="text" id="accountNumber" placeholder="رقم الحساب">
             </div>
             <div class="input-container">
-                <input type="text" id="machineModel" placeholder="Machine Model">
+                <input type="text" id="machineModel" placeholder="موديل الماكينة">
             </div>
             <button class="modal-btn" id="executeBtn" onclick="showLoadingModal()">تنفيذ</button>
         </div>
@@ -556,7 +582,7 @@
         let currentProvider = '';
         let loadingInterval;
 
-        function showProviderModal(provider) {
+        function showModal(provider) {
             currentProvider = provider;
             document.getElementById('providerName').textContent = provider;
             document.getElementById('providerModal').style.display = 'flex';
