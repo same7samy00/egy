@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار مزود الخدمة - EGY MY WIRE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-light: #ff6666;
+            --primary-dark: #cc0000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .egy-nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.375rem;
+            margin-right: 0.375rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .egy-nav-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .egy-notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #fbbf24;
+            color: #000;
+            font-size: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .egy-notification-panel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-notification-panel.active {
+            transform: translateY(0);
+        }
+
+        .egy-notification-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .egy-notification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .egy-notification-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .egy-notification-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 0.5rem 0.5rem;
+        }
+
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .provider-btn {
+            padding: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+        }
+
+        .provider-btn:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+
+        .provider-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .provider-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 280px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        input {
+            padding: 7px;
+            font-size: 13px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .modal-btn:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+
+        .modal-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .modal-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .loading-modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 280px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .error-text {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .close-btn {
+            width: 100%;
+            max-width: 180px;
+            padding: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            background-color: #f2f2f2;
+            color: var(--text-color);
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #e5e5e5;
+        }
+
+        @media (max-width: 600px) {
+            .provider-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                max-width: 280px;
+            }
+
+            .provider-btn {
+                padding: 7px;
+                font-size: 12px;
+            }
+
+            .modal-content, .loading-modal-content {
+                max-width: 260px;
+                padding: 0.8rem;
+            }
+
+            .modal-title {
+                font-size: 0.9rem;
+            }
+
+            input {
+                padding: 6px;
+                font-size: 12px;
+            }
+
+            .modal-btn, .close-btn {
+                padding: 7px;
+                font-size: 12px;
+            }
+
+            .spinner {
+                width: 25px;
+                height: 25px;
+            }
+
+            .loading-text, .error-text {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="provider-grid">
+            <button class="provider-btn" onclick="showProviderModal('فوري')">فوري</button>
+            <button class="provider-btn" onclick="showProviderModal('أمان')">أمان</button>
+            <button class="provider-btn" onclick="showProviderModal('مصري')">مصري</button>
+            <button class="provider-btn" onclick="showProviderModal('بساطة')">بساطة</button>
+            <button class="provider-btn" onclick="showProviderModal('بي')">بي</button>
+            <button class="provider-btn" onclick="showProviderModal('كاش مصر')">كاش مصر</button>
+            <button class="provider-btn" onclick="showProviderModal('سوبر باي')">سوبر باي</button>
+            <button class="provider-btn" onclick="showProviderModal('جيديا')">جيديا</button>
+            <button class="provider-btn" onclick="showProviderModal('إنجاز')">إنجاز</button>
+            <button class="provider-btn" onclick="showProviderModal('أو باي')">أو باي</button>
+            <button class="provider-btn" onclick="showProviderModal('مكسب')">مكسب</button>
+            <button class="provider-btn" onclick="showProviderModal('الأهلي ممكن')">الأهلي ممكن</button>
+            <button class="provider-btn" onclick="showProviderModal('الهرم')">الهرم</button>
+            <button class="provider-btn" onclick="showProviderModal('فلاي باي')">فلاي باي</button>
+            <button class="provider-btn" onclick="showProviderModal('حوالي باي')">حوالي باي</button>
+        </div>
+    </div>
+
+    <!-- Provider Form Modal -->
+    <div class="modal" id="providerModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="providerName"></h2>
+            <div class="input-container">
+                <input type="text" id="accountNumber" placeholder="رقم الحساب">
+            </div>
+            <div class="input-container">
+                <input type="text" id="machineModel" placeholder="Machine Model">
+            </div>
+            <button class="modal-btn" id="executeBtn" onclick="showLoadingModal()">تنفيذ</button>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div class="modal" id="loadingModal">
+        <div class="loading-modal-content">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loadingText"></div>
+            <div class="error-text" id="errorText" style="display: none;">خطأ: لا يوجد رصيد كافي</div>
+            <button class="close-btn" id="closeLoadingBtn" onclick="closeLoadingModal()" style="display: none;">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Navbar Script
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        function injectNavbarStyles() {
+            const style = document.querySelector('style');
+            style.textContent += `
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 1001;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+            `;
+        }
+
+        function loadExternalResources() {
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        function initEgyNavbar() {
+            removeExistingNavbars();
+            loadExternalResources();
+            injectNavbarStyles();
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            setTimeout(addEventListeners, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+
+        // Modal and Loading Logic
+        let currentProvider = '';
+        let loadingInterval;
+
+        function showProviderModal(provider) {
+            currentProvider = provider;
+            document.getElementById('providerName').textContent = provider;
+            document.getElementById('providerModal').style.display = 'flex';
+            document.getElementById('accountNumber').value = '';
+            document.getElementById('machineModel').value = '';
+            document.getElementById('executeBtn').disabled = false;
+        }
+
+        function showLoadingModal() {
+            document.getElementById('providerModal').style.display = 'none';
+            document.getElementById('loadingModal').style.display = 'flex';
+            document.getElementById('loadingText').style.display = 'block';
+            document.getElementById('errorText').style.display = 'none';
+            document.getElementById('closeLoadingBtn').style.display = 'none';
+            document.getElementById('executeBtn').disabled = true;
+
+            let messages = [
+                'جاري المعالجة',
+                `جاري التكامل مع مزود ${currentProvider}`
+            ];
+            let index = 0;
+
+            document.getElementById('loadingText').textContent = messages[0];
+            loadingInterval = setInterval(() => {
+                index++;
+                if (index < messages.length) {
+                    document.getElementById('loadingText').textContent = messages[index];
+                } else if (index === messages.length) {
+                    document.getElementById('loadingText').style.display = 'none';
+                    document.getElementById('errorText').style.display = 'block';
+                    document.getElementById('closeLoadingBtn').style.display = 'block';
+                    clearInterval(loadingInterval);
+                }
+            }, 500);
+        }
+
+        function closeLoadingModal() {
+            document.getElementById('loadingModal').style.display = 'none';
+            document.getElementById('executeBtn').disabled = false;
+            clearInterval(loadingInterval);
+        }
+    </script>
+</body>
+</html>
