@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>??????? ???????? - EGY MY WIRE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-light: #ff6666;
+            --primary-dark: #cc0000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .egy-nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.375rem;
+            margin-right: 0.375rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .egy-nav-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .egy-notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #fbbf24;
+            color: #000;
+            font-size: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .egy-notification-panel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-notification-panel.active {
+            transform: translateY(0);
+        }
+
+        .egy-notification-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .egy-notification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .egy-notification-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .egy-notification-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5rem 0.5rem 1rem;
+        }
+
+        .machine-image {
+            max-width: 100%;
+            width: 300px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .specs-container, .purchase-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .spec-group, .purchase-option {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .spec-group h3, .purchase-option h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-group ul, .purchase-option ul {
+            list-style: none;
+            padding-right: 1rem;
+        }
+
+        .spec-group li, .purchase-option li {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 0.3rem;
+            position: relative;
+            padding-right: 1rem;
+        }
+
+        .spec-group li::before, .purchase-option li::before {
+            content: '•';
+            color: var(--primary-color);
+            position: absolute;
+            right: 0;
+        }
+
+        .contact-info {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .machine-image {
+                width: 250px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .specs-container, .purchase-container {
+                max-width: 100%;
+                padding: 0 0.5rem;
+            }
+
+            .spec-group h3, .purchase-option h3 {
+                font-size: 1.1rem;
+            }
+
+            .spec-group li, .purchase-option li {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <img src="https://i.postimg.cc/0QM8QzNN/0-18.png" alt="Machine Image" class="machine-image">
+        <div class="specs-container">
+            <h2 class="section-title">??????? ????????</h2>
+            <div class="spec-group">
+                <h3>???? ??????? ????????</h3>
+                <ul>
+                    <li>???? ???????: Paydroid (????? ??? Android 10)</li>
+                    <li>???????: ????? ?????? Cortex A55 ????? 1.6GHz + ????? ???</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>???????</h3>
+                <ul>
+                    <li>??????? ????????: 8 ???????? eMMC</li>
+                    <li>??????? ????????? (RAM): 1 ???????? DDR3</li>
+                    <li>???? ?????: 16 ???????? eMMC + 2 ???????? RAM DDR3</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>?????? ????????</h3>
+                <ul>
+                    <li>?????? ??????? (Magnetic)</li>
+                    <li>???????? ?????? (IC Card)</li>
+                    <li>??????? ???? ????? (NFC)</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>?????????</h3>
+                <ul>
+                    <li>???????? ????????: 5 ????????</li>
+                    <li>???????? ???????: 0.3 ????????</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>??????</h3>
+                <ul>
+                    <li>?????: 6 ????</li>
+                    <li>?????: ???? ??? IPS HD+</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>???????</h3>
+                <ul>
+                    <li>??? ???: 2.4GHz / 5GHz</li>
+                    <li>??????: Bluetooth 5.0</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>????????</h3>
+                <ul>
+                    <li>?????: 5150mAh</li>
+                    <li>?????: 3.7V</li>
+                    <li>??????: 19.055Wh</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>???????</h3>
+                <ul>
+                    <li>?????: ????? ?????? ????? ???? 2 ????</li>
+                    <li>??????: 80 ??/?????</li>
+                    <li>?????: ??? ????? ??? 40 ??</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>????? ????????</h3>
+                <ul>
+                    <li>1 ????? Micro SIM</li>
+                    <li>2 ????? PSAM</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>???????</h3>
+                <ul>
+                    <li>?? ??????? / ???????</li>
+                    <li>?? ??? ?????</li>
+                    <li>?? ??? ?????</li>
+                    <li>?? ????? ?????? (Quick Scan)</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>?????</h3>
+                <ul>
+                    <li>???? ???</li>
+                    <li>????????</li>
+                    <li>????? (Buzzer)</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>??????? ??????</h3>
+                <ul>
+                    <li>???? USB Type-C OTG</li>
+                    <li>4 ?????? POGO ?????</li>
+                    <li>??????: ???? 100-240V AC? 50/60Hz? ???? 5.0V DC? 2.0A</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>???? ???????</h3>
+                <ul>
+                    <li>???? ????? ???????: ?? 0° ??? 45°C</li>
+                    <li>???? ????? ???????: ?? -20° ??? 70°C</li>
+                    <li>???????: 5% - 95% (???? ?????)</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>????? ??????</h3>
+                <ul>
+                    <li>???????: 211.5 × 81 × 52.9 ???</li>
+                    <li>?????: 368 ???? (??? ?? ??? ????????)</li>
+                </ul>
+            </div>
+            <div class="spec-group">
+                <h3>????????</h3>
+                <ul>
+                    <li>PCI PTS 6.x SRED</li>
+                    <li>EMV ??????? 1 ?2</li>
+                    <li>??? ????? ??????????: Visa payWave? Mastercard Contactless? Discover D-PAS? AMEX ExpressPay? JCB J/Speedy? UPI qUICS</li>
+                    <li>?????? ?????: KC? KTC</li>
+                </ul>
+            </div>
+        </div>
+        <div class="purchase-container">
+            <h2 class="section-title">????? ????? ?????? ??????</h2>
+            <div class="purchase-option">
+                <h3>???? ?????</h3>
+                <ul>
+                    <li>?????: 3800 ????</li>
+                    <li>??????: 500 ???? ????? ???? ??????</li>
+                    <li>???????:
+                        <ul style="list-style: none; padding-right: 1rem;">
+                            <li>???? ????? ???? ???? ?????? ?? ????? ???? ???????</li>
+                            <li>?????? ???? ?????? ?????? ?? ?????</li>
+                            <li>?????? ???? ????? ????????: ??? ???????? ??? ????? ??????? ??? ??? ????? ??????? ?? ?????? ?? ?????</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="purchase-option">
+                <h3>???? ???????</h3>
+                <ul>
+                    <li>?????: 3800 ????</li>
+                    <li>??????: 500 ???? + 316 ???? ??? ???</li>
+                    <li>???????:
+                        <ul style="list-style: none; padding-right: 1rem;">
+                            <li>???? ????? ???? ???? ?????? ???? ??? ?? ????? ???? ???????</li>
+                            <li>?????? ???? ?????? ?????? ?? ????? ?? ??? ?????? ????? ????? ??????? ?????? ???????</li>
+                            <li>?????? ???? ????? ????????: ??? ???????? ??? ????? ??????? ??? ??? ????? ??????? ?? ?????? ?? ?????</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="purchase-option">
+                <h3>???? ???????</h3>
+                <ul>
+                    <li>??? ???????: 500 ???? ???</li>
+                    <li>???????:
+                        <ul style="list-style: none; padding-right: 1rem;">
+                            <li>???? ????? ???? ???? ??????? ?? ????? ???? ???????</li>
+                            <li>?????? ???? ?????? ?????? ?? ????? ?? ??? ??????? ????????? ????? ????? ??????? ?????? ???????</li>
+                            <li>?????? ???? ????? ????????: ??? ???????? ??? ????? ??????? ??? ??? ????? ??????? ?? ?????? ?? ?????</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="contact-info">
+                ???? ??? ???????? ?? ???? ???? ???????
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Navbar Script
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        function injectNavbarStyles() {
+            const style = document.querySelector('style');
+            style.textContent += `
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 1001;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+            `;
+        }
+
+        function loadExternalResources() {
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://same7samy00.github.io/egy/?????.html" class="egy-nav-btn" aria-label="?????? ??????">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="?????????">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">?????????</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="????? ?????????">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">?? ???? ???????</h3>
+                    <p style="color: #6b7280; text-align: center;">??? ???? ?? ??????? ????? ?? ????? ??????. ?????? ????? ??? ??? ????.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        function initEgyNavbar() {
+            removeExistingNavbars();
+            loadExternalResources();
+            injectNavbarStyles();
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            setTimeout(addEventListeners, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+    </script>
+</body>
+</html>
