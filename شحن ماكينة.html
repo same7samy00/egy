@@ -139,30 +139,30 @@
         }
 
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .provider-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
             width: 100%;
             max-width: 100%;
             padding: 0 0.5rem;
         }
 
         .provider-btn {
-            padding: 7px;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 14px;
             cursor: pointer;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: background-color 0.3s ease, transform 0.2s ease;
             text-align: center;
         }
@@ -193,31 +193,37 @@
             justify-content: center;
         }
 
-        .modal-content {
+        .modal-content, .loading-modal-content {
             background-color: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 280px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 90vw;
+            height: 90vh;
             padding: 1rem;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .input-container {
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
             width: 100%;
+            max-width: 300px;
         }
 
         input {
-            padding: 7px;
-            font-size: 13px;
+            padding: 8px;
+            font-size: 14px;
             text-align: center;
             border: 1px solid #ddd;
             border-radius: 6px;
@@ -234,14 +240,15 @@
 
         .modal-btn {
             width: 100%;
-            padding: 8px;
-            font-size: 13px;
+            max-width: 200px;
+            padding: 10px;
+            font-size: 14px;
             cursor: pointer;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 6px;
-            transition: background-color inese-actions 0.3s ease, transform 0.2s ease;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .modal-btn:hover:not(:disabled) {
@@ -258,26 +265,17 @@
         }
 
         .loading-modal-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 280px;
             padding: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .spinner {
-            border: 3px solid rgba(255, 0, 0, 0.1);
+            border: 4px solid rgba(255, 0, 0, 0.1);
             border-left-color: var(--primary-color);
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         @keyframes spin {
@@ -286,14 +284,14 @@
         }
 
         .loading-text {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-color);
             margin-bottom: 1rem;
             text-align: center;
         }
 
         .error-text {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--primary-color);
             margin-bottom: 1rem;
             text-align: center;
@@ -301,74 +299,111 @@
 
         .close-btn {
             width: 100%;
-            max-width: 180px;
-            padding: 8px;
-            font-size: 13px;
+            max-width: 200px;
+            padding: 10px;
+            font-size: 14px;
             cursor: pointer;
             background-color: #f2f2f2;
             color: var(--text-color);
             border: none;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
+            border-radius: 8px;
+            transition: background-color 0.25s ease;
         }
 
         .close-btn:hover {
-            background-color: #e5e5e5;
+            background-color: #e5e5e5e5;
         }
 
         @media (max-width: 600px) {
             .section-title {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
 
             .provider-grid {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 6px;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 8px;
                 padding: 0 0.25rem;
-            }
-
-            .provider-btn {
-                padding: 6px;
-                font-size: 11px;
-            }
-
-            .modal-content, .loading-modal-content {
-                max-width: 260px;
-                padding: 0.8rem;
-            }
-
-            .modal-title {
-                font-size: 0.9rem;
-            }
-
-            input {
-                padding: 6px;
-                font-size: 12px;
-            }
-
-            .modal-btn, .close-btn {
-                padding: 7px;
-                font-size: 12px;
-            }
-
-            .spinner {
-                width: 24px;
-                height: 24px;
-            }
-
-            .loading-text, .error-text {
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .provider-grid {
-                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             }
 
             .provider-btn {
                 padding: 8px;
                 font-size: 13px;
+            }
+
+            .modal-content, .modal-content, .loading-modal-content {
+                padding: 0.8rem;
+            }
+
+            .modal-title {
+                font-size: 0.95rem;
+            }
+
+            .input-container {
+                max-width: 260px;
+            }
+
+            input {
+                padding: 7px;
+                font-size: 13px;
+            }
+
+            .modal-btn, .close-btn {
+                max-width: 180px;
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .spinner {
+                width: 28px;
+                height: 28px;
+            }
+
+            .loading-text, .error-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .provider-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 12px;
+            }
+
+            .provider-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .input-container {
+                max-width: 400px;
+            }
+
+            input {
+                padding: 10px;
+                font-size: 15px;
+            }
+
+            .modal-btn, .close-btn {
+                max-width: 250px;
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .spinner {
+                width: 36px;
+                height: 36px;
+            }
+
+            .loading-text, .error-text {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -391,7 +426,7 @@
             <button class="provider-btn" onclick="showModal('الأهلي ممكن')">الأهلي ممكن</button>
             <button class="provider-btn" onclick="showModal('الهرم')">الهرم</button>
             <button class="provider-btn" onclick="showModal('فلاي باي')">فلاي باي</button>
-            <button class="provider-btn" onclick="showModal('حوالي باي')">حوالي باي</button>
+            <button class="provider-btn" onclick="showModal('حولي باي')">حولي باي</button>
         </div>
     </div>
 
