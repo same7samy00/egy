@@ -1,0 +1,500 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلبات التاجر - EGY MY WIRE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-light: #ff6666;
+            --primary-dark: #cc0000;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .egy-nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.375rem;
+            margin-right: 0.375rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .egy-nav-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .egy-notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #fbbf24;
+            color: #000;
+            font-size: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .egy-notification-panel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .egy-notification-panel.active {
+            transform: translateY(0);
+        }
+
+        .egy-notification-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .egy-notification-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .egy-notification-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f2f2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .egy-notification-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 0.5rem 0.5rem;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        select, textarea {
+            padding: 8px;
+            font-size: 14px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 300px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .modal-message {
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            max-width: 200px;
+            padding: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #f2f2f2;
+            color: var(--text-color);
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #e5e5e5;
+        }
+
+        @media (max-width: 600px) {
+            .input-container {
+                max-width: 280px;
+            }
+
+            select, textarea {
+                font-size: 13px;
+                padding: 7px;
+            }
+
+            textarea {
+                min-height: 70px;
+            }
+
+            button {
+                max-width: 280px;
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .modal-content {
+                max-width: 280px;
+                padding: 0.8rem;
+            }
+
+            .modal-message {
+                font-size: 0.9rem;
+            }
+
+            .modal-close-btn {
+                max-width: 180px;
+                padding: 7px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="input-container">
+            <select id="requestType" required>
+                <option value="" disabled selected>اختر نوع الطلب</option>
+                <option value="شكوى">تقديم شكوى</option>
+                <option value="شريحة داتا">طلب شريحة داتا</option>
+                <option value="إضافة خدمة">طلب إضافة خدمة</option>
+                <option value="استرجاع عملية">استرجاع عملية</option>
+                <option value="رصيد معلق">رصيد معلق</option>
+                <option value="عملية خصم غير منفذة">عملية تم خصمها ولم تنفذ</option>
+                <option value="صيانة ماكينة">صيانة ماكينة</option>
+                <option value="إضافة عميل">إضافة عميل خاص بي</option>
+            </select>
+        </div>
+        <div class="input-container">
+            <textarea id="notes" placeholder="أدخل ملاحظاتك هنا"></textarea>
+        </div>
+        <div class="button-container">
+            <button id="submitRequest" onclick="submitRequest()">تقديم الطلب</button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <div class="modal-message">
+                تم ارسال طلبك سيتم التواصل معك من خلال الدعم الفني
+            </div>
+            <button onclick="closeModal()" class="modal-close-btn">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Navbar Script
+        function removeExistingNavbars() {
+            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
+            existingNavbars.forEach(navbar => {
+                navbar.remove();
+            });
+        }
+
+        function injectNavbarStyles() {
+            const style = document.querySelector('style');
+            style.textContent += `
+                .egy-notification-panel {
+                    position: fixed;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                    z-index: 1001;
+                    transform: translateY(100%);
+                    transition: transform 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .egy-notification-panel.active {
+                    transform: translateY(0);
+                }
+
+                .egy-notification-header {
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                .egy-notification-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+
+                .egy-notification-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: #f2f2f2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                }
+
+                .egy-notification-icon i {
+                    font-size: 2.5rem;
+                    color: var(--primary-color);
+                }
+            `;
+        }
+
+        function loadExternalResources() {
+            if (!document.querySelector('link[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+            if (!document.querySelector('link[href*="Tajawal"]')) {
+                const googleFonts = document.createElement('link');
+                googleFonts.rel = 'stylesheet';
+                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
+                document.head.appendChild(googleFonts);
+            }
+        }
+
+        function createNavbar() {
+            const navbar = document.createElement('nav');
+            navbar.className = 'egy-navbar';
+            navbar.innerHTML = `
+                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+                <div style="display: flex; align-items: center;">
+                    <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+                    </a>
+                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
+                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
+                        <span class="egy-notification-badge">0</span>
+                    </button>
+                </div>
+            `;
+            return navbar;
+        }
+
+        function createNotificationPanel() {
+            const panel = document.createElement('div');
+            panel.id = 'egyNotificationPanel';
+            panel.className = 'egy-notification-panel';
+            panel.innerHTML = `
+                <div class="egy-notification-header">
+                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+                    </button>
+                </div>
+                <div class="egy-notification-content">
+                    <div class="egy-notification-icon">
+                        <i class="fas fa-bell-slash"></i>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+                </div>
+            `;
+            return panel;
+        }
+
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        function initEgyNavbar() {
+            removeExistingNavbars();
+            loadExternalResources();
+            injectNavbarStyles();
+            const navbar = createNavbar();
+            document.body.insertBefore(navbar, document.body.firstChild);
+            const notificationPanel = createNotificationPanel();
+            document.body.appendChild(notificationPanel);
+            setTimeout(addEventListeners, 100);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEgyNavbar);
+        } else {
+            initEgyNavbar();
+        }
+
+        // Form Script
+        function submitRequest() {
+            const requestType = document.getElementById('requestType').value;
+            if (requestType) {
+                const modal = document.getElementById('confirmationModal');
+                modal.style.display = 'flex';
+                document.getElementById('submitRequest').disabled = true;
+                document.getElementById('submitRequest').textContent = 'جاري الإرسال...';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none';
+            document.getElementById('submitRequest').disabled = false;
+            document.getElementById('submitRequest').textContent = 'تقديم الطلب';
+            document.getElementById('requestType').value = '';
+            document.getElementById('notes').value = '';
+        }
+
+        window.onload = function() {
+            document.getElementById('requestType').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('submitRequest').disabled = false;
+        };
+    </script>
+</body>
+</html>
