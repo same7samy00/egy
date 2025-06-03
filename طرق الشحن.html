@@ -1,278 +1,40 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مثال على استخدام شريط التنقل التلقائي</title>
-    <!-- أي CSS موجود مسبقاً -->
-</head>
-<body>
-    <!-- محتوى الصفحة الأصلي -->
-    <div class="content">
-    </div>
-
-    <!-- الكود الذي تحتاج لصقه في أي صفحة - ابدأ من هنا -->
-    <script>
-        // إزالة أي شريط تنقل موجود
-        function removeExistingNavbars() {
-            const existingNavbars = document.querySelectorAll('nav, .navbar, header nav, .navigation, .nav-bar');
-            existingNavbars.forEach(navbar => {
-                navbar.remove();
-            });
-        }
-
-        // إضافة CSS للشريط الجديد
-        function injectNavbarStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                :root {
-                    --primary-color: #ff0000;
-                    --primary-light: #ff6666;
-                    --primary-dark: #cc0000;
-                    --text-color: #333;
-                    --bg-color: #f9f9f9;
-                }
-
-                body {
-                    font-family: 'Tajawal', sans-serif;
-                    margin: 0;
-                }
-
-                .egy-navbar {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 0.75rem;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    position: sticky;
-                    top: 0;
-                    z-index: 10;
-                }
-
-                .egy-notification-panel {
-                    position: fixed;
-                    bottom: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: white;
-                    z-index: 50;
-                    transform: translateY(100%);
-                    transition: transform 0.3s ease;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .egy-notification-panel.active {
-                    transform: translateY(0);
-                }
-
-                .egy-notification-header {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 1rem;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                }
-
-                .egy-notification-content {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 2rem;
-                }
-
-                .egy-notification-icon {
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
-                    background-color: #f2f2f2;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-bottom: 1rem;
-                }
-
-                .egy-notification-icon i {
-                    font-size: 2.5rem;
-                    color: var(--primary-color);
-                }
-
-                .egy-nav-btn {
-                    background: none;
-                    border: none;
-                    color: white;
-                    padding: 0.375rem;
-                    margin-right: 0.375rem;
-                    cursor: pointer;
-                    border-radius: 4px;
-                    transition: background-color 0.3s;
-                    position: relative;
-                }
-
-                .egy-nav-btn:hover {
-                    background-color: rgba(255,255,255,0.1);
-                }
-
-                .egy-notification-badge {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    background-color: #fbbf24;
-                    color: #000;
-                    font-size: 0.75rem;
-                    width: 1rem;
-                    height: 1rem;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // إضافة Font Awesome و Google Fonts
-        function loadExternalResources() {
-            // Font Awesome
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const fontAwesome = document.createElement('link');
-                fontAwesome.rel = 'stylesheet';
-                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
-                document.head.appendChild(fontAwesome);
-            }
-
-            // Google Fonts - Tajawal
-            if (!document.querySelector('link[href*="Tajawal"]')) {
-                const googleFonts = document.createElement('link');
-                googleFonts.rel = 'stylesheet';
-                googleFonts.href = 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap';
-                document.head.appendChild(googleFonts);
-            }
-        }
-
-        // إنشاء شريط التنقل الجديد
-        function createNavbar() {
-            const navbar = document.createElement('nav');
-            navbar.className = 'egy-navbar';
-            navbar.innerHTML = `
-                <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
-                <div style="display: flex; align-items: center;">
-                    <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
-                        <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
-                    </a>
-                    <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
-                        <i class="fas fa-bell" style="font-size: 1.125rem;"></i>
-                    </button>
-                </div>
-            `;
-            return navbar;
-        }
-
-        // إنشاء لوحة الإشعارات
-        function createNotificationPanel() {
-            const panel = document.createElement('div');
-            panel.id = 'egyNotificationPanel';
-            panel.className = 'egy-notification-panel';
-            panel.innerHTML = `
-                <div class="egy-notification-header">
-                    <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
-                    <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
-                        <i class="fas fa-times" style="font-size: 1.25rem;"></i>
-                    </button>
-                </div>
-                <div class="egy-notification-content">
-                    <div class="egy-notification-icon">
-                        <i class="fas fa-bell-slash"></i>
-                    </div>
-                    <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
-                    <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
-                </div>
-            `;
-            return panel;
-        }
-
-        // إضافة وظائف التفاعل
-        function addEventListeners() {
-            const notificationBtn = document.getElementById('egyNotificationBtn');
-            const notificationPanel = document.getElementById('egyNotificationPanel');
-            const closeNotifications = document.getElementById('egyCloseNotifications');
-
-            if (notificationBtn && notificationPanel && closeNotifications) {
-                notificationBtn.addEventListener('click', () => {
-                    notificationPanel.classList.add('active');
-                });
-
-                closeNotifications.addEventListener('click', () => {
-                    notificationPanel.classList.remove('active');
-                });
-
-                // إغلاق اللوحة عند النقر خارجها
-                notificationPanel.addEventListener('click', (e) => {
-                    if (e.target === notificationPanel) {
-                        notificationPanel.classList.remove('active');
-                    }
-                });
-            }
-        }
-
-        // التشغيل الرئيسي
-        function initEgyNavbar() {
-            // إزالة شريط التنقل القديم
-            removeExistingNavbars();
-            
-            // تحميل الموارد الخارجية
-            loadExternalResources();
-            
-            // إضافة CSS
-            injectNavbarStyles();
-            
-            // إنشاء وإضافة شريط التنقل الجديد
-            const navbar = createNavbar();
-            document.body.insertBefore(navbar, document.body.firstChild);
-            
-            // إنشاء وإضافة لوحة الإشعارات
-            const notificationPanel = createNotificationPanel();
-            document.body.appendChild(notificationPanel);
-            
-            // إضافة وظائف التفاعل
-            setTimeout(addEventListeners, 100);
-        }
-
-        // تشغيل الكود عند تحميل الصفحة
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initEgyNavbar);
-        } else {
-            initEgyNavbar();
-        }
-    </script>
-    <!-- انتهاء الكود - انسخ حتى هنا -->
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>EGY MY WIRE - خدمات الشحن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #ff0000;
+            --primary-color: #ff1900;
             --primary-light: #ff0000;
-            --primary-dark: #ff0000;
+            --primary-dark: #ff1900;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #ff1900;
             --text-color: #333;
             --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px 0 60px;
         }
 
         .egy-navbar {
@@ -324,12 +86,12 @@
 
         .egy-notification-panel {
             position: fixed;
-            bottom: 0;
+            top: 0;
             right: 0;
             width: 100%;
             height: 100%;
             background-color: white;
-            z-index: 50;
+            z-index: 1001;
             transform: translateY(100%);
             transition: transform 0.3s ease;
             display: flex;
@@ -374,119 +136,11 @@
             font-size: 2.5rem;
             color: var(--primary-color);
         }
-    </style>
-</head>
-<body>
-    <nav class="egy-navbar">
-        <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
-        <div style="display: flex; align-items: center;">
-            <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
-            </a>
-            <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">
-            </button>
-        </div>
-    </nav>
 
-    <div id="egyNotificationPanel" class="egy-notification-panel">
-        <div class="egy-notification-header">
-            <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
-            <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
-                <i class="fas fa-times" style="font-size: 1.25rem;"></i>
-            </button>
-        </div>
-        <div class="egy-notification-content">
-            <div class="egy-notification-icon">
-                <i class="fas fa-bell-slash"></i>
-            </div>
-            <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
-            <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
-        </div>
-    </div>
-
-    <script>
-        // Add event listeners for notification panel
-        function addEventListeners() {
-            const notificationBtn = document.getElementById('egyNotificationBtn');
-            const notificationPanel = document.getElementById('egyNotificationPanel');
-            const closeNotifications = document.getElementById('egyCloseNotifications');
-
-            if (notificationBtn && notificationPanel && closeNotifications) {
-                notificationBtn.addEventListener('click', () => {
-                    notificationPanel.classList.add('active');
-                });
-
-                closeNotifications.addEventListener('click', () => {
-                    notificationPanel.classList.remove('active');
-                });
-
-                notificationPanel.addEventListener('click', (e) => {
-                    if (e.target === notificationPanel) {
-                        notificationPanel.classList.remove('active');
-                    }
-                });
-            }
-        }
-
-        // Initialize
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', addEventListeners);
-        } else {
-            addEventListeners();
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EGY MY WIRE - خدمات الشحن</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #ff1900;
-            --primary-light: #ff0000;
-            --primary-dark: #ff1900;
-            --secondary-color: #3498db;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --danger-color: #ff1900;
-            --text-color: #333;
-            --bg-color: #f9f9f9;
-            --card-bg: #ffffff;
-            --border-radius: 10px;
-            --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px 0 60px;
-        }
-
-        /* ===== أزرار الشحن ===== */
         .container {
             max-width: 1200px;
-            margin: 1rem auto;
+            margin: 5rem auto 1rem;
             padding: 0 1rem;
-        }
-
-        .page-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-            font-weight: 800;
-            font-size: 2rem;
         }
 
         .promo-banner {
@@ -565,7 +219,6 @@
             padding: 0 0.5rem;
         }
 
-        /* ===== النافذة المنبثقة ===== */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -633,7 +286,6 @@
             color: var(--danger-color);
         }
 
-        /* ===== نموذج الشحن ===== */
         .recharge-form {
             display: flex;
             flex-direction: column;
@@ -703,7 +355,6 @@
             cursor: not-allowed;
         }
 
-        /* ===== حالة النجاح ===== */
         .success-container {
             display: none;
             flex-direction: column;
@@ -761,7 +412,7 @@
             color: white;
             border: none;
             padding: 0.4rem 0.8rem;
-            border-radius: var(--border-radius);
+            border-radius: inherit;
             cursor: pointer;
             transition: background-color 0.3s;
             display: flex;
@@ -774,7 +425,7 @@
             background-color: #2980b9;
         }
 
-        .auto-detect-note {
+        .auto-detect {
             background-color: #f8f9fa;
             border-right: 4px solid var(--success-color);
             padding: 0.8rem;
@@ -784,7 +435,6 @@
             font-size: 0.9rem;
         }
 
-        /* ===== المؤقت الدائري ===== */
         .timer-container {
             position: relative;
             width: 100px;
@@ -799,7 +449,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: conic-gradient(var(--primary-color) 0%, #f0f0f0 0%);
+            background: conic-gradient(var(--primary-color) 0%, #f0f0f0 0);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -814,11 +464,10 @@
             align-items: center;
             justify-content: center;
             font-size: 1.3rem;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary-color);
         }
 
-        /* ===== حالة الفشل ===== */
         .failure-container {
             display: none;
             flex-direction: column;
@@ -862,7 +511,6 @@
             background-color: var(--primary-dark);
         }
 
-        /* ===== التنبيه ===== */
         .alert-overlay {
             position: fixed;
             top: 0;
@@ -945,41 +593,24 @@
             background-color: #e67e22;
         }
 
-        /* ===== التأثيرات والأنيميشن ===== */
         @keyframes slide-in {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
 
         @keyframes fade-in {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes fade-out {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .loader {
@@ -991,7 +622,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* ===== الاستجابة (Responsive) ===== */
         @media (max-width: 1024px) {
             .recharge-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -1004,15 +634,12 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 0.6rem;
             }
-            
             .recharge-button-img {
                 height: 100px;
             }
-            
             .recharge-button-title {
                 font-size: 0.9rem;
             }
-            
             .recharge-button-desc {
                 font-size: 0.7rem;
             }
@@ -1023,20 +650,16 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 0.5rem;
             }
-            
             .recharge-button-img {
                 height: 80px;
             }
-            
             .recharge-button-title {
                 font-size: 0.8rem;
             }
-            
             .recharge-button-desc {
                 font-size: 0.65rem;
                 padding: 0 0.3rem;
             }
-            
             .popup-container {
                 padding: 1.2rem;
             }
@@ -1044,91 +667,101 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="egy-navbar">
+        <div style="font-size: 1.125rem; font-weight: bold;">EGY MY WIRE</div>
+        <div style="display: flex; align-items: center;">
+            <a href="https://same7samy00.github.io/egy/حسابي.html" class="egy-nav-btn" aria-label="الحساب الشخصي">
+                <i class="fas fa-user-circle" style="font-size: 1.125rem;"></i>
+            </a>
+            <button id="egyNotificationBtn" class="egy-nav-btn" aria-label="الإشعارات">            </button>
+        </div>
+    </nav>
+
+    <!-- Notification Panel -->
+    <div id="egyNotificationPanel" class="egy-notification-panel">
+        <div class="egy-notification-header">
+            <h2 style="font-size: 1.25rem; font-weight: bold; margin: 0;">الإشعارات</h2>
+            <button id="egyCloseNotifications" style="background: none; border: none; color: white; cursor: pointer;" aria-label="إغلاق الإشعارات">
+                <i class="fas fa-times" style="font-size: 1.25rem;"></i>
+            </button>
+        </div>
+        <div class="egy-notification-content">
+            <div class="egy-notification-icon">
+                <i class="fas fa-bell-slash"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem;">لا توجد إشعارات</h3>
+            <p style="color: #6b7280; text-align: center;">ليس لديك أي إشعارات جديدة في الوقت الحالي. سنعلمك عندما يصل شيء جديد.</p>
+        </div>
+    </div>
+
     <!-- المحتوى الرئيسي -->
     <div class="container">
-        
         <div class="promo-banner">
-            <h4>عرض خاص لفترة محدودة!</h4>
+            <h3>عرض خاص لفترة محدودة!</h3>
             <p>الإيداع بدون رسوم - السحب 1 جنيه / الألف فقط</p>
         </div>
         
         <div class="recharge-grid">
-            <!-- زر 1: فودافون كاش -->
             <a href="#" class="recharge-button" data-popup="recharge" data-service="vodafone">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/8Km9tLL.jpg" alt="فودافون كاش">
+                    <img src="https://i.postimg.cc/W4fdRKNZ/0-4.png" alt="فودافون كاش">
                 </div>
                 <h3 class="recharge-button-title">فودافون كاش</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 2: أورانج كاش -->
             <a href="#" class="recharge-button" data-popup="recharge" data-service="orange">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/JqtgQ3z.jpg" alt="أورانج كاش">
+                    <img src="https://i.postimg.cc/85JjTHc0/0-5.png" alt="أورانج كاش">
                 </div>
                 <h3 class="recharge-button-title">أورانج كاش</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 3: اتصالات كاش -->
             <a href="#" class="recharge-button" data-popup="recharge" data-service="etisalat">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/Yjw10g3.jpg" alt="اتصالات كاش">
+                    <img src="https://i.postimg.cc/cHp6Cn84/0-6.png" alt="اتصالات كاش">
                 </div>
                 <h3 class="recharge-button-title">اتصالات كاش</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 4: وي باي -->
             <a href="#" class="recharge-button" data-popup="recharge" data-service="we">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/QZm8cGG.jpg" alt="وي باي">
+                    <img src="https://i.postimg.cc/PJ1Jw5mb/0-7.png" alt="وي باي">
                 </div>
                 <h3 class="recharge-button-title">وي باي</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 5: انستا باي -->
             <a href="#" class="recharge-button" data-popup="recharge" data-service="instapay">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/7Vd4YQj.jpg" alt="انستا باي">
+                    <img src="https://i.postimg.cc/KvyRyt20/0-8.png" alt="انستا باي">
                 </div>
                 <h3 class="recharge-button-title">انستا باي</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 6: فوري بلس -->
             <a href="https://example.com/fawry" class="recharge-button">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/pYuXRxH.jpg" alt="فوري بلس">
+                    <img src="https://i.postimg.cc/m2NhZhZB/0-9.png" alt="فوري بلس">
                 </div>
                 <h3 class="recharge-button-title">فوري بلس</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 7: البريد المصري -->
             <a href="https://example.com/egyptpost" class="recharge-button">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/L8qwBoc.jpg" alt="البريد المصري">
+                    <img src="https://i.postimg.cc/Z5bnWZ03/0-10.png" alt="البريد المصري">
                 </div>
                 <h3 class="recharge-button-title">البريد المصري</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 8: كارت بنكي -->
             <a href="https://example.com/bankcard" class="recharge-button">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/JHq4Ief.jpg" alt="كارت بنكي">
+                    <img src="https://i.postimg.cc/cLFHYj8z/0-11.png" alt="كارت بنكي">
                 </div>
                 <h3 class="recharge-button-title">كارت بنكي</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
             </a>
-            
-            <!-- زر 9: ATM -->
             <a href="https://example.com/atm" class="recharge-button">
                 <div class="recharge-button-img">
-                    <img src="https://i.imgur.com/xJCRMOz.jpg" alt="ATM">
+                    <img src="https://i.postimg.cc/cJ6JcmRL/0-12.png" alt="ATM">
                 </div>
                 <h3 class="recharge-button-title">ATM</h3>
                 <p class="recharge-button-desc">الإيداع بدون رسوم - السحب 1 جنيه / الألف</p>
@@ -1145,36 +778,27 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <!-- نموذج الشحن -->
             <div class="recharge-form" id="rechargeForm">
                 <div class="form-group">
-                    <label class="form-label">رقم الهاتف</label>
+                    <label for="phoneNumber" class="form-label">رقم الهاتف</label>
                     <input type="tel" class="form-input" id="phoneNumber" placeholder="أدخل رقم الهاتف">
                     <div class="error-message" id="phoneError">يرجى إدخال رقم هاتف صحيح (يبدأ بـ 010 أو 011 أو 012 أو 015)</div>
                 </div>
-                
                 <div class="form-group">
-                    <label class="form-label">المبلغ (جنيه)</label>
+                    <label for="amount" class="form-label">المبلغ (جنيه)</label>
                     <input type="number" class="form-input" id="amount" placeholder="أدخل المبلغ">
                     <div class="error-message" id="amountError">يجب أن يكون المبلغ بين 200 و 10000 جنيه</div>
                 </div>
-                
                 <button class="form-button" id="submitButton">استكمال</button>
             </div>
-            
-            <!-- حالة النجاح -->
             <div class="success-container" id="successContainer">
                 <div class="success-icon">
                     <i class="fas fa-check"></i>
                 </div>
-                
-                <h4 class="success-title">تم إنشاء الطلب بنجاح</h4>
-                
+                <h3 class="success-title">تم إنشاء الطلب بنجاح</h3>
                 <p>قم بتحويل مبلغ</p>
                 <div class="success-amount" id="finalAmount">495 جنيه</div>
                 <p>لرقم المحفظة التالي:</p>
-                
                 <div class="wallet-container">
                     <span class="wallet-number" id="walletNumber">01023520619</span>
                     <button class="copy-button" id="copyButton">
@@ -1182,13 +806,10 @@
                         <span>نسخ</span>
                     </button>
                 </div>
-                
-                <div class="auto-detect-note">
-                    <p><i class="fas fa-info-circle"></i> يتم اكتشاف التحويل تلقائياً وعند تحويلك للمبلغ سيتم إيداع الرصيد بنجاح</p>
+                <div class="auto-detect">
+                    <p><i class="fas fa-info-circle"></i> يتم اكتشاف التحويل تلقائيًا وعند تحويلك للمبلغ سيتم إيداع الرصيد بنجاح</p>
                 </div>
-                
-                <p>قم بتحويل مبلغ الايداع من محفظتك قبل انتهاء الوقت/p>
-                
+                <p>قم بتحويل مبلغ الإيداع من محفظتك قبل انتهاء الوقت</p>
                 <div class="timer-container">
                     <div class="circle-timer" id="circleTimer">
                         <div class="timer-inner">
@@ -1197,17 +818,12 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- حالة الفشل -->
             <div class="failure-container" id="failureContainer">
                 <div class="failure-icon">
                     <i class="fas fa-times"></i>
                 </div>
-                
-                <h4 class="failure-title">فشلت العملية</h4>
-                
-                <p>لم نتمكن من إتمام عملية الايداع يرجى المحاولة مرة أخرى.</p>
-                
+                <h3 class="failure-title">فشلت العملية</h3>
+                <p>لم نتمكن من إتمام عملية الإيداع يرجى المحاولة مرة أخرى.</p>
                 <button class="retry-button" id="retryButton">إعادة المحاولة</button>
             </div>
         </div>
@@ -1226,7 +842,37 @@
     </div>
 
     <script>
-        // تفعيل النافذة المنبثقة
+        // Notification panel event listeners
+        function addEventListeners() {
+            const notificationBtn = document.getElementById('egyNotificationBtn');
+            const notificationPanel = document.getElementById('egyNotificationPanel');
+            const closeNotifications = document.getElementById('egyCloseNotifications');
+
+            if (notificationBtn && notificationPanel && closeNotifications) {
+                notificationBtn.addEventListener('click', () => {
+                    notificationPanel.classList.add('active');
+                });
+
+                closeNotifications.addEventListener('click', () => {
+                    notificationPanel.classList.remove('active');
+                });
+
+                notificationPanel.addEventListener('click', (e) => {
+                    if (e.target === notificationPanel) {
+                        notificationPanel.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Initialize notification panel
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', addEventListeners);
+        } else {
+            addEventListeners();
+        }
+
+        // Popup functionality
         const popupOverlay = document.getElementById('popupOverlay');
         const popupContainer = document.getElementById('popupContainer');
         const popupClose = document.getElementById('popupClose');
@@ -1236,19 +882,15 @@
         const alertCancel = document.getElementById('alertCancel');
         const alertConfirm = document.getElementById('alertConfirm');
 
-        // متغير للتحقق من حالة المؤقت
         let isTimerRunning = false;
 
-        // فتح النافذة المنبثقة عند الضغط على أزرار الشحن
         rechargeButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
                 const service = button.getAttribute('data-service');
-                
-                // تعيين عنوان النافذة حسب الخدمة
-                switch(service) {
+                switch (service) {
                     case 'vodafone':
-                        popupTitle.textContent = ' إيداع فودافون كاش';
+                        popupTitle.textContent = 'إيداع فودافون كاش';
                         break;
                     case 'orange':
                         popupTitle.textContent = 'إيداع أورانج كاش';
@@ -1263,10 +905,8 @@
                         popupTitle.textContent = 'إيداع انستا باي';
                         break;
                     default:
-                        popupTitle.textContent = ' إيداع';
+                        popupTitle.textContent = 'إيداع';
                 }
-                
-                // فتح النافذة المنبثقة
                 popupOverlay.classList.add('active');
                 setTimeout(() => {
                     popupContainer.classList.add('active');
@@ -1274,10 +914,8 @@
             });
         });
 
-        // إغلاق النافذة المنبثقة
         popupClose.addEventListener('click', () => {
             if (isTimerRunning) {
-                // إظهار تنبيه إذا كان المؤقت يعمل
                 alertOverlay.classList.add('active');
             } else {
                 closePopup();
@@ -1287,7 +925,6 @@
         popupOverlay.addEventListener('click', (e) => {
             if (e.target === popupOverlay) {
                 if (isTimerRunning) {
-                    // إظهار تنبيه إذا كان المؤقت يعمل
                     alertOverlay.classList.add('active');
                 } else {
                     closePopup();
@@ -1295,7 +932,6 @@
             }
         });
 
-        // أزرار التنبيه
         alertCancel.addEventListener('click', () => {
             alertOverlay.classList.remove('active');
         });
@@ -1310,12 +946,11 @@
             popupContainer.classList.remove('active');
             setTimeout(() => {
                 popupOverlay.classList.remove('active');
-                // إعادة تعيين النموذج
                 resetForm();
             }, 300);
         }
 
-        // التحقق من النموذج
+        // Form validation
         const phoneInput = document.getElementById('phoneNumber');
         const amountInput = document.getElementById('amount');
         const phoneError = document.getElementById('phoneError');
@@ -1331,13 +966,10 @@
         const retryButton = document.getElementById('retryButton');
         const finalAmount = document.getElementById('finalAmount');
 
-        // التحقق من رقم الهاتف
         phoneInput.addEventListener('input', validatePhone);
-        
         function validatePhone() {
             const phoneRegex = /^(010|011|012|015)\d{8}$/;
             const isValid = phoneRegex.test(phoneInput.value);
-            
             if (!isValid) {
                 phoneInput.classList.add('error');
                 phoneError.classList.add('active');
@@ -1345,17 +977,13 @@
                 phoneInput.classList.remove('error');
                 phoneError.classList.remove('active');
             }
-            
             validateForm();
         }
 
-        // التحقق من المبلغ
         amountInput.addEventListener('input', validateAmount);
-        
         function validateAmount() {
             const amount = parseInt(amountInput.value);
             const isValid = amount >= 200 && amount <= 10000;
-            
             if (!isValid) {
                 amountInput.classList.add('error');
                 amountError.classList.add('active');
@@ -1363,72 +991,49 @@
                 amountInput.classList.remove('error');
                 amountError.classList.remove('active');
             }
-            
             validateForm();
         }
 
-        // التحقق من النموذج بالكامل
         function validateForm() {
             const phoneRegex = /^(010|011|012|015)\d{8}$/;
             const isPhoneValid = phoneRegex.test(phoneInput.value);
-            
             const amount = parseInt(amountInput.value);
             const isAmountValid = amount >= 200 && amount <= 10000;
-            
             submitButton.disabled = !(isPhoneValid && isAmountValid);
         }
 
-        // إرسال النموذج
         submitButton.addEventListener('click', submitForm);
-        
         function submitForm() {
-            // حساب المبلغ النهائي (المبلغ المدخل - 5 جنيه)
             const originalAmount = parseInt(amountInput.value);
             const discountedAmount = originalAmount - 5;
-            
-            // تعيين المبلغ النهائي في صفحة النجاح
             finalAmount.textContent = discountedAmount + " جنيه";
-            
-            // إخفاء النموذج وإظهار حالة النجاح
             rechargeForm.style.display = 'none';
             successContainer.style.display = 'flex';
-            
-            // تعيين رقم المحفظة (يمكن أن يكون ديناميكيًا)
             walletNumber.textContent = '01023520619';
-            
-            // بدء المؤقت
             startTimer();
         }
 
-        // نسخ رقم المحفظة
         copyButton.addEventListener('click', () => {
             navigator.clipboard.writeText(walletNumber.textContent)
                 .then(() => {
                     const originalText = copyButton.innerHTML;
                     copyButton.innerHTML = '<i class="fas fa-check"></i><span>تم النسخ</span>';
-                    
                     setTimeout(() => {
                         copyButton.innerHTML = originalText;
                     }, 2000);
                 });
         });
 
-        // المؤقت الدائري
         let timerInterval;
-        
         function startTimer() {
             isTimerRunning = true;
             let timeLeft = 60;
             timerValue.textContent = timeLeft;
-            
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerValue.textContent = timeLeft;
-                
-                // تحديث المؤقت الدائري
                 const percentage = (timeLeft / 60) * 100;
                 circleTimer.style.background = `conic-gradient(var(--primary-color) ${percentage}%, #f0f0f0 0%)`;
-                
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     isTimerRunning = false;
@@ -1437,24 +1042,19 @@
             }, 1000);
         }
 
-        // إظهار حالة الفشل
         function showFailure() {
             successContainer.style.display = 'none';
             failureContainer.style.display = 'flex';
         }
 
-        // إعادة المحاولة
         retryButton.addEventListener('click', () => {
-            // إعادة تحميل الصفحة
             window.location.reload();
         });
 
-        // إعادة تعيين النموذج
         function resetForm() {
             rechargeForm.style.display = 'flex';
             successContainer.style.display = 'none';
             failureContainer.style.display = 'none';
-            
             phoneInput.value = '';
             amountInput.value = '';
             phoneInput.classList.remove('error');
@@ -1462,13 +1062,12 @@
             phoneError.classList.remove('active');
             amountError.classList.remove('active');
             submitButton.disabled = true;
-            
-            // إيقاف المؤقت إذا كان يعمل
             if (timerInterval) {
                 clearInterval(timerInterval);
                 isTimerRunning = false;
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'949a487e92bce191',t:'MTc0ODkwMjI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'949a487e92bce191',t:'MTc0ODkwMjI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>
