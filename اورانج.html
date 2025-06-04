@@ -32,6 +32,86 @@
         }
 
         .custom-navbar .back-button {
+            order: 1;
+        }
+
+        .custom-navbar .price {
+            order: 2;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .custom-navbar .app-name {
+            order: 3;
+        }
+
+        .custom-navbar > div, .custom-navbar > button {
+            flex-shrink: 0;
+        }
+
+        nav:not(.custom-navbar), header:not(.custom-navbar), [role="navigation"]:not(.custom-navbar) {
+            display: none !important;
+        }
+
+        @media (max-width: 640px) {
+            .custom-navbar {
+                padding: 0.5rem;
+            }
+            .custom-navbar .app-name {
+                font-size: 1rem;
+            }
+            .custom-navbar .price {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Navigation Bar -->
+    <div class="custom-navbar">
+        <button class="back-button p-2 rounded-full hover:bg-red-800 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        <div class="price text-sm font-medium">00.00 ج.م</div>
+        <div class="app-name text-lg font-bold">EGY MY WIRE</div>
+    </div>
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGY MY WIRE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+
+        .custom-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: #fe0000;
+            color: white;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-navbar .back-button {
             order: 1; /* Always on the right */
         }
 
