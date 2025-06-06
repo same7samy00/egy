@@ -1,0 +1,994 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EGY MY WIRE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            font-size: 80%;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://source.unsplash.com/random/1080x1920/?egypt,market');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .app-title {
+            color: white;
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .app-slogan {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 300px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            background-color: #e00000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .fullscreen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .modal-active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 30px;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-title {
+            color: #ff0000;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .form-label {
+            display: block;
+            text-align: right;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+            outline: none;
+        }
+        
+        .error-message {
+            color: #ff0000;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            text-align: right;
+            display: none;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .weak {
+            background-color: #ff4d4d;
+            width: 33.33%;
+        }
+        
+        .medium {
+            background-color: #ffcc00;
+            width: 66.66%;
+        }
+        
+        .strong {
+            background-color: #00cc44;
+            width: 100%;
+        }
+        
+        .password-strength-text {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .forgot-password {
+            color: #ff0000;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+        }
+        
+        .id-info {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: right;
+            font-size: 0.8rem;
+            color: #333;
+        }
+        
+        .id-info p {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        
+        .form-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 10px;
+        }
+        
+        .form-actions {
+            margin-top: 20px;
+        }
+        
+        @media (max-height: 700px) {
+            .container {
+                padding-top: 20px;
+                justify-content: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+            
+            .app-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الصفحة الرئيسية -->
+    <div id="home-page" class="container">
+        <h4 class="app-title">التطبيق</h4>
+        <p class="app-slogan">بندعم تجار مصر</p>
+        
+        <button id="login-btn" class="btn">تسجيل الدخول</button>
+        <button id="register-btn" class="btn">إنشاء حساب</button>
+    </div>
+    
+    <!-- نافذة تسجيل الدخول -->
+    <div id="login-modal" class="fullscreen-modal">
+        <div class="form-container">
+            <h4 class="form-title">تسجيل الدخول</h4>
+            <h3 class="form-subtitle">أدخل بياناتك للوصول إلى حسابك</h3>
+            
+            <div id="login-success" class="success-message">
+                تم تسجيل الدخول بنجاح! جاري تحويلك...
+            </div>
+            
+            <div class="form-content">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label" for="login-phone">رقم الهاتف</label>
+                        <input type="tel" id="login-phone" class="form-input" placeholder="أدخل رقم الهاتف" maxlength="11">
+                        <div id="login-phone-error" class="error-message">رقم غير صحيح</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">كلمة المرور</label>
+                        <input type="password" id="login-password" class="form-input" placeholder="أدخل كلمة المرور">
+                        <div id="login-password-error" class="error-message">كلمة المرور غير صحيحة</div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn">تسجيل الدخول</button>
+                        <a href="#" id="forgot-password" class="forgot-password">هل نسيت كلمة المرور؟</a>
+                    </div>
+                </form>
+            </div>
+            
+            <button id="login-back" class="back-button">×</button>
+        </div>
+    </div>
+    
+    <!-- نافذة إنشاء حساب -->
+    <div id="register-modal" class="fullscreen-modal">
+        <div class="form-container">
+            <h4 class="form-title">إنشاء حساب جديد</h4>
+            <h3 class="form-subtitle">سجل بياناتك للانضمام إلى منصتنا</h3>
+            
+            <div id="register-success" class="success-message">
+                تم إنشاء الحساب بنجاح! جاري تحويلك...
+            </div>
+            
+            <div class="form-content">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label class="form-label" for="full-name">الاسم الرباعي</label>
+                        <input type="text" id="full-name" class="form-input" placeholder="أدخل الاسم الرباعي">
+                        <div id="name-error" class="error-message">يجب إدخال الاسم الرباعي</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">رقم الهاتف</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="أدخل رقم الهاتف" maxlength="11">
+                        <div id="phone-error" class="error-message">رقم غير صحيح</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="national-id">الرقم القومي</label>
+                        <input type="text" id="national-id" class="form-input" placeholder="أدخل الرقم القومي" maxlength="14">
+                        <div id="id-error" class="error-message">الرقم القومي غير صحيح</div>
+                        <div id="id-info" class="id-info" style="display: none;">
+                            <p><strong>تاريخ الميلاد:</strong> <span id="birth-date">--/--/----</span></p>
+                            <p><strong>محافظة الميلاد:</strong> <span id="governorate">--</span></p>
+                            <p><strong>النوع:</strong> <span id="gender">--</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">كلمة المرور</label>
+                        <input type="password" id="password" class="form-input" placeholder="أدخل كلمة المرور">
+                        <div class="password-strength">
+                            <div id="password-strength-bar" class="password-strength-bar"></div>
+                        </div>
+                        <div id="password-strength-text" class="password-strength-text">قوة كلمة المرور</div>
+                        <div id="password-error" class="error-message">يجب أن تتكون من 6 أحرف على الأقل</div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn">إنشاء حساب</button>
+                    </div>
+                </form>
+            </div>
+            
+            <button id="register-back" class="back-button">×</button>
+        </div>
+    </div>
+    
+    <!-- نافذة استعادة كلمة المرور -->
+    <div id="reset-modal" class="fullscreen-modal">
+        <div class="form-container">
+            <h4 class="form-title">استعادة كلمة المرور</h4>
+            <h3 class="form-subtitle">أدخل بياناتك لاستعادة كلمة المرور</h3>
+            
+            <div id="reset-success" class="success-message">
+                تم تغيير كلمة المرور بنجاح! جاري تحويلك...
+            </div>
+            
+            <div class="form-content">
+                <form id="reset-form">
+                    <div id="reset-step-1">
+                        <div class="form-group">
+                            <label class="form-label" for="reset-national-id">الرقم القومي</label>
+                            <input type="text" id="reset-national-id" class="form-input" placeholder="أدخل الرقم القومي" maxlength="14">
+                            <div id="reset-id-error" class="error-message">الرقم القومي غير صحيح</div>
+                            <div id="reset-id-info" class="id-info" style="display: none;">
+                                <p><strong>تاريخ الميلاد:</strong> <span id="reset-birth-date">--/--/----</span></p>
+                                <p><strong>محافظة الميلاد:</strong> <span id="reset-governorate">--</span></p>
+                                <p><strong>النوع:</strong> <span id="reset-gender">--</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="reset-phone">رقم الهاتف</label>
+                            <input type="tel" id="reset-phone" class="form-input" placeholder="أدخل رقم الهاتف" maxlength="11">
+                            <div id="reset-phone-error" class="error-message">رقم غير صحيح</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="verify-btn" class="btn">التحقق</button>
+                        </div>
+                    </div>
+                    
+                    <div id="reset-step-2" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label" for="new-password">كلمة المرور الجديدة</label>
+                            <input type="password" id="new-password" class="form-input" placeholder="أدخل كلمة المرور الجديدة">
+                            <div class="password-strength">
+                                <div id="new-password-strength-bar" class="password-strength-bar"></div>
+                            </div>
+                            <div id="new-password-strength-text" class="password-strength-text">قوة كلمة المرور</div>
+                            <div id="new-password-error" class="error-message">يجب أن تتكون من 6 أحرف على الأقل</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn">تغيير كلمة المرور</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <button id="reset-back" class="back-button">×</button>
+        </div>
+    </div>
+    
+    <!-- صفحة لوحة التحكم (مثال) -->
+    <div id="dashboard-page" class="container" style="display: none;">
+        <h4 class="app-title">لوحة التحكم</h4>
+        <p class="app-slogan">مرحباً بك في التطبيق</p>
+        
+        <button id="logout-btn" class="btn">تسجيل الخروج</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // عناصر الصفحة الرئيسية
+            const homePage = document.getElementById('home-page');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            
+            // عناصر نافذة تسجيل الدخول
+            const loginModal = document.getElementById('login-modal');
+            const loginBack = document.getElementById('login-back');
+            const loginForm = document.getElementById('login-form');
+            const loginPhone = document.getElementById('login-phone');
+            const loginPassword = document.getElementById('login-password');
+            const loginPhoneError = document.getElementById('login-phone-error');
+            const loginPasswordError = document.getElementById('login-password-error');
+            const loginSuccess = document.getElementById('login-success');
+            const forgotPassword = document.getElementById('forgot-password');
+            
+            // عناصر نافذة إنشاء حساب
+            const registerModal = document.getElementById('register-modal');
+            const registerBack = document.getElementById('register-back');
+            const registerForm = document.getElementById('register-form');
+            const fullName = document.getElementById('full-name');
+            const phone = document.getElementById('phone');
+            const nationalId = document.getElementById('national-id');
+            const password = document.getElementById('password');
+            const nameError = document.getElementById('name-error');
+            const phoneError = document.getElementById('phone-error');
+            const idError = document.getElementById('id-error');
+            const passwordError = document.getElementById('password-error');
+            const passwordStrengthBar = document.getElementById('password-strength-bar');
+            const passwordStrengthText = document.getElementById('password-strength-text');
+            const registerSuccess = document.getElementById('register-success');
+            const idInfo = document.getElementById('id-info');
+            const birthDate = document.getElementById('birth-date');
+            const governorate = document.getElementById('governorate');
+            const gender = document.getElementById('gender');
+            
+            // عناصر نافذة استعادة كلمة المرور
+            const resetModal = document.getElementById('reset-modal');
+            const resetBack = document.getElementById('reset-back');
+            const resetForm = document.getElementById('reset-form');
+            const resetNationalId = document.getElementById('reset-national-id');
+            const resetPhone = document.getElementById('reset-phone');
+            const resetIdError = document.getElementById('reset-id-error');
+            const resetPhoneError = document.getElementById('reset-phone-error');
+            const verifyBtn = document.getElementById('verify-btn');
+            const resetStep1 = document.getElementById('reset-step-1');
+            const resetStep2 = document.getElementById('reset-step-2');
+            const newPassword = document.getElementById('new-password');
+            const newPasswordStrengthBar = document.getElementById('new-password-strength-bar');
+            const newPasswordStrengthText = document.getElementById('new-password-strength-text');
+            const newPasswordError = document.getElementById('new-password-error');
+            const resetSuccess = document.getElementById('reset-success');
+            const resetIdInfo = document.getElementById('reset-id-info');
+            const resetBirthDate = document.getElementById('reset-birth-date');
+            const resetGovernorate = document.getElementById('reset-governorate');
+            const resetGender = document.getElementById('reset-gender');
+            
+            // عناصر صفحة لوحة التحكم
+            const dashboardPage = document.getElementById('dashboard-page');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            // قاموس محافظات مصر
+            const governorates = {
+                '01': 'القاهرة',
+                '02': 'الإسكندرية',
+                '03': 'بورسعيد',
+                '04': 'السويس',
+                '11': 'دمياط',
+                '12': 'الدقهلية',
+                '13': 'الشرقية',
+                '14': 'القليوبية',
+                '15': 'كفر الشيخ',
+                '16': 'الغربية',
+                '17': 'المنوفية',
+                '18': 'البحيرة',
+                '19': 'الإسماعيلية',
+                '21': 'الجيزة',
+                '22': 'بني سويف',
+                '23': 'الفيوم',
+                '24': 'المنيا',
+                '25': 'أسيوط',
+                '26': 'سوهاج',
+                '27': 'قنا',
+                '28': 'أسوان',
+                '29': 'الأقصر',
+                '31': 'البحر الأحمر',
+                '32': 'الوادي الجديد',
+                '33': 'مطروح',
+                '34': 'شمال سيناء',
+                '35': 'جنوب سيناء',
+                '88': 'خارج مصر'
+            };
+            
+            // أحداث الصفحة الرئيسية
+            loginBtn.addEventListener('click', function() {
+                loginModal.classList.add('modal-active');
+            });
+            
+            registerBtn.addEventListener('click', function() {
+                registerModal.classList.add('modal-active');
+            });
+            
+            // أحداث نافذة تسجيل الدخول
+            loginBack.addEventListener('click', function() {
+                loginModal.classList.remove('modal-active');
+                resetLoginForm();
+            });
+            
+            forgotPassword.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.classList.remove('modal-active');
+                resetModal.classList.add('modal-active');
+            });
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const phoneValue = loginPhone.value.trim();
+                const passwordValue = loginPassword.value.trim();
+                let isValid = true;
+                
+                // التحقق من رقم الهاتف
+                if (!isValidPhone(phoneValue)) {
+                    loginPhoneError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    loginPhoneError.style.display = 'none';
+                }
+                
+                // التحقق من كلمة المرور
+                if (passwordValue.length < 6) {
+                    loginPasswordError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    loginPasswordError.style.display = 'none';
+                }
+                
+                if (isValid) {
+                    // التحقق من وجود المستخدم في localStorage
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.phone === phoneValue && u.password === passwordValue);
+                    
+                    if (user) {
+                        loginSuccess.style.display = 'block';
+                        setTimeout(function() {
+                            loginModal.classList.remove('modal-active');
+                            homePage.style.display = 'none';
+                            dashboardPage.style.display = 'flex';
+                            resetLoginForm();
+                        }, 2000);
+                    } else {
+                        loginPasswordError.textContent = 'بيانات غير صحيحة';
+                        loginPasswordError.style.display = 'block';
+                    }
+                }
+            });
+            
+            // أحداث نافذة إنشاء حساب
+            registerBack.addEventListener('click', function() {
+                registerModal.classList.remove('modal-active');
+                resetRegisterForm();
+            });
+            
+            password.addEventListener('input', checkPasswordStrength);
+            
+            nationalId.addEventListener('input', function() {
+                const idValue = this.value.trim();
+                if (idValue.length === 14) {
+                    extractNationalIdInfo(idValue, birthDate, governorate, gender, idInfo);
+                } else {
+                    idInfo.style.display = 'none';
+                }
+            });
+            
+            resetNationalId.addEventListener('input', function() {
+                const idValue = this.value.trim();
+                if (idValue.length === 14) {
+                    extractNationalIdInfo(idValue, resetBirthDate, resetGovernorate, resetGender, resetIdInfo);
+                } else {
+                    resetIdInfo.style.display = 'none';
+                }
+            });
+            
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fullNameValue = fullName.value.trim();
+                const phoneValue = phone.value.trim();
+                const nationalIdValue = nationalId.value.trim();
+                const passwordValue = password.value.trim();
+                let isValid = true;
+                
+                // التحقق من الاسم الرباعي
+                if (fullNameValue.split(/\s+/).filter(Boolean).length < 4) {
+                    nameError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    nameError.style.display = 'none';
+                }
+                
+                // التحقق من رقم الهاتف
+                if (!isValidPhone(phoneValue)) {
+                    phoneError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    phoneError.style.display = 'none';
+                }
+                
+                // التحقق من الرقم القومي
+                if (!isValidNationalId(nationalIdValue)) {
+                    idError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    idError.style.display = 'none';
+                }
+                
+                // التحقق من كلمة المرور
+                if (passwordValue.length < 6) {
+                    passwordError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    passwordError.style.display = 'none';
+                }
+                
+                if (isValid) {
+                    // التحقق من عدم وجود المستخدم مسبقًا
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const existingUser = users.find(u => u.phone === phoneValue || u.nationalId === nationalIdValue);
+                    
+                    if (existingUser) {
+                        idError.textContent = 'هذا المستخدم موجود بالفعل';
+                        idError.style.display = 'block';
+                    } else {
+                        // إضافة المستخدم الجديد
+                        const newUser = {
+                            fullName: fullNameValue,
+                            phone: phoneValue,
+                            nationalId: nationalIdValue,
+                            password: passwordValue
+                        };
+                        
+                        users.push(newUser);
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        registerSuccess.style.display = 'block';
+                        setTimeout(function() {
+                            registerModal.classList.remove('modal-active');
+                            homePage.style.display = 'none';
+                            dashboardPage.style.display = 'flex';
+                            resetRegisterForm();
+                        }, 2000);
+                    }
+                }
+            });
+            
+            // أحداث نافذة استعادة كلمة المرور
+            resetBack.addEventListener('click', function() {
+                resetModal.classList.remove('modal-active');
+                resetPasswordForm();
+            });
+            
+            newPassword.addEventListener('input', function() {
+                checkNewPasswordStrength();
+            });
+            
+            verifyBtn.addEventListener('click', function() {
+                const nationalIdValue = resetNationalId.value.trim();
+                const phoneValue = resetPhone.value.trim();
+                let isValid = true;
+                
+                // التحقق من الرقم القومي
+                if (!isValidNationalId(nationalIdValue)) {
+                    resetIdError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    resetIdError.style.display = 'none';
+                }
+                
+                // التحقق من رقم الهاتف
+                if (!isValidPhone(phoneValue)) {
+                    resetPhoneError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    resetPhoneError.style.display = 'none';
+                }
+                
+                if (isValid) {
+                    // التحقق من وجود المستخدم في localStorage
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.nationalId === nationalIdValue && u.phone === phoneValue);
+                    
+                    if (user) {
+                        // الانتقال إلى الخطوة الثانية
+                        resetStep1.style.display = 'none';
+                        resetStep2.style.display = 'block';
+                    } else {
+                        resetIdError.textContent = 'لا يوجد حساب بهذه البيانات';
+                        resetIdError.style.display = 'block';
+                    }
+                }
+            });
+            
+            resetForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const nationalIdValue = resetNationalId.value.trim();
+                const phoneValue = resetPhone.value.trim();
+                const newPasswordValue = newPassword.value.trim();
+                
+                if (newPasswordValue.length < 6) {
+                    newPasswordError.style.display = 'block';
+                    return;
+                } else {
+                    newPasswordError.style.display = 'none';
+                }
+                
+                // تحديث كلمة المرور في localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.nationalId === nationalIdValue && u.phone === phoneValue);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].password = newPasswordValue;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    resetSuccess.style.display = 'block';
+                    setTimeout(function() {
+                        resetModal.classList.remove('modal-active');
+                        loginModal.classList.add('modal-active');
+                        resetPasswordForm();
+                    }, 2000);
+                }
+            });
+            
+            // أحداث صفحة لوحة التحكم
+            logoutBtn.addEventListener('click', function() {
+                dashboardPage.style.display = 'none';
+                homePage.style.display = 'flex';
+            });
+            
+            // دوال المساعدة
+            function isValidPhone(phone) {
+                const phoneRegex = /^(010|011|012|015)\d{8}$/;
+                return phoneRegex.test(phone);
+            }
+            
+            function isValidNationalId(id) {
+                if (id.length !== 14 || !/^\d+$/.test(id)) {
+                    return false;
+                }
+                
+                // التحقق من الرقم الأول (قرن الميلاد)
+                const century = parseInt(id.charAt(0));
+                if (century !== 2 && century !== 3) {
+                    return false;
+                }
+                
+                // التحقق من تاريخ الميلاد
+                const year = parseInt(id.substring(1, 3));
+                const month = parseInt(id.substring(3, 5));
+                const day = parseInt(id.substring(5, 7));
+                
+                if (month < 1 || month > 12) {
+                    return false;
+                }
+                
+                if (day < 1 || day > 31) {
+                    return false;
+                }
+                
+                // التحقق من كود المحافظة
+                const governorateCode = id.substring(7, 9);
+                if (!governorates[governorateCode]) {
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            function extractNationalIdInfo(id, birthDateElement, governorateElement, genderElement, infoContainer) {
+                if (isValidNationalId(id)) {
+                    // استخراج تاريخ الميلاد
+                    const century = id.charAt(0) === '2' ? '19' : '20';
+                    const year = century + id.substring(1, 3);
+                    const month = id.substring(3, 5);
+                    const day = id.substring(5, 7);
+                    birthDateElement.textContent = `${day}/${month}/${year}`;
+                    
+                    // استخراج المحافظة
+                    const governorateCode = id.substring(7, 9);
+                    governorateElement.textContent = governorates[governorateCode] || 'غير معروفة';
+                    
+                    // استخراج النوع
+                    const genderCode = parseInt(id.charAt(12));
+                    genderElement.textContent = genderCode % 2 === 0 ? 'أنثى' : 'ذكر';
+                    
+                    infoContainer.style.display = 'block';
+                } else {
+                    infoContainer.style.display = 'none';
+                }
+            }
+            
+            function checkPasswordStrength() {
+                const passwordValue = password.value.trim();
+                
+                if (passwordValue.length === 0) {
+                    passwordStrengthBar.className = 'password-strength-bar';
+                    passwordStrengthText.textContent = 'قوة كلمة المرور';
+                    return;
+                }
+                
+                let strength = 0;
+                
+                // التحقق من طول كلمة المرور
+                if (passwordValue.length >= 8) {
+                    strength += 1;
+                }
+                
+                // التحقق من وجود أحرف وأرقام
+                if (/[A-Za-z]/.test(passwordValue) && /\d/.test(passwordValue)) {
+                    strength += 1;
+                }
+                
+                // التحقق من وجود رموز خاصة
+                if (/[^A-Za-z0-9]/.test(passwordValue)) {
+                    strength += 1;
+                }
+                
+                // تحديث شريط قوة كلمة المرور
+                passwordStrengthBar.className = 'password-strength-bar';
+                
+                if (strength === 1) {
+                    passwordStrengthBar.classList.add('weak');
+                    passwordStrengthText.textContent = 'ضعيفة';
+                    passwordStrengthText.style.color = '#ff4d4d';
+                } else if (strength === 2) {
+                    passwordStrengthBar.classList.add('medium');
+                    passwordStrengthText.textContent = 'متوسطة';
+                    passwordStrengthText.style.color = '#ffcc00';
+                } else if (strength === 3) {
+                    passwordStrengthBar.classList.add('strong');
+                    passwordStrengthText.textContent = 'قوية';
+                    passwordStrengthText.style.color = '#00cc44';
+                }
+            }
+            
+            function checkNewPasswordStrength() {
+                const passwordValue = newPassword.value.trim();
+                
+                if (passwordValue.length === 0) {
+                    newPasswordStrengthBar.className = 'password-strength-bar';
+                    newPasswordStrengthText.textContent = 'قوة كلمة المرور';
+                    return;
+                }
+                
+                let strength = 0;
+                
+                // التحقق من طول كلمة المرور
+                if (passwordValue.length >= 8) {
+                    strength += 1;
+                }
+                
+                // التحقق من وجود أحرف وأرقام
+                if (/[A-Za-z]/.test(passwordValue) && /\d/.test(passwordValue)) {
+                    strength += 1;
+                }
+                
+                // التحقق من وجود رموز خاصة
+                if (/[^A-Za-z0-9]/.test(passwordValue)) {
+                    strength += 1;
+                }
+                
+                // تحديث شريط قوة كلمة المرور
+                newPasswordStrengthBar.className = 'password-strength-bar';
+                
+                if (strength === 1) {
+                    newPasswordStrengthBar.classList.add('weak');
+                    newPasswordStrengthText.textContent = 'ضعيفة';
+                    newPasswordStrengthText.style.color = '#ff4d4d';
+                } else if (strength === 2) {
+                    newPasswordStrengthBar.classList.add('medium');
+                    newPasswordStrengthText.textContent = 'متوسطة';
+                    newPasswordStrengthText.style.color = '#ffcc00';
+                } else if (strength === 3) {
+                    newPasswordStrengthBar.classList.add('strong');
+                    newPasswordStrengthText.textContent = 'قوية';
+                    newPasswordStrengthText.style.color = '#00cc44';
+                }
+            }
+            
+            function resetLoginForm() {
+                loginForm.reset();
+                loginPhoneError.style.display = 'none';
+                loginPasswordError.style.display = 'none';
+                loginSuccess.style.display = 'none';
+            }
+            
+            function resetRegisterForm() {
+                registerForm.reset();
+                nameError.style.display = 'none';
+                phoneError.style.display = 'none';
+                idError.style.display = 'none';
+                passwordError.style.display = 'none';
+                passwordStrengthBar.className = 'password-strength-bar';
+                passwordStrengthText.textContent = 'قوة كلمة المرور';
+                registerSuccess.style.display = 'none';
+                idInfo.style.display = 'none';
+            }
+            
+            function resetPasswordForm() {
+                resetForm.reset();
+                resetIdError.style.display = 'none';
+                resetPhoneError.style.display = 'none';
+                newPasswordError.style.display = 'none';
+                newPasswordStrengthBar.className = 'password-strength-bar';
+                newPasswordStrengthText.textContent = 'قوة كلمة المرور';
+                resetSuccess.style.display = 'none';
+                resetStep1.style.display = 'block';
+                resetStep2.style.display = 'none';
+                resetIdInfo.style.display = 'none';
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94bbb16b60f8e1b5',t:'MTc0OTI1MjU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
