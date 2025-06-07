@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -458,14 +456,6 @@
         </div>
     </div>
     
-    <!-- صفحة لوحة التحكم (مثال) -->
-    <div id="dashboard-page" class="container" style="display: none;">
-        <h4 class="app-title">لوحة التحكم</h4>
-        <p class="app-slogan">مرحباً بك في التطبيق</p>
-        
-        <button id="logout-btn" class="btn">تسجيل الخروج</button>
-    </div>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // عناصر الصفحة الرئيسية
@@ -524,10 +514,6 @@
             const resetBirthDate = document.getElementById('reset-birth-date');
             const resetGovernorate = document.getElementById('reset-governorate');
             const resetGender = document.getElementById('reset-gender');
-            
-            // عناصر صفحة لوحة التحكم
-            const dashboardPage = document.getElementById('dashboard-page');
-            const logoutBtn = document.getElementById('logout-btn');
             
             // قاموس محافظات مصر
             const governorates = {
@@ -614,8 +600,7 @@
                         loginSuccess.style.display = 'block';
                         setTimeout(function() {
                             loginModal.classList.remove('modal-active');
-                            homePage.style.display = 'none';
-                            dashboardPage.style.display = 'flex';
+                            window.location.href = 'https://ana.mywire.org/%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%AF'; // التوجيه إلى صفحة لوحة التحكم
                             resetLoginForm();
                         }, 2000);
                     } else {
@@ -715,8 +700,7 @@
                         registerSuccess.style.display = 'block';
                         setTimeout(function() {
                             registerModal.classList.remove('modal-active');
-                            homePage.style.display = 'none';
-                            dashboardPage.style.display = 'flex';
+                            window.location.href = 'https://ana.mywire.org/%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%AF'; // التوجيه إلى صفحة لوحة التحكم
                             resetRegisterForm();
                         }, 2000);
                     }
@@ -799,12 +783,6 @@
                         resetPasswordForm();
                     }, 2000);
                 }
-            });
-            
-            // أحداث صفحة لوحة التحكم
-            logoutBtn.addEventListener('click', function() {
-                dashboardPage.style.display = 'none';
-                homePage.style.display = 'flex';
             });
             
             // دوال المساعدة
@@ -990,5 +968,5 @@
             }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94bbb16b60f8e1b5',t:'MTc0OTI1MjU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
