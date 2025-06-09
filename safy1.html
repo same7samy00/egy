@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>شحن رصيد</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #374151;
+            --accent-color: #f0f4f8;
+            --border-color: #e5e7eb;
+        }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background-color: var(--accent-color);
+            direction: rtl;
+        }
+
+        /* === Top Bar Styles === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px; padding: 0 1rem; display: flex; align-items: center;
+            justify-content: space-between; color: white; position: sticky; top: 0; z-index: 900;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            width: 40px; height: 40px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white !important; text-decoration: none; flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25); transform: scale(1.05);
+        }
+        .top-bar-title {
+            font-weight: 700; flex-grow: 1; text-align: center;
+        }
+
+        /* === Form Styles === */
+        .form-wrapper {
+            padding: 1rem;
+        }
+        .form-container {
+            width: 100%; max-width: 500px; margin: 1rem auto;
+            padding: 2rem; background-color: white; border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .form-group {
+            margin-bottom: 1.25rem; position: relative;
+        }
+        .form-label {
+            display: block; margin-bottom: 0.5rem; font-weight: 600;
+            color: #374151; font-size: 1rem;
+        }
+        .form-input {
+            width: 100%; padding: 12px 15px; border: 1px solid #d1d5db;
+            border-radius: 8px; font-size: 16px; transition: all 0.3s ease;
+            text-align: center;
+        }
+        .form-input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+        }
+        .form-input.valid { border-color: #34d399; }
+        .form-input.invalid { border-color: #ef4444; }
+        .provider-info {
+            margin-top: 6px; display: flex; align-items: center;
+            justify-content: center; font-size: 14px; font-weight: 600; height: 20px;
+        }
+        .provider-icon { margin-left: 8px; font-size: 18px; }
+        .submit-btn {
+            width: 100%; padding: 14px; background-color: var(--primary-color);
+            color: white; border: none; border-radius: 8px; font-size: 16px;
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+        }
+        .submit-btn:hover:not(:disabled) { background-color: #2e5faa; }
+        .submit-btn:disabled { background-color: #93c5fd; cursor: not-allowed; }
+        .info-text {
+            font-size: 14px; color: #6b7280; margin-top: 5px; text-align: center;
+        }
+
+        /* Provider Colors */
+        .vodafone { color: #e60000; }
+        .etisalat { color: #6ac82b; }
+        .orange { color: #ff7900; }
+        .we { color: #652d90; }
+
+        /* === Invoice Modal Styles (New Fullscreen System) === */
+        .modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--accent-color); width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            transition: transform 0.3s ease; transform: translateY(100%);
+        }
+        .modal.active .modal-content { transform: translateY(0); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-bottom: 1px solid var(--border-color);
+            background-color: white; flex-shrink: 0;
+        }
+        .modal-title {
+            font-size: 1.125rem; font-weight: 700; color: var(--secondary-color);
+        }
+        .close-button {
+            background: none; border: none; font-size: 1.75rem; color: #6b7280; cursor: pointer;
+        }
+        .modal-body { flex-grow: 1; padding: 1rem; overflow-y: auto; }
+        .details-table {
+            width: 100%; border-collapse: collapse; background-color: white;
+            border-radius: 0.75rem; overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .details-table td {
+            padding: 0.75rem 1rem; text-align: right; border-bottom: 1px solid var(--border-color);
+        }
+        .details-table tr:last-child td { border-bottom: none; }
+        .details-table td:first-child {
+            font-weight: 600; color: #6b7280; width: 120px;
+        }
+        .details-table .value { font-weight: 600; color: #1f2937; }
+        
+        .no-balance-notification {
+            background-color: #fef2f2; color: #dc2626; padding: 1rem;
+            text-align: center; font-size: 0.875rem; border-radius: 0.5rem;
+            margin-top: 1rem; display: none;
+        }
+        .modal-footer {
+            display: flex; gap: 0.5rem; align-items: center;
+            padding: 1rem; border-top: 1px solid var(--border-color); background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        .btn {
+            padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease; border: none; font-size: 1rem;
+            width: 100%;
+        }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover:not(:disabled) { background-color: #2e5faa; }
+        .btn-secondary { background-color: #e5e7eb; color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        .btn:disabled .spinner { display: inline-block; }
+        .spinner {
+            width: 1rem; height: 1rem; border-width: 2px;
+            border: 2px solid #f3f3f3; border-top-color: var(--primary-color);
+            border-radius: 50%; display: none; margin-left: 0.5rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Notification Modal */
+        .notification-modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); display: flex; 
+            align-items: center; justify-content: center; z-index: 1050; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden;
+        }
+        .notification-modal.active { opacity: 1; visibility: visible; }
+        .notification-modal .notification-content {
+            background-color: white; width: 100%; height: 100%; display: flex; flex-direction: column;
+            transition: transform 0.3s ease; transform: translateY(100%);
+        }
+        .notification-modal.active .notification-content { transform: translateY(0); }
+    </style>
+</head>
+<body>
+    
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="top-bar-title">شحن رصيد</div>
+        <div class="icon-container" id="notificationIcon">
+            <i class="fas fa-bell"></i>
+        </div>
+    </div>
+
+    <div class="form-wrapper">
+        <div class="form-container">
+            <form id="rechargeForm">
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" id="phoneNumber" class="form-input" placeholder="أدخل رقم الهاتف (11 رقم)" maxlength="11" autocomplete="off">
+                    <div class="provider-info" id="providerInfo"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">القيمة (جنيه)</label>
+                    <input type="number" id="amount" class="form-input" placeholder="أدخل القيمة" min="5" max="6000" autocomplete="off">
+                    <div class="info-text">القيمة المسموح بها: 5 - 6000 جنيه</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الرصيد</label>
+                    <input type="number" id="balance" class="form-input" placeholder="أدخل الرصيد" min="3.5" max="4200" step="0.1" autocomplete="off">
+                    <div class="info-text">الرصيد المسموح به: 3.5 - 4200</div>
+                </div>
+                <button type="submit" id="submitBtn" class="submit-btn" disabled>عرض تفاصيل الشحن</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="purchaseModal" class="modal">
+        <div id="modal-content" class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">تفاصيل عملية الشحن</h2>
+                <button class="close-button" onclick="closePurchaseModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="details-table">
+                    <tbody>
+                        <tr><td>رقم المرجع</td><td class="value" id="modalRef"></td></tr>
+                        <tr><td>التاريخ</td><td class="value" id="modalDate"></td></tr>
+                        <tr><td>الوقت</td><td class="value" id="modalTime"></td></tr>
+                    </tbody>
+                </table>
+                <table class="details-table">
+                     <tbody>
+                        <tr><td>رقم الهاتف</td><td class="value" id="modalPhone"></td></tr>
+                        <tr><td>مزود الخدمة</td><td class="value" id="modalProvider"></td></tr>
+                        <tr><td>القيمة</td><td class="value" id="modalAmount"></td></tr>
+                        <tr><td>الرصيد</td><td class="value" id="modalBalance"></td></tr>
+                        <tr><td>العمولة</td><td class="value" id="modalCommission"></td></tr>
+                        <tr><td>المبلغ المستحق</td><td class="value" id="modalTotal" style="font-size: 1.1rem;"></td></tr>
+                    </tbody>
+                </table>
+                <div id="no-balance-notification" class="no-balance-notification">
+                    <i class="fas fa-exclamation-circle" style="margin-left: 5px;"></i>
+                    لا يوجد رصيد كافي لإتمام العملية
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePurchaseModal()">إلغاء</button>
+                <button id="chargeBtn" class="btn btn-primary" onclick="chargeNow()">
+                    <span class="spinner"></span>
+                    <span>تأكيد الشحن</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-content">
+             <div class="modal-header">
+                <h2 class="modal-title">الإشعارات</h2>
+                <button id="closeNotificationModalBtn" class="close-button">&times;</button>
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form elements
+            const phoneInput = document.getElementById('phoneNumber');
+            const amountInput = document.getElementById('amount');
+            const balanceInput = document.getElementById('balance');
+            const providerInfo = document.getElementById('providerInfo');
+            const submitBtn = document.getElementById('submitBtn');
+            const form = document.getElementById('rechargeForm');
+            
+            // Modal elements
+            const purchaseModal = document.getElementById('purchaseModal');
+            const chargeBtn = document.getElementById('chargeBtn');
+            const noBalanceNotification = document.getElementById('no-balance-notification');
+
+            // Form validation state
+            let phoneValid = false, amountValid = false, balanceValid = false, currentProvider = '';
+
+            // --- Form Logic (Real-time validation and calculation) ---
+            phoneInput.addEventListener('input', debounce(function() {
+                const phoneNumber = this.value.trim();
+                const phoneRegex = /^(010|011|012|015)\d{8}$/;
+                if (phoneNumber.length === 11 && phoneRegex.test(phoneNumber)) {
+                    phoneValid = true;
+                    this.classList.remove('invalid'); this.classList.add('valid');
+                    let provider = '', providerClass = '', providerIcon = '';
+                    if (phoneNumber.startsWith('010')) { provider = 'فودافون'; providerClass = 'vodafone'; providerIcon = 'ri-signal-tower-fill'; }
+                    else if (phoneNumber.startsWith('011')) { provider = 'اتصالات'; providerClass = 'etisalat'; providerIcon = 'ri-base-station-fill'; }
+                    else if (phoneNumber.startsWith('012')) { provider = 'أورانج'; providerClass = 'orange'; providerIcon = 'ri-wifi-fill'; }
+                    else if (phoneNumber.startsWith('015')) { provider = 'وي'; providerClass = 'we'; providerIcon = 'ri-broadcast-fill'; }
+                    currentProvider = provider;
+                    providerInfo.innerHTML = `<i class="provider-icon ${providerIcon} ${providerClass}"></i><span class="${providerClass}">${provider}</span>`;
+                } else {
+                    phoneValid = false;
+                    this.classList.remove('valid');
+                    if (phoneNumber.length > 0) {
+                        this.classList.add('invalid');
+                        providerInfo.innerHTML = '<span style="color: #ef4444;">رقم هاتف غير صحيح</span>';
+                    } else {
+                        this.classList.remove('invalid'); providerInfo.innerHTML = '';
+                    }
+                }
+                validateForm();
+            }, 300));
+
+            amountInput.addEventListener('input', debounce(function() {
+                const amount = parseFloat(this.value);
+                amountValid = !isNaN(amount) && amount >= 5 && amount <= 6000;
+                this.classList.toggle('valid', amountValid);
+                this.classList.toggle('invalid', this.value.length > 0 && !amountValid);
+                if (amountValid) {
+                    const balance = (amount * 0.7).toFixed(1);
+                    balanceInput.value = balance;
+                    balanceValid = parseFloat(balance) >= 3.5 && parseFloat(balance) <= 4200;
+                    balanceInput.classList.toggle('valid', balanceValid);
+                    balanceInput.classList.toggle('invalid', !balanceValid);
+                }
+                validateForm();
+            }, 300));
+
+            balanceInput.addEventListener('input', debounce(function() {
+                const balance = parseFloat(this.value);
+                balanceValid = !isNaN(balance) && balance >= 3.5 && balance <= 4200;
+                this.classList.toggle('valid', balanceValid);
+                this.classList.toggle('invalid', this.value.length > 0 && !balanceValid);
+                if (balanceValid) {
+                    const amount = (balance / 0.7).toFixed(1);
+                    amountInput.value = amount;
+                    amountValid = parseFloat(amount) >= 5 && parseFloat(amount) <= 6000;
+                    amountInput.classList.toggle('valid', amountValid);
+                    amountInput.classList.toggle('invalid', !amountValid);
+                }
+                validateForm();
+            }, 300));
+
+            function validateForm() {
+                submitBtn.disabled = !(phoneValid && amountValid && balanceValid);
+            }
+
+            // --- Modal and Submission Logic ---
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                openInvoiceModal();
+            });
+
+            function openInvoiceModal() {
+                // Generate data
+                const now = new Date();
+                const refId = Math.floor(Math.random() * 900000000) + 100000000;
+                const amount = parseFloat(amountInput.value);
+                const commission = 1.00; // Example commission
+                const total = amount + commission;
+
+                // Populate modal
+                document.getElementById('modalRef').textContent = refId;
+                document.getElementById('modalDate').textContent = now.toLocaleDateString('ar-EG-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('modalTime').textContent = now.toLocaleTimeString('ar-EG-u-nu-latn', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('modalPhone').textContent = phoneInput.value;
+                document.getElementById('modalProvider').textContent = currentProvider;
+                document.getElementById('modalAmount').textContent = amount.toFixed(2) + ' جنيه';
+                document.getElementById('modalBalance').textContent = balanceInput.value + ' جنيه';
+                document.getElementById('modalCommission').textContent = commission.toFixed(2) + ' جنيه';
+                document.getElementById('modalTotal').textContent = total.toFixed(2) + ' جنيه';
+                
+                // Reset modal state
+                noBalanceNotification.style.display = 'none';
+                chargeBtn.disabled = false;
+                chargeBtn.querySelector('span:last-child').textContent = 'تأكيد الشحن';
+
+                // Show modal
+                purchaseModal.classList.add('active');
+            }
+            
+            window.closePurchaseModal = function() {
+                purchaseModal.classList.remove('active');
+            }
+
+            window.chargeNow = function() {
+                chargeBtn.disabled = true;
+                chargeBtn.querySelector('span:last-child').textContent = 'جاري التحقق...';
+                
+                setTimeout(() => {
+                    noBalanceNotification.style.display = 'block';
+                    chargeBtn.disabled = false;
+                    chargeBtn.querySelector('span:last-child').textContent = 'تأكيد الشحن';
+                }, 1500);
+            }
+
+            // --- Utility and Notification Modal Logic ---
+            function debounce(func, delay) {
+                let timeout;
+                return function() {
+                    const context = this;
+                    const args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), delay);
+                };
+            }
+
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationModal = document.getElementById('notificationModal');
+            const closeNotificationModalBtn = document.getElementById('closeNotificationModalBtn');
+
+            notificationIcon.addEventListener('click', () => { notificationModal.classList.add('active'); });
+            closeNotificationModalBtn.addEventListener('click', () => { notificationModal.classList.remove('active'); });
+        });
+    </script>
+</body>
+</html>
