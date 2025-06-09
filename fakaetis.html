@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أقوى كروت</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* === Global & Theme Styles (Updated) === */
+        :root {
+            --primary-color: #3a7bd5; /* اللون الأزرق الجديد */
+            --secondary-color: #374151; /* اللون الرمادي الجديد */
+            --accent-color: #f0f4f8; /* لون الخلفية الفاتح الجديد */
+            --border-color: #e5e7eb; /* لون الحدود الجديد */
+        }
+        * {
+            font-family: 'Cairo', sans-serif; /* الخط الموحد الجديد */
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #ffffff; /* خلفية بيضاء */
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* لإفساح المجال للشريط العلوي الثابت */
+            direction: rtl;
+        }
+
+        /* === Top Bar Styles (New) === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: fixed; /* تثبيت الشريط في الأعلى */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 900;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white !important; 
+            text-decoration: none; 
+            flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+        .top-bar-title {
+            font-weight: 700;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        /* === Page Content Styles (Reskinned) === */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .category-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 15px 0 8px 0;
+            color: #1f2937;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .card-button {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-button:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.07);
+        }
+        .card-info { flex: 1; }
+        .card-title {
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .card-details { font-size: 0.8rem; color: #6b7280; }
+        .card-detail { margin: 0; }
+        .card-arrow {
+            color: #9ca3af;
+            font-size: 1.25rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .card-button:hover .card-arrow {
+            transform: translateX(-4px);
+            color: var(--primary-color);
+        }
+
+        /* === Modal Styles (Reskinned but functionally original) === */
+        .modal {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        /* Phone Input Modal */
+        .phone-input-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 400px;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .phone-input-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--secondary-color);
+        }
+        .phone-input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            text-align: center;
+            direction: ltr;
+        }
+        .phone-input-error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            text-align: center;
+        }
+        .phone-input-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Invoice Modal */
+        .modal-content {
+            background-color: var(--accent-color);
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+        }
+        .invoice-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-bottom: 1px solid var(--border-color);
+            background-color: white;
+            flex-shrink: 0;
+        }
+        .invoice-title {
+            font-size: 1.125rem; font-weight: 700; color: var(--secondary-color);
+        }
+        .close-button {
+            background: none; border: none; font-size: 1.75rem; color: #6b7280; cursor: pointer;
+        }
+        .invoice-body {
+            flex-grow: 1; padding: 0.75rem; overflow-y: auto;
+        }
+        .details-table, .invoice-table, .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .details-table td, .invoice-table td, .invoice-table th, .summary-table td {
+            padding: 0.75rem; text-align: right; border-bottom: 1px solid var(--border-color);
+        }
+        .details-table tr:last-child td, .invoice-table tr:last-child td, .summary-table tr:last-child td {
+             border-bottom: none;
+        }
+        .details-table td:first-child, .summary-table td:first-child {
+            font-weight: 600; color: #6b7280; width: 120px;
+        }
+        .invoice-table th {
+            background-color: #f9fafb; font-weight: 600; color: #6b7280; font-size: 0.75rem; text-transform: uppercase;
+        }
+        .summary-table tr:last-child {
+            font-weight: 700;
+        }
+        #final-amount { color: var(--primary-color); font-size: 1rem; }
+        .no-balance-notification {
+            background-color: #fef2f2; color: #dc2626; padding: 1rem; text-align: center;
+            font-size: 0.875rem; border-radius: 0.5rem; margin-top: 1rem; display: none;
+        }
+
+        /* Action Buttons / Footer */
+        .action-buttons {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-top: 1px solid var(--border-color); background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+        .btn {
+            padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; border: none; font-size: 0.9rem;
+            flex-grow: 1;
+        }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: #2e5faa; }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; margin-left: 0.5rem; }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Notification Modal (New) */
+        .notification-modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); display: flex; 
+            align-items: center; justify-content: center; z-index: 1050; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden;
+        }
+        .notification-modal.active { opacity: 1; visibility: visible; }
+        .notification-modal .notification-content {
+            background-color: white; width: 100%; height: 100%; display: flex; flex-direction: column;
+            transition: transform 0.3s ease; transform: translateY(100%);
+        }
+        .notification-modal.active .notification-content { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="top-bar-title">
+            <span>أقوى كروت</span>
+        </div>
+        <div class="icon-container" id="notificationIcon">
+            <i class="fas fa-bell"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="category-title">كروت تسلية</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج تسلية', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج تسلية</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج تسلية', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج تسلية</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج تسلية', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج تسلية</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج تسلية', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج تسلية</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+
+        <h2 class="category-title">كروت ميجا اكس</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج ميجا اكس', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج ميجا اكس</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج ميجا اكس', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج ميجا اكس</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج ميجا اكس', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج ميجا اكس</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج ميجا اكس', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج ميجا اكس</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+
+        <h2 class="category-title">كروت سوشيال</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج سوشيال', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج سوشيال</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج سوشيال', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج سوشيال</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج سوشيال', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج سوشيال</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج سوشيال', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج سوشيال</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+
+        <h2 class="category-title">كروت استريمنج</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج استريمنج', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج استريمنج</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج استريمنج', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج استريمنج</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج استريمنج', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج استريمنج</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج استريمنج', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج استريمنج</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+        
+        <h2 class="category-title">كروت ميكس</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج ميكس', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج ميكس</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج ميكس', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج ميكس</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج ميكس', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج ميكس</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج ميكس', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج ميكس</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 38ج ميكس', 38, 38, 36.296)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 38ج ميكس</h3>
+                    <p class="card-details">السعر: 38 ج | الرصيد: 38 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+
+        <h2 class="category-title">كروت دقائق</h2>
+        <div class="card-list">
+            <div class="card-button" onclick="openModal('أقوى كارت 13ج دقائق', 13, 13, 11.896)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 13ج دقائق</h3>
+                    <p class="card-details">السعر: 13 ج | الرصيد: 13 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 16.5ج دقائق', 16.5, 16.5, 14.368)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 16.5ج دقائق</h3>
+                    <p class="card-details">السعر: 16.5 ج | الرصيد: 16.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 19.5ج دقائق', 19.5, 19.5, 17.324)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 19.5ج دقائق</h3>
+                    <p class="card-details">السعر: 19.5 ج | الرصيد: 19.5 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 26ج دقائق', 26, 26, 24.792)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 26ج دقائق</h3>
+                    <p class="card-details">السعر: 26 ج | الرصيد: 26 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+            <div class="card-button" onclick="openModal('أقوى كارت 38ج دقائق', 38, 38, 36.296)">
+                <div class="card-info">
+                    <h3 class="card-title">أقوى كارت 38ج دقائق</h3>
+                    <p class="card-details">السعر: 38 ج | الرصيد: 38 ج</p>
+                </div>
+                <div class="card-arrow">&lsaquo;</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div id="loading-spinner" style="display: none;"><div class="spinner"></div></div>
+        
+        <div id="phone-input-container" class="phone-input-container">
+            <div class="phone-input-title">أدخل رقم الهاتف</div>
+            <input type="tel" id="phone-input" class="phone-input-field" placeholder="011xxxxxxxx" maxlength="11">
+            <div id="phone-input-error" class="phone-input-error">يرجى إدخال رقم هاتف صحيح يبدأ بـ 011</div>
+            <div class="phone-input-buttons">
+                 <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                 <button class="btn btn-primary" onclick="validatePhoneNumber()">التالي</button>
+            </div>
+        </div>
+
+        <div id="modal-content" class="modal-content">
+            <div class="invoice-header">
+                <div class="invoice-title">فاتورة شراء كارت</div>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="invoice-body">
+                <table class="details-table">
+                    <tbody>
+                        <tr><td>رقم الفاتورة</td><td>INV-45191</td></tr>
+                        <tr><td>تاريخ الإصدار</td><td id="invoice-date"></td></tr>
+                        <tr><td>وقت الإصدار</td><td id="invoice-time"></td></tr>
+                        <tr><td>رقم المرجع</td><td id="reference-number"></td></tr>
+                        <tr><td>رقم الهاتف</td><td id="phone-number"></td></tr>
+                    </tbody>
+                </table>
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">الخدمة</th>
+                            <th style="width: 25%; text-align: center;">الكمية</th>
+                            <th style="width: 25%; text-align: left;">الإجمالي</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="service"></td>
+                            <td style="text-align: center;"><input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10" onchange="updatePrices()" oninput="validateQuantity(this)"></td>
+                            <td id="price" style="text-align: left; font-weight: 600;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="summary-table">
+                    <tbody>
+                        <tr><td>إجمالي القيمة:</td><td id="total-price" style="text-align: left;"></td></tr>
+                        <tr><td>إجمالي الرصيد:</td><td id="balance" style="text-align: left;"></td></tr>
+                        <tr><td>العمولة:</td><td id="commission" style="text-align: left;"></td></tr>
+                        <tr><td>المبلغ المستحق:</td><td id="final-amount" style="text-align: left;"></td></tr>
+                    </tbody>
+                </table>
+                <div id="no-balance-notification" class="no-balance-notification">لا يوجد رصيد كافي لإتمام العملية</div>
+            </div>
+            <div class="action-buttons">
+                 <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                 <button id="print-button" class="btn btn-primary" onclick="printCard()">طباعة الكارت</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-content">
+            <div class="modal-header">
+                <h2 class="invoice-title">الإشعارات</h2>
+                <button id="closeNotificationModalBtn" class="close-button">&times;</button>
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Original Functional Logic (Untouched) ---
+        let currentCardData = {};
+
+        function validateQuantity(input) {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 1) input.value = 1;
+            else if (value > 10) input.value = 10;
+        }
+
+        function openModal(service, price, balance, deducted) {
+            currentCardData = { service, price, balance, deducted, commission: 1 };
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('loading-spinner').style.display = 'flex';
+            document.getElementById('phone-input-container').style.display = 'none';
+            document.getElementById('modal-content').style.display = 'none';
+            document.getElementById('phone-input').value = '';
+            document.getElementById('phone-input-error').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('phone-input-container').style.display = 'block';
+            }, 250);
+        }
+
+        function validatePhoneNumber() {
+            const phoneInput = document.getElementById('phone-input');
+            const phoneNumber = phoneInput.value.trim();
+            const phoneRegex = /^011\d{8}$/; // Preserved original regex for this page
+            if (phoneRegex.test(phoneNumber)) {
+                document.getElementById('phone-input-error').style.display = 'none';
+                document.getElementById('phone-input-container').style.display = 'none';
+                document.getElementById('loading-spinner').style.display = 'flex';
+                
+                document.getElementById('phone-number').textContent = phoneNumber;
+                const now = new Date();
+                document.getElementById('invoice-date').textContent = now.toLocaleDateString('ar-EG');
+                document.getElementById('invoice-time').textContent = now.toLocaleTimeString('ar-EG');
+                document.getElementById('reference-number').textContent = Math.floor(Math.random() * 900000000) + 100000000;
+                
+                document.getElementById('quantity').value = '1';
+                updatePrices();
+                
+                document.getElementById('no-balance-notification').style.display = 'none';
+                
+                setTimeout(() => {
+                    document.getElementById('loading-spinner').style.display = 'none';
+                    document.getElementById('modal-content').style.display = 'flex';
+                }, 250);
+            } else {
+                document.getElementById('phone-input-error').style.display = 'block';
+            }
+        }
+
+        function updatePrices() {
+            const quantityInput = document.getElementById('quantity');
+            let quantity = parseInt(quantityInput.value) || 1;
+            
+            const totalPrice = currentCardData.price * quantity;
+            const totalBalance = currentCardData.balance * quantity;
+            const totalDeducted = currentCardData.deducted * quantity;
+            const commission = currentCardData.commission * quantity;
+            const finalAmount = totalDeducted + commission;
+            
+            document.getElementById('service').textContent = currentCardData.service;
+            document.getElementById('price').textContent = totalPrice.toFixed(3) + ' ج';
+            document.getElementById('total-price').textContent = totalPrice.toFixed(3) + ' ج';
+            document.getElementById('balance').textContent = totalBalance.toFixed(3) + ' ج';
+            document.getElementById('commission').textContent = commission.toFixed(3) + ' ج';
+            document.getElementById('final-amount').textContent = finalAmount.toFixed(3) + ' ج';
+        }
+
+        function printCard() {
+            const printButton = document.getElementById('print-button');
+            printButton.disabled = true;
+            printButton.innerHTML = 'جاري الطباعة...';
+            setTimeout(() => {
+                document.getElementById('no-balance-notification').style.display = 'block';
+                printButton.disabled = false;
+                printButton.innerHTML = 'طباعة الكارت';
+            }, 500);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        document.getElementById('phone-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                validatePhoneNumber();
+            }
+        });
+
+        // --- Notification Modal Logic (Added) ---
+        const notificationIcon = document.getElementById('notificationIcon');
+        const notificationModal = document.getElementById('notificationModal');
+        const closeNotificationModalBtn = document.getElementById('closeNotificationModalBtn');
+
+        notificationIcon.addEventListener('click', () => {
+            notificationModal.classList.add('active');
+        });
+
+        closeNotificationModalBtn.addEventListener('click', () => {
+            notificationModal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
