@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>كروت الشحن - EGY MY WIRE</title>
     
-    <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* === Start: Global & Body Styles (Modified) === */
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #ffffff; /* تم التعديل إلى اللون الأبيض */
             color: #1f2937;
             margin: 0;
             padding: 0;
@@ -20,7 +20,7 @@
             direction: rtl !important;
         }
 
-        /* === Start: Top Bar Styles === */
+        /* === Start: Top Bar Styles (New) === */
         .top-bar {
             background: linear-gradient(135deg, #3a7bd5, #2e5faa);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -59,6 +59,7 @@
         }
         /* === End: Top Bar Styles === */
         
+        /* Styles for main page content (Original) */
         .main-content {
             padding: 1rem;
         }
@@ -81,7 +82,7 @@
             background-color: white;
             border: 1px solid #e5e7eb;
             border-radius: 0.75rem;
-            padding: 0.75rem 1rem; /* تصغير حجم الزر */
+            padding: 0.75rem 1rem;
             transition: all 0.2s ease-in-out;
             display: flex;
             align-items: center;
@@ -95,7 +96,7 @@
         }
         
         .logo-container {
-            width: 45px; /* تصغير حجم اللوجو */
+            width: 45px;
             height: 45px;
             display: flex;
             align-items: center;
@@ -120,7 +121,7 @@
             text-align: right;
         }
 
-        /* Notification Modal */
+        /* === Start: Notification Modal Styles (New) === */
         .notification-modal {
             position: fixed; inset: 0;
             background-color: rgba(0, 0, 0, 0.6);
@@ -146,18 +147,17 @@
             transform: translateY(100%);
         }
         .notification-modal.active .notification-content { transform: translateY(0); }
+         /* === End: Notification Modal Styles === */
     </style>
 </head>
 <body>
 
-    <!-- Top Bar -->
     <div class="top-bar">
         <a href="#" onclick="history.back(); return false;" class="icon-container">
             <i class="fas fa-arrow-right"></i>
         </a>
         <div class="balance">
-            <span>كروت الشحن</span>
-        </div>
+            <span>كروت الشحن</span> </div>
         <div class="icon-container" id="notificationIcon">
             <i class="fas fa-bell"></i>
         </div>
@@ -165,7 +165,6 @@
 
     <div class="main-content">
         <div class="cards-list">
-            <!-- Vodafone -->
             <a href="https://same7samy00.github.io/egy/voda1.html" class="card-link">
                 <div class="card-btn">
                     <div class="logo-container">
@@ -174,7 +173,6 @@
                     <div class="card-title">كروت فودافون</div>
                 </div>
             </a>
-            <!-- Orange -->
             <a href="https://same7samy00.github.io/egy/ora1.html" class="card-link">
                 <div class="card-btn">
                     <div class="logo-container">
@@ -183,7 +181,6 @@
                     <div class="card-title">كروت أورانج</div>
                 </div>
             </a>
-            <!-- Etisalat -->
             <a href="https://same7samy00.github.io/egy/Etis.html" class="card-link">
                 <div class="card-btn">
                     <div class="logo-container">
@@ -192,7 +189,6 @@
                     <div class="card-title">كروت اتصالات</div>
                 </div>
             </a>
-            <!-- WE -->
             <a href="https://same7samy00.github.io/egy/we1.html" class="card-link">
                 <div class="card-btn">
                     <div class="logo-container">
@@ -204,17 +200,16 @@
         </div>
     </div>
 
-    <!-- Notification Modal (Full Screen) -->
     <div class="notification-modal" id="notificationModal">
         <div class="notification-content">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h2 class="text-xl font-bold">الإشعارات</h2>
-                <button id="closeModal" class="text-2xl text-gray-700">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 1.25rem; font-weight: 700;">الإشعارات</h2>
+                <button id="closeModal" style="font-size: 1.5rem; color: #4b5563;">&times;</button>
             </div>
-            <div class="flex-grow flex flex-col items-center justify-center p-6 text-center">
-                <i class="fas fa-bell-slash text-gray-400 text-6xl mb-4"></i>
-                <p class="text-gray-600 text-xl">لا توجد إشعارات حالياً</p>
-                <p class="text-gray-500 mt-2">سيتم إعلامك عند وصول إشعارات جديدة</p>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
             </div>
         </div>
     </div>
@@ -223,7 +218,7 @@
         const notificationIcon = document.getElementById('notificationIcon');
         const notificationModal = document.getElementById('notificationModal');
         const closeModal = document.getElementById('closeModal');
-
+        
         notificationIcon.addEventListener('click', () => {
             notificationModal.classList.add('active');
         });
