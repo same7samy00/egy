@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>كروت الشحن - EGY MY WIRE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === Start: Global & Body Styles (Modified) === */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #ffffff; /* تم التعديل إلى اللون الأبيض */
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            direction: rtl !important;
+        }
+
+        /* === Start: Top Bar Styles (New) === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white !important; 
+            text-decoration: none; 
+            flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+        .balance {
+            font-weight: 700;
+            flex-grow: 1;
+            text-align: center;
+        }
+        /* === End: Top Bar Styles === */
+        
+        /* Styles for main page content (Original) */
+        .main-content {
+            padding: 1rem;
+        }
+        
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-btn {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-color: #3a7bd5;
+        }
+        
+        .logo-container {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .logo-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            text-align: right;
+        }
+
+        /* === Start: Notification Modal Styles (New) === */
+        .notification-modal {
+            position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .notification-modal.active { 
+            opacity: 1;
+            visibility: visible;
+        }
+        .notification-content {
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            transform: translateY(100%);
+        }
+        .notification-modal.active .notification-content { transform: translateY(0); }
+         /* === End: Notification Modal Styles === */
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="balance">
+            <span>كروت الفكه</span> </div>
+        <div class="icon-container" id="notificationIcon">
+            <i class="fas fa-bell"></i>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="cards-list">
+            <a href="https://same7samy00.github.io/egy/fakavoda1.html" class="card-link">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/j57zbG89/5.png" alt="Vodafone">
+                    </div>
+                    <div class="card-title">كروت فكه فودافون</div>
+                </div>
+            </a>
+            <a href="https://same7samy00.github.io/egy/fakaora.html" class="card-link">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/rm09pdpf/7.png" alt="Orange">
+                    </div>
+                    <div class="card-title">كروت فكه أورنج</div>
+                </div>
+            </a>
+            <a href="https://same7samy00.github.io/egy/fakaetis.html" class="card-link">
+                <div class="card-btn">
+                    <div class="logo-container">
+                        <img class="logo-img" src="https://i.postimg.cc/VNHR19zS/8.png" alt="Etisalat">
+                    </div>
+                    <div class="card-title">كروت فكه اتصالات</div>
+                </div>
+            </a>
+
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 1.25rem; font-weight: 700;">الإشعارات</h2>
+                <button id="closeModal" style="font-size: 1.5rem; color: #4b5563;">&times;</button>
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const notificationIcon = document.getElementById('notificationIcon');
+        const notificationModal = document.getElementById('notificationModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        notificationIcon.addEventListener('click', () => {
+            notificationModal.classList.add('active');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            notificationModal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
