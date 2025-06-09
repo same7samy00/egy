@@ -2,33 +2,42 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شراء كروت فكة فودافون</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>شراء كروت فودافون</title>
     
-    <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* === Global & Body Styles === */
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #ffffff; /* التعديل هنا: تم تغيير الخلفية إلى الأبيض */
+            background-color: #ffffff; /* خلفية بيضاء */
+            color: #1f2937;
             margin: 0;
             padding: 0;
-            direction: rtl !important; 
+            min-height: 100vh;
+            direction: rtl !important;
         }
 
-        /* === Start: Top Bar Styles === */
+        /* === Top Bar Styles (New) === */
         .top-bar {
             background: linear-gradient(135deg, #3a7bd5, #2e5faa);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             height: 60px;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
         .icon-container {
             background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 5px;
+            border-radius: 8px;
             width: 40px;
             height: 40px;
             cursor: pointer;
@@ -38,22 +47,19 @@
             justify-content: center;
             color: white !important; 
             text-decoration: none; 
+            flex-shrink: 0;
         }
         .icon-container:hover {
             background-color: rgba(255, 255, 255, 0.25);
             transform: scale(1.05);
         }
-        .balance {
-            cursor: pointer;
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 5px;
-            padding: 8px 16px;
-            height: 40px;
+        .top-bar-title {
+            font-weight: 700;
+            flex-grow: 1;
+            text-align: center;
         }
-        /* === End: Top Bar Styles === */
 
-
-        /* === Start: Services List Styles === */
+        /* === Services List Styles (Original) === */
         .card-button {
             background-color: white;
             border: 1px solid #e5e7eb;
@@ -77,10 +83,8 @@
         .card-details { font-size: 0.8rem; color: #6b7280; }
         .card-arrow { color: #9ca3af; font-size: 1.25rem; }
         .card-button:hover .card-arrow { transform: translateX(-4px); color: #3a7bd5; }
-        /* === End: Services List Styles === */
-        
 
-        /* === Start: Modal Styles === */
+        /* === Purchase Modal Styles (Original) === */
         .modal {
             position: fixed; inset: 0;
             background-color: rgba(0, 0, 0, 0.6);
@@ -109,16 +113,41 @@
             padding: 1rem; border-bottom: 1px solid #e5e7eb;
             background-color: white;
         }
-        .modal-body { flex-grow: 1; padding: 0.75rem; overflow-y: auto; }
+        .modal-body { flex-grow: 1; padding: 0.75rem; overflow-y: auto; background-color: #f0f4f8; }
         .modal-footer {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem; border-top: 1px solid #e5e7eb; background-color: white;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
-        /* === End: Modal Styles === */
 
-        
-        /* === Start: General UI Styles === */
+        /* === Notification Modal Styles (New) === */
+        .notification-modal {
+            position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 1050; /* أعلى من نافذة الشراء */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .notification-modal.active { 
+            opacity: 1;
+            visibility: visible;
+        }
+        .notification-content {
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            transform: translateY(100%);
+        }
+        .notification-modal.active .notification-content { transform: translateY(0); }
+
+        /* === General UI Styles (Original) === */
         .btn {
             padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease; border: none; font-size: 0.9rem;
@@ -143,36 +172,29 @@
         .invoice-table th, .invoice-table td { padding: 0.5rem; text-align: right; border-bottom: 1px solid #e5e7eb; }
         .invoice-table th { background-color: #f9fafb; font-weight: 600; color: #6b7280; font-size: 0.75rem; text-transform: uppercase;}
         .invoice-table td { font-size: 0.85rem; color: #374151; }
-        /* === End: General UI Styles === */
-        
     </style>
 </head>
 <body>
 
-    <!-- Top Bar -->
-    <div class="top-bar flex items-center justify-between px-4 text-white">
+    <div class="top-bar">
         <a href="#" onclick="history.back(); return false;" class="icon-container">
             <i class="fas fa-arrow-right"></i>
         </a>
-        <div class="balance font-bold text-center flex items-center justify-center">
-            <span>00.00 جنية</span>
+        <div class="top-bar-title">
+            <span>كروت شحن فودافون</span>
         </div>
         <div class="icon-container" id="notificationIcon">
             <i class="fas fa-bell"></i>
         </div>
     </div>
 
-    <!-- Page Content -->
     <div class="max-w-md mx-auto p-4">
-        <!-- Title & Image Section -->
         <div class="text-center mb-4">
             <h2 class="text-base font-bold text-gray-800">كروت شحن فودافون</h2>
             <img src="https://i.postimg.cc/bJX6BwzH/0-1.png" alt="Vodafone" class="mx-auto mt-2 h-16">
         </div>
 
-        <!-- Services List -->
         <div class="flex flex-col gap-3">
-            <!-- التعديل هنا: تم تعديل بنية الزر ليظهر السهم يسارًا -->
             <div class="card-button flex items-center justify-between" onclick="openModal('كارت شحن - 13 جنيه', 13.000, 9.1, 12.896)">
                 <div class="flex-grow text-right">
                     <h3 class="card-title">كارت شحن - 13 جنيه</h3>
@@ -225,60 +247,61 @@
         </div>
     </div>
 
-<!-- النافذة المنبثقة للفاتورة -->
-<div id="modal" class="modal">
-    <div class="w-full h-full flex items-center justify-center absolute hidden" id="loading-spinner"><div class="spinner"></div></div>
-    <div id="modal-content" class="modal-content hidden">
-        <div class="modal-header">
-            <h2 class="text-lg font-bold">فاتورة شراء</h2>
-            <button class="text-2xl text-gray-500" onclick="closeModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="w-full bg-white border border-gray-200 rounded-lg p-3 mb-3">
-                <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">رقم الفاتورة</span><span class="font-semibold">INV-45191</span></div>
-                <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">تاريخ الإصدار</span><span class="font-semibold">٠٦‏/٠٦‏/٢٠٢٥</span></div>
-                <div class="flex justify-between items-center text-xs"><span class="text-gray-500">رقم المرجع</span><span class="font-semibold">406686106</span></div>
+    <div id="purchaseModal" class="modal">
+        <div class="w-full h-full flex items-center justify-center absolute hidden" id="loading-spinner"><div class="spinner"></div></div>
+        <div id="modal-content" class="modal-content hidden">
+            <div class="modal-header">
+                <h2 class="text-lg font-bold">فاتورة شراء</h2>
+                <button class="text-2xl text-gray-500" onclick="closePurchaseModal()">&times;</button>
             </div>
-            <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden mb-3">
-                <table class="invoice-table">
-                    <thead><tr><th>الخدمة</th><th class="text-center">الكمية</th><th class="text-left">الإجمالي</th></tr></thead>
-                    <tbody><tr><td id="service"></td><td class="w-24"><input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10" oninput="validateQuantity(this)"></td><td id="value" class="text-left font-semibold"></td></tr></tbody>
-                </table>
+            <div class="modal-body">
+                <div class="w-full bg-white border border-gray-200 rounded-lg p-3 mb-3">
+                    <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">رقم الفاتورة</span><span class="font-semibold">INV-45191</span></div>
+                    <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">تاريخ الإصدار</span><span id="invoice-date" class="font-semibold"></span></div>
+                    <div class="flex justify-between items-center text-xs"><span class="text-gray-500">رقم المرجع</span><span class="font-semibold">406686106</span></div>
+                </div>
+                <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden mb-3">
+                    <table class="invoice-table">
+                        <thead><tr><th>الخدمة</th><th class="text-center">الكمية</th><th class="text-left">الإجمالي</th></tr></thead>
+                        <tbody><tr><td id="service"></td><td class="w-24"><input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10" oninput="validateQuantity(this)"></td><td id="value" class="text-left font-semibold"></td></tr></tbody>
+                    </table>
+                </div>
+                <div class="w-full bg-white border border-gray-200 rounded-lg p-3">
+                     <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي القيمة:</span><span id="total-value" class="font-semibold"></span></div>
+                     <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي الرصيد:</span><span id="balance" class="font-semibold"></span></div>
+                     <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">العمولة:</span><span id="commission" class="font-semibold"></span></div>
+                     <div class="flex justify-between items-center text-sm pt-2 border-t mt-2"><span class="font-bold">المبلغ المستحق:</span><span id="final-amount" class="font-bold text-blue-600"></span></div>
+                </div>
+                <div id="no-balance-notification" class="w-full bg-red-100 text-red-700 p-3 text-center text-sm font-semibold rounded-lg mt-3 hidden">لا يوجد رصيد كافي لإتمام العملية</div>
             </div>
-            <div class="w-full bg-white border border-gray-200 rounded-lg p-3">
-                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي القيمة:</span><span id="total-value" class="font-semibold"></span></div>
-                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي الرصيد:</span><span id="balance" class="font-semibold"></span></div>
-                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">العمولة:</span><span id="commission" class="font-semibold"></span></div>
-                 <div class="flex justify-between items-center text-sm pt-2 border-t mt-2"><span class="font-bold">المبلغ المستحق:</span><span id="final-amount" class="font-bold text-blue-600"></span></div>
+            <div class="modal-footer">
+                <button id="print-button" class="btn btn-primary flex-grow" onclick="printCard()">طباعة الكارت</button>
+                <button class="btn btn-secondary mr-2" onclick="closePurchaseModal()">إلغاء</button>
             </div>
-            <div id="no-balance-notification" class="w-full bg-red-100 text-red-700 p-3 text-center text-sm font-semibold rounded-lg mt-3 hidden">لا يوجد رصيد كافي لإتمام العملية</div>
-        </div>
-        <div class="modal-footer">
-            <button id="print-button" class="btn btn-primary flex-grow" onclick="printCard()">طباعة الكارت</button>
-            <button class="btn btn-secondary mr-2" onclick="closeModal()">إلغاء</button>
         </div>
     </div>
-</div>
 
-<!-- نافذة الإشعارات الخاصة بالشريط العلوي -->
-<div id="notification-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="text-2xl font-bold text-gray-800">الإشعارات</h2>
-            <button id="close-notification-btn" class="text-2xl text-gray-500">&times;</button>
-        </div>
-        <div class="modal-body flex-col items-center justify-center text-center">
-            <i class="fas fa-bell-slash text-gray-400 text-6xl mb-6"></i>
-            <p class="text-gray-600 text-xl mb-2">لا توجد إشعارات حالياً</p>
-            <p class="text-gray-500">سيتم إعلامك عند وصول إشعارات جديدة</p>
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                <h2 style="font-size: 1.25rem; font-weight: 700;">الإشعارات</h2>
+                <button id="closeNotificationModalBtn" style="font-size: 1.5rem; color: #4b5563;">&times;</button>
+            </div>
+            <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
+    // --- Set Current Date in Invoice ---
+    document.getElementById('invoice-date').textContent = new Date().toLocaleDateString('ar-EG');
+
     // --- Card Purchase Logic ---
     let currentCardData = {};
-    const modal = document.getElementById('modal');
+    const purchaseModal = document.getElementById('purchaseModal');
     const loadingSpinner = document.getElementById('loading-spinner');
     const modalContent = document.getElementById('modal-content');
 
@@ -291,7 +314,7 @@
 
     function openModal(service, value, balance, deducted) {
         currentCardData = { service, value, balance, deducted };
-        modal.classList.add('active');
+        purchaseModal.classList.add('active');
         loadingSpinner.classList.remove('hidden');
         modalContent.classList.add('hidden');
         
@@ -335,20 +358,20 @@
         }, 500);
     }
 
-    function closeModal() {
-        modal.classList.remove('active');
+    function closePurchaseModal() {
+        purchaseModal.classList.remove('active');
     }
 
     // --- Notification Modal Logic ---
     const notificationIcon = document.getElementById('notificationIcon');
-    const notificationModal = document.getElementById('notification-modal');
-    const closeNotificationBtn = document.getElementById('close-notification-btn');
+    const notificationModal = document.getElementById('notificationModal');
+    const closeNotificationModalBtn = document.getElementById('closeNotificationModalBtn');
 
     notificationIcon.addEventListener('click', () => {
         notificationModal.classList.add('active');
     });
 
-    closeNotificationBtn.addEventListener('click', () => {
+    closeNotificationModalBtn.addEventListener('click', () => {
         notificationModal.classList.remove('active');
     });
 
