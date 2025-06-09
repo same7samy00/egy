@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شراء كروت فكة وي</title>
+    
+    <!-- الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            direction: rtl !important; 
+        }
+
+        /* === Start: Top Bar Styles === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white !important; 
+            text-decoration: none; 
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+        .balance {
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            padding: 8px 16px;
+            height: 40px;
+        }
+        /* === End: Top Bar Styles === */
+
+
+        /* === Start: Services List Styles === */
+        .card-button {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .card-button:hover {
+            border-color: #3a7bd5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.07);
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #3a7bd5;
+            margin-bottom: 0.25rem;
+        }
+        .card-details { font-size: 0.8rem; color: #6b7280; }
+        .card-arrow { color: #9ca3af; font-size: 1.25rem; }
+        .card-button:hover .card-arrow { transform: translateX(-4px); color: #3a7bd5; }
+        /* === End: Services List Styles === */
+        
+
+        /* === Start: Modal Styles === */
+        .modal {
+            position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.active { 
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #f9fafb;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            transition: transform 0.3s ease;
+            transform: translateY(100%);
+        }
+        .modal.active .modal-content { transform: translateY(0); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-bottom: 1px solid #e5e7eb;
+            background-color: white;
+        }
+        .modal-body { flex-grow: 1; padding: 0.75rem; overflow-y: auto; }
+        .modal-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-top: 1px solid #e5e7eb; background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        /* === End: Modal Styles === */
+
+        
+        /* === Start: General UI Styles === */
+        .btn {
+            padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; border: none; font-size: 0.9rem;
+        }
+        .btn-primary { background-color: #3a7bd5; color: white; }
+        .btn-primary:hover { background-color: #2e5faa; }
+        .btn-secondary { background-color: #e5e7eb; color: #374151; }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        .quantity-input {
+            width: 100%; padding: 0.5rem; border: 1px solid #d1d5db;
+            border-radius: 0.375rem; text-align: center; font-size: 0.9rem;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid #3a7bd5;
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        .btn .spinner { width: 1rem; height: 1rem; border-width: 2px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .invoice-table { width: 100%; border-collapse: collapse; }
+        .invoice-table th, .invoice-table td { padding: 0.5rem; text-align: right; border-bottom: 1px solid #e5e7eb; }
+        .invoice-table th { background-color: #f9fafb; font-weight: 600; color: #6b7280; font-size: 0.75rem; text-transform: uppercase;}
+        .invoice-table td { font-size: 0.85rem; color: #374151; }
+        /* === End: General UI Styles === */
+        
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar flex items-center justify-between px-4 text-white">
+        <a href="#" onclick="history.back(); return false;" class="icon-container">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="balance font-bold text-center flex items-center justify-center">
+            <span>00.00 جنية</span>
+        </div>
+        <div class="icon-container" id="notificationIcon">
+            <i class="fas fa-bell"></i>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="max-w-md mx-auto p-4">
+        <!-- Title & Image Section -->
+        <div class="text-center mb-4">
+            <h2 class="text-base font-bold text-gray-800">كروت شحن وي</h2>
+            <img src="https://i.postimg.cc/bJX6BwzH/0-1.png" alt="WE" class="mx-auto mt-2 h-16">
+        </div>
+
+        <!-- Services List -->
+        <div class="flex flex-col gap-3">
+            <!-- ** التعديل هنا: تم تحديث بيانات الكروت ** -->
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 13 جنيه', 13.000, 9.1, 12.896)">
+                <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 13 جنيه</h3>
+                    <p class="card-details">القيمة: 13.000 جنيه | الرصيد: 9.1 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 16.5 جنيه', 16.500, 11.55, 16.368)">
+                <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 16.5 جنيه</h3>
+                    <p class="card-details">القيمة: 16.500 جنيه | الرصيد: 11.55 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 19.5 جنيه', 19.500, 13.65, 19.344)">
+                <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 19.5 جنيه</h3>
+                    <p class="card-details">القيمة: 19.500 جنيه | الرصيد: 13.65 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 26 جنيه', 26.000, 18.2, 25.792)">
+                <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 26 جنيه</h3>
+                    <p class="card-details">القيمة: 26.000 جنيه | الرصيد: 18.2 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 38 جنيه', 38.000, 26.6, 37.696)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 38 جنيه</h3>
+                    <p class="card-details">القيمة: 38.000 جنيه | الرصيد: 26.6 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 40 جنيه', 40.000, 28, 39.68)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 40 جنيه</h3>
+                    <p class="card-details">القيمة: 40.000 جنيه | الرصيد: 28 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 50 جنيه', 50.000, 35, 49.6)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 50 جنيه</h3>
+                    <p class="card-details">القيمة: 50.000 جنيه | الرصيد: 35 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 60 جنيه', 60.000, 42, 59.52)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 60 جنيه</h3>
+                    <p class="card-details">القيمة: 60.000 جنيه | الرصيد: 42 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 75 جنيه', 75.000, 52.5, 74.4)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 75 جنيه</h3>
+                    <p class="card-details">القيمة: 75.000 جنيه | الرصيد: 52.5 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 100 جنيه', 100.000, 70, 99.2)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 100 جنيه</h3>
+                    <p class="card-details">القيمة: 100.000 جنيه | الرصيد: 70 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+            <div class="card-button flex items-center justify-between" onclick="openModal('كارت وي - 150 جنيه', 150.000, 105, 148.8)">
+                 <div class="flex-grow text-right">
+                    <h3 class="card-title">كارت شحن وي - 150 جنيه</h3>
+                    <p class="card-details">القيمة: 150.000 جنيه | الرصيد: 105 جنيه</p>
+                </div>
+                <div class="card-arrow pr-2">&lsaquo;</div>
+            </div>
+        </div>
+    </div>
+
+<!-- النافذة المنبثقة للفاتورة -->
+<div id="modal" class="modal">
+    <div class="w-full h-full flex items-center justify-center absolute hidden" id="loading-spinner"><div class="spinner"></div></div>
+    <div id="modal-content" class="modal-content hidden">
+        <div class="modal-header">
+            <h2 class="text-lg font-bold">فاتورة شراء</h2>
+            <button class="text-2xl text-gray-500" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="w-full bg-white border border-gray-200 rounded-lg p-3 mb-3">
+                <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">رقم الفاتورة</span><span class="font-semibold">INV-45191</span></div>
+                <div class="flex justify-between items-center text-xs border-b pb-2 mb-2"><span class="text-gray-500">تاريخ الإصدار</span><span class="font-semibold">٠٦‏/٠٦‏/٢٠٢٥</span></div>
+                <div class="flex justify-between items-center text-xs"><span class="text-gray-500">رقم المرجع</span><span class="font-semibold">406686106</span></div>
+            </div>
+            <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden mb-3">
+                <table class="invoice-table">
+                    <thead><tr><th>الخدمة</th><th class="text-center">الكمية</th><th class="text-left">الإجمالي</th></tr></thead>
+                    <tbody><tr><td id="service"></td><td class="w-24"><input type="number" id="quantity" class="quantity-input" value="1" min="1" max="10" oninput="validateQuantity(this)"></td><td id="value" class="text-left font-semibold"></td></tr></tbody>
+                </table>
+            </div>
+            <div class="w-full bg-white border border-gray-200 rounded-lg p-3">
+                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي القيمة:</span><span id="total-value" class="font-semibold"></span></div>
+                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">إجمالي الرصيد:</span><span id="balance" class="font-semibold"></span></div>
+                 <div class="flex justify-between items-center text-xs mb-2"><span class="text-gray-500">العمولة:</span><span id="commission" class="font-semibold"></span></div>
+                 <div class="flex justify-between items-center text-sm pt-2 border-t mt-2"><span class="font-bold">المبلغ المستحق:</span><span id="final-amount" class="font-bold text-blue-600"></span></div>
+            </div>
+            <div id="no-balance-notification" class="w-full bg-red-100 text-red-700 p-3 text-center text-sm font-semibold rounded-lg mt-3 hidden">لا يوجد رصيد كافي لإتمام العملية</div>
+        </div>
+        <div class="modal-footer">
+            <button id="print-button" class="btn btn-primary flex-grow" onclick="printCard()">طباعة الكارت</button>
+            <button class="btn btn-secondary mr-2" onclick="closeModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- نافذة الإشعارات الخاصة بالشريط العلوي -->
+<div id="notification-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="text-2xl font-bold text-gray-800">الإشعارات</h2>
+            <button id="close-notification-btn" class="text-2xl text-gray-500">&times;</button>
+        </div>
+        <div class="modal-body flex-col items-center justify-center text-center">
+            <i class="fas fa-bell-slash text-gray-400 text-6xl mb-6"></i>
+            <p class="text-gray-600 text-xl mb-2">لا توجد إشعارات حالياً</p>
+            <p class="text-gray-500">سيتم إعلامك عند وصول إشعارات جديدة</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Card Purchase Logic ---
+    let currentCardData = {};
+    const modal = document.getElementById('modal');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const modalContent = document.getElementById('modal-content');
+
+    function validateQuantity(input) {
+        let value = parseInt(input.value);
+        if (isNaN(value) || value < 1) { input.value = 1; } 
+        else if (value > 10) { input.value = 10; }
+        updatePrices();
+    }
+
+    function openModal(service, value, balance, deducted) {
+        currentCardData = { service, value, balance, deducted };
+        modal.classList.add('active');
+        loadingSpinner.classList.remove('hidden');
+        modalContent.classList.add('hidden');
+        
+        document.getElementById('no-balance-notification').classList.add('hidden');
+        document.getElementById('quantity').value = 1;
+        document.getElementById('service').textContent = service;
+        updatePrices();
+
+        setTimeout(() => {
+            loadingSpinner.classList.add('hidden');
+            modalContent.classList.remove('hidden');
+        }, 250);
+    }
+
+    function updatePrices() {
+        const quantityInput = document.getElementById('quantity');
+        let quantity = parseInt(quantityInput.value) || 1;
+        
+        const totalValue = currentCardData.value * quantity;
+        const totalBalance = currentCardData.balance * quantity;
+        const totalDeducted = currentCardData.deducted * quantity;
+        const commission = 1 * quantity;
+        const finalAmount = totalDeducted + commission;
+
+        document.getElementById('value').textContent = `${totalValue.toFixed(3)} ج`;
+        document.getElementById('total-value').textContent = `${totalValue.toFixed(3)} ج`;
+        document.getElementById('balance').textContent = `${totalBalance.toFixed(2)} ج`;
+        document.getElementById('commission').textContent = `${commission.toFixed(3)} ج`;
+        document.getElementById('final-amount').textContent = `${finalAmount.toFixed(3)} ج`;
+    }
+
+    function printCard() {
+        const printButton = document.getElementById('print-button');
+        printButton.disabled = true;
+        printButton.innerHTML = '<span class="spinner inline-block mr-2"></span> جاري الطباعة...';
+        
+        setTimeout(() => {
+            document.getElementById('no-balance-notification').classList.remove('hidden');
+            printButton.disabled = false;
+            printButton.innerHTML = 'طباعة الكارت';
+        }, 500);
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    // --- Notification Modal Logic ---
+    const notificationIcon = document.getElementById('notificationIcon');
+    const notificationModal = document.getElementById('notification-modal');
+    const closeNotificationBtn = document.getElementById('close-notification-btn');
+
+    notificationIcon.addEventListener('click', () => {
+        notificationModal.classList.add('active');
+    });
+
+    closeNotificationBtn.addEventListener('click', () => {
+        notificationModal.classList.remove('active');
+    });
+
+</script>
+
+</body>
+</html>
