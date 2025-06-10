@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خدمات التمويل والتحصيلات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #374151;
+            --accent-color: #f0f4f8;
+            --border-color: #e5e7eb;
+            --danger-color: #ef4444;
+        }
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: var(--accent-color);
+            margin: 0; padding: 0; direction: rtl;
+        }
+
+        /* === Top Bar Styles === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px; padding: 0 1rem; display: flex; align-items: center;
+            justify-content: space-between; color: white; position: sticky; top: 0; z-index: 900;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            width: 40px; height: 40px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white !important; text-decoration: none; flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25); transform: scale(1.05);
+        }
+        .top-bar-title {
+            font-weight: 700; flex-grow: 1; text-align: center;
+        }
+        
+        /* === Content Styles === */
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .service-button {
+            background-color: white; border-radius: 0.75rem;
+            padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.07);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; border: 1px solid var(--border-color);
+            min-height: 120px;
+        }
+        .service-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        .service-button img {
+            width: 40px; height: 40px; margin-bottom: 0.75rem; object-fit: contain;
+        }
+        .service-button span {
+            font-size: 0.875rem; font-weight: 600;
+            line-height: 1.4; color: var(--secondary-color);
+        }
+        
+        /* === Failure Modal === */
+        .modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background-color: var(--accent-color); width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform: translateY(100%); animation: slideUp 0.3s forwards;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .failure-icon {
+            font-size: 4.5rem; color: var(--danger-color);
+            animation: popIn 0.5s ease-out;
+            margin-bottom: 1.5rem;
+        }
+        .failure-title {
+            font-size: 1.5rem; /* حجم h4 */
+            font-weight: 700;
+            color: var(--secondary-color);
+            animation: fadeIn 0.5s 0.2s backwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+    
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container"><i class="fas fa-arrow-right"></i></a>
+        <div class="top-bar-title">خدمات التمويل والتحصيلات</div>
+        <div class="icon-container" id="notificationIcon"><i class="fas fa-bell"></i></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="grid-container">
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>كونتكت</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>e-Khales</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مايلو - بى تك للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات أور</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية الشرقية للتمويل الأصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مؤسسة انا المصرى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال اعمال اسكندرية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تنمية متحصلات الكترونيه</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط ريفي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مؤسسة التضامن</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات يو (فاليو)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط لييد</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال الأعمال بالدقهلية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شركة تمويلي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بدايتي للتمويل (72927)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>قسط المبادرة 7125</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ارادة للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سداد معجل تنمية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط سهولة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال اعمال الشرقية - 7299</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شباب مصر بالمنيا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط أمل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>كاش للتمويل F</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بي تك - دفع فاتورة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المؤسسة المصرية للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط التعمير والاسكان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>التعمير للتمويل العقارى - اقساط اولي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط بنك الاسكندرية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الاهلي للتمويل العقاري</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تمويل للتمويل العقاري</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سيدات اعمال المستقبل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>قروض اسيد</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية سوهاج</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>باب رزق جميل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال اعمال اسوان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية تنمية المشروعات بورسعيد</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جمعية الصعيد</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سيدات اعمال اسيوط</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات بيزنس لاين</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات مؤسسة حواء المستقبل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية تنمية (سيجدا)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال اعمال نجع حمادي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية فكرة للتنمية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تمويل فوري (سداد اقساط) 26102</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ماني فيللوز</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات المرأة الريفية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اولاد الملوك للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>فاين استون</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مستحقات شركة الاولى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>علشانك يا بلدي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الجمعية الإنجيلية بالمنيا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية سان مارك</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بي تك - دفع فواتير</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك الأهلى الكويتى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية تنمية المجتمع ببوريج</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية تنمية المجتمع بسوهاج</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>أور للتمويل - وسيلة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية تنمية المشروعات بني سويف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية خريجي ابيس للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية المبادرة - ايداع مندوب</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اقساط شهري</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>عبد اللطيف جميل للتمويل-مصر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية سيدات الأعمال المصرية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مؤسسة خالد عبد الله</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شركة املاك للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تعاونيات البناء والاسكان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جروب</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات فرصة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جمعية أسوان للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>فينبى للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ثقه للتمويل - سلفة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بلنك - الأقساط المستحقة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سندة للتمويل المتناهي الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية المرأة للتنمية الانسانية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية المستقبل للتمويل الأصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية رابطة المرأة العربية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية الرؤية الجديدة للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>البنك الأهلي - القرض العقاري</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك ابو ظبي الاسلامي - اقساط التمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات قروض المشرق</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك التعمير و الاسكان - جنوب سيناء</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بلنك - سداد كلي للقرض</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>قروض بنك أى بي سي ABC</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تمويل فوري (علي السريع) 26101</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>قسط تامين حياة -جى اى جى (حياة تكافل)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المبادرة للتمويل متناهي الصغر ببني هاني</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الجمعيه المصريه لرعاية أطفال الشوارع</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية ريديك قنا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية الأسرة المصرية - أسوان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية شباب مصر بالفيوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مكسب للتمويل متناهي الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>انجاز للتمويل المتناهي الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مرابحات بنك ابوظبي الاسلامي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مشروع بدايتى للإقراض (73144)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بلنك - تسجيل طلبات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعيه الجيزة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية سيدات اعمال المنيا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رواج للتمويل الإستهلاكي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات كاريتاس مصر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شاري للتمويل متناهي الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>أمان للتنمية و التمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيل ميد تقسيط</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعيه شروق مصر فرع اسيوط</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جمعية ريديك قنا-3</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جمعية ريديك قنا-2</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ابوظبي الإسلامي للتمويل الاستهلاكي – تكه</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدفوعات درايف للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مؤسسة تضامن 2024</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>التمويل الأخضر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات جمعيلة شروق مصر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>إيداع عربون قناة السويس لتأمينات الحياة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رجال أعمال الشرقية 77401</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الاهلى للتمويل العقارى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سحب اموال شركه تنمية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شركة الخير للتمويل متناهي الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المبادرة (70100)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تساهيل (74651)</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جمعية ارزاق لتمويلات متناهية الصغر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>أكسا للتأمين شركة فاليو</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>سهولة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ماني فيللوز</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بي تك</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>كونتكت</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بريميوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>فرصة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك ناتجاس الكويتى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك المشرق</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>خدمة مدفوعات درايف للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك الاسكندرية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المصرية للترقيم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مشروع الإسكان الاجتماعي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك التعمير والإسكان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>شركة املاك للتمويل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مصر المقاصة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ايفاباي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رزق الله</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>ميد تقسيط</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>التعمير للتمويل العقاري</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>أبجد</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>عبد اللطيف جميل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تكة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>دايرة لتمويل المستهلك</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>بنك أى بي</span></button>
+ </div>
+ </div>
+ <script>
+  // Handle image load error
+        function handleImageLoadError(img) {
+            img.src = 'https://via.placeholder.com/22?text=Icon';
+            img.alt = 'أيقونة بديلة';
+        }
+       // التوجيه عند الضغط على الأزرار
+document.querySelectorAll('.button').forEach(button => {
+  button.addEventListener('click', () => {
+    window.location.href = 'https://same7samy00.github.io/egy/لا%20يوجد%20رصيد.html';
+  });
+});
+        // Back button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('backBtn');
+            backBtn.addEventListener('click', function() {
+                window.history.back();
+            });
+        });
+ </script>
