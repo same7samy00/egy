@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خدمات الشحن والباقات</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #374151;
+            --accent-color: #f0f4f8;
+            --border-color: #e5e7eb;
+            --gold-color: #ffd700;
+        }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background-color: var(--accent-color);
+            direction: rtl;
+        }
+
+        /* === Top Bar Styles === */
+        .top-bar {
+            background: linear-gradient(135deg, #3a7bd5, #2e5faa);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px; padding: 0 1rem; display: flex; align-items: center;
+            justify-content: space-between; color: white; position: sticky; top: 0; z-index: 900;
+        }
+        .icon-container {
+            background-color: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            width: 40px; height: 40px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white !important; text-decoration: none; flex-shrink: 0;
+        }
+        .icon-container:hover {
+            background-color: rgba(255, 255, 255, 0.25); transform: scale(1.05);
+        }
+        .top-bar-title {
+            font-weight: 700; flex-grow: 1; text-align: center;
+        }
+        
+        /* === Compact Content Styles === */
+        .content-wrapper {
+             padding: 1rem; max-width: 500px; margin: 0 auto;
+        }
+        .section-title {
+            font-size: 1rem; font-weight: 700;
+            margin-bottom: 0.75rem; margin-top: 1rem; color: #1f2937;
+        }
+        .service-btn {
+            background-color: white; border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 0.75rem; font-weight: 600;
+            font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease;
+            text-align: right; width: 100%; margin-bottom: 0.5rem;
+            display: flex; align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .service-btn:hover {
+             border-color: var(--primary-color);
+             background-color: #fafcff;
+        }
+        .service-btn.active {
+            border-color: var(--primary-color);
+            background-color: #eff6ff; color: var(--primary-color);
+            border-width: 2px;
+            padding: calc(0.75rem - 1px);
+        }
+        .service-icon {
+            font-size: 1.1rem; margin-left: 0.75rem; width: 20px;
+            text-align: center;
+        }
+        .service-icon.orange { color: #f97316; }
+        .service-icon.etisalat { color: #84cc16; }
+        .service-icon.vodafone { color: #ef4444; }
+
+        .input-group { margin-top: 1.5rem; }
+        .phone-input {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 1rem; transition: all 0.2s ease;
+            direction: ltr; text-align: center;
+             background-color: white;
+        }
+        .phone-input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+        }
+        .phone-error {
+            color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem;
+            display: none; text-align: center;
+        }
+        .btn {
+            padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease; border: none; font-size: 1rem;
+        }
+        #submit-btn {
+            background-color: var(--primary-color); color: white;
+            width: 100%; display: block; text-align: center; margin-top: 1.5rem;
+        }
+        #submit-btn:hover:not(:disabled) { background-color: #2e5faa; }
+        #submit-btn:disabled { background-color: #93c5fd; cursor: not-allowed; }
+        
+        /* === Invoice & Modals === */
+        .modal {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--accent-color); width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            transition: transform 0.3s ease; transform: translateY(100%);
+        }
+        .modal.active .modal-content { transform: translateY(0); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-bottom: 1px solid var(--border-color);
+            background-color: white; flex-shrink: 0;
+        }
+        .modal-title { font-size: 1.125rem; font-weight: 700; color: var(--secondary-color); }
+        .close-button { background: none; border: none; font-size: 1.75rem; color: #6b7280; cursor: pointer; }
+        .modal-body { flex-grow: 1; padding: 1rem; overflow-y: auto; text-align: center; }
+        
+        #offer-section { padding: 1.5rem 1rem; background-color: #ffffff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); position: relative; overflow: hidden; }
+        .offer-title { font-size: 1.5rem; font-weight: 900; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .offer-subtitle { font-size: 0.9rem; color: var(--secondary-color); }
+        .glitter-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .glitter {
+            position: absolute; width: 4px; height: 4px; background: var(--gold-color);
+            border-radius: 50%; animation: fall linear infinite; opacity: 0;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); opacity: 1; }
+        }
+
+        .details-table {
+            width: 100%; border-collapse: collapse; background-color: white; text-align: right;
+            border-radius: 0.75rem; overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 1rem; font-size: 0.9rem;
+        }
+        .details-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .details-table tr:last-child td { border-bottom: none; }
+        .details-table td:first-child { font-weight: 600; color: #6b7280; width: 120px; }
+        .details-table .value { font-weight: 600; color: #1f2937; }
+        
+        .no-balance-notification {
+            background-color: #fef2f2; color: #dc2626; padding: 1rem;
+            text-align: center; font-size: 0.875rem; border-radius: 0.5rem;
+            margin-top: 1rem; display: none; font-weight: 700;
+        }
+        .modal-footer {
+            display: flex; gap: 0.75rem; align-items: center;
+            padding: 1rem; border-top: 1px solid var(--border-color); background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        .modal-footer .btn { /* التعديل هنا */
+            width: auto;
+            flex-grow: 1;
+        }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-secondary { background-color: #e5e7eb; color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: #d1d5db; }
+        .spinner {
+            width: 1rem; height: 1rem;
+            border: 2px solid #f3f3f3; border-top-color: white;
+            border-radius: 50%; display: none; margin-left: 0.5rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .notification-modal { /* Standard styles */ }
+    </style>
+</head>
+<body>
+    
+    <div class="top-bar">
+        <a href="#" onclick="history.back(); return false;" class="icon-container">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="top-bar-title">خدمات الشحن والباقات</div>
+        <div class="icon-container" id="notificationIcon">
+            <i class="fas fa-bell"></i>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="section-title">1. اختر الخدمة</div>
+        <div id="serviceList">
+            <button class="service-btn" data-service="orange-internet" data-prefix="012">
+                <i class="fas fa-wifi service-icon orange"></i> <span>أورنج باقة انترنت جو</span>
+            </button>
+            <button class="service-btn" data-service="orange-freemax" data-prefix="012">
+                <i class="fas fa-mobile-alt service-icon orange"></i> <span>أورنج باقات فري ماكس</span>
+            </button>
+            <button class="service-btn" data-service="etisalat-demagh" data-prefix="011">
+                <i class="fas fa-brain service-icon etisalat"></i> <span>اتصالات دماغ تانية</span>
+            </button>
+            <button class="service-btn" data-service="etisalat-hekaya" data-prefix="011">
+                <i class="fas fa-comment-dots service-icon etisalat"></i> <span>باقة حكاية (اتصالات)</span>
+            </button>
+            <button class="service-btn" data-service="vodafone-flex" data-prefix="010">
+                <i class="fas fa-sync-alt service-icon vodafone"></i> <span>تجديد فودافون فليكس</span>
+            </button>
+        </div>
+        <div class="input-group">
+            <label for="phone-number" class="section-title" style="margin-bottom: 0.5rem;">2. أدخل رقم الهاتف</label>
+            <input type="tel" id="phone-number-input" class="phone-input" placeholder="الرجاء اختيار خدمة أولاً" maxlength="11">
+            <div class="phone-error" id="phone-error"></div>
+        </div>
+        <button id="submit-btn" class="btn btn-primary" disabled>استعلام</button>
+    </div>
+    
+    <div class="modal" id="invoiceModal">
+       <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">تفاصيل الخدمة</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="offer-section">
+                    <div class="glitter-container"></div>
+                    <div class="offer-title">مفيش استعلامات بس فيه جنيهات!</div>
+                    <p class="offer-subtitle">يمكنك استكمال العملية بدون استعلام وستحصل على عمولة 1.00 جنيه</p>
+                </div>
+                <table class="details-table" style="margin-top: 1.5rem;">
+                    <tbody>
+                        <tr><td>الخدمة</td><td class="value" id="modalServiceName"></td></tr>
+                        <tr><td>رقم الهاتف</td><td class="value" id="modalPhoneNumber"></td></tr>
+                        <tr><td>عمولتك</td><td class="value">1.00 جنيه</td></tr>
+                        <tr><td>المطلوب للدفع</td><td class="value" style="font-size: 1.1rem; color: var(--primary-color);">0.00 جنيه</td></tr>
+                    </tbody>
+                </table>
+                 <div class="no-balance-notification" id="errorMessage">
+                    <i class="fas fa-exclamation-circle" style="margin-left: 5px;"></i>
+                    لا يوجد رصيد كافي لإتمام العملية
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                <button class="btn btn-primary" id="payBtn" onclick="processPayment()">
+                    <span class="spinner"></span>
+                    <span>دفع</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification-modal" id="notificationModal">
+        </div>
+
+    <script>
+        // All Javascript functionality remains the same
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceData = {
+                "orange-internet": { name: "أورنج باقة انترنت جو", prefix: "012" },
+                "orange-freemax": { name: "أورنج باقات فري ماكس", prefix: "012" },
+                "etisalat-demagh": { name: "اتصالات دماغ تانية", prefix: "011" },
+                "etisalat-hekaya": { name: "باقة حكاية (اتصالات)", prefix: "011" },
+                "vodafone-flex": { name: "تجديد فودافون فليكس", prefix: "010" }
+            };
+
+            let selectedService = null;
+            const phoneInput = document.getElementById('phone-number-input');
+            const submitBtn = document.getElementById('submit-btn');
+            const phoneError = document.getElementById('phone-error');
+            const invoiceModal = document.getElementById('invoiceModal');
+            const payBtn = document.getElementById('payBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const offerSection = document.getElementById('offer-section');
+            const glitterContainer = document.querySelector('.glitter-container');
+
+            function createGlitter() {
+                if(glitterContainer.children.length > 0) return;
+                for (let i = 0; i < 30; i++) {
+                    const glitter = document.createElement('div');
+                    glitter.classList.add('glitter');
+                    glitter.style.left = `${Math.random() * 100}%`;
+                    glitter.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                    glitter.style.animationDelay = `${Math.random() * 5}s`;
+                    glitterContainer.appendChild(glitter);
+                }
+            }
+
+            function selectService(button) {
+                document.querySelectorAll('.service-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                selectedService = serviceData[button.dataset.service];
+                phoneInput.placeholder = "أدخل رقم يبدأ بـ " + selectedService.prefix;
+                phoneInput.value = "";
+                phoneError.style.display = "none";
+                submitBtn.disabled = true;
+                phoneInput.focus();
+            }
+            
+            function validatePhone() {
+                phoneError.style.display = 'none';
+                if (!selectedService) {
+                    phoneError.textContent = 'يرجى اختيار خدمة أولاً.';
+                    phoneError.style.display = 'block';
+                    submitBtn.disabled = true;
+                    return;
+                }
+                const phoneNumber = phoneInput.value.trim();
+                const requiredPrefix = selectedService.prefix;
+                submitBtn.disabled = !(phoneNumber.length === 11 && phoneNumber.startsWith(requiredPrefix));
+            }
+
+            function showInvoice() {
+                const phoneNumber = phoneInput.value.trim();
+                if (!selectedService || phoneNumber.length !== 11 || !phoneNumber.startsWith(selectedService.prefix)) {
+                    phoneError.textContent = `يرجى إدخال رقم هاتف صحيح يبدأ بـ ${selectedService.prefix}.`;
+                    phoneError.style.display = 'block';
+                    return;
+                }
+                
+                offerSection.style.display = 'block';
+                errorMessage.style.display = 'none';
+                payBtn.disabled = false;
+                payBtn.querySelector('span:last-child').textContent = 'دفع';
+                document.getElementById('modalServiceName').textContent = selectedService.name;
+                document.getElementById('modalPhoneNumber').textContent = phoneNumber;
+                
+                invoiceModal.classList.add('active');
+            }
+
+            window.processPayment = function() {
+                offerSection.style.display = 'none';
+                payBtn.disabled = true;
+                payBtn.querySelector('span:last-child').textContent = 'جاري المعالجة';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'block';
+                    payBtn.disabled = false;
+                    payBtn.querySelector('span:last-child').textContent = 'دفع';
+                }, 1500);
+            };
+
+            window.closeModal = function() {
+                invoiceModal.classList.remove('active');
+            };
+
+            document.querySelectorAll('.service-btn').forEach(button => {
+                button.addEventListener('click', () => selectService(button));
+            });
+            phoneInput.addEventListener('input', validatePhone);
+            submitBtn.addEventListener('click', showInvoice);
+            
+            createGlitter();
+
+            // Notification modal logic can be added here if needed
+        });
+    </script>
+</body>
+</html>
