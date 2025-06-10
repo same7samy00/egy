@@ -51,7 +51,8 @@
         }
         .section-title {
             font-size: 1rem; font-weight: 700;
-            margin-bottom: 0.75rem; margin-top: 1rem; color: #1f2937;
+            margin-bottom: 1rem; /* تم زيادة المسافة السفلية هنا */
+            margin-top: 1rem; color: #1f2937;
         }
         .service-btn {
             background-color: white; border: 1px solid var(--border-color);
@@ -160,7 +161,7 @@
             padding: 1rem; border-top: 1px solid var(--border-color); background-color: white;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05); flex-shrink: 0;
         }
-        .modal-footer .btn { /* التعديل هنا */
+        .modal-footer .btn {
             width: auto;
             flex-grow: 1;
         }
@@ -210,7 +211,7 @@
             </button>
         </div>
         <div class="input-group">
-            <label for="phone-number" class="section-title" style="margin-bottom: 0.5rem;">2. أدخل رقم الهاتف</label>
+            <label for="phone-number" class="section-title">2. أدخل رقم الهاتف</label>
             <input type="tel" id="phone-number-input" class="phone-input" placeholder="الرجاء اختيار خدمة أولاً" maxlength="11">
             <div class="phone-error" id="phone-error"></div>
         </div>
@@ -256,7 +257,7 @@
         </div>
 
     <script>
-        // All Javascript functionality remains the same
+        // Javascript functionality remains the same
         document.addEventListener('DOMContentLoaded', function() {
             const serviceData = {
                 "orange-internet": { name: "أورنج باقة انترنت جو", prefix: "012" },
@@ -354,7 +355,7 @@
             
             createGlitter();
 
-            // Notification modal logic can be added here if needed
+            // Notification modal logic would be here
         });
     </script>
 </body>
