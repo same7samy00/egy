@@ -13,10 +13,6 @@
             --primary-color: #3a7bd5;
             --secondary-color: #374151;
             --accent-color: #f0f4f8;
-            --border-color: #e5e7eb;
-            --success-color: #22c55e;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
         }
         * {
             font-family: 'Cairo', sans-serif;
@@ -57,18 +53,6 @@
         }
         .main-icon-wrapper {
             font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;
-            position: relative; display: inline-block;
-        }
-        .main-icon-wrapper.pulsing::before {
-            content: '';
-            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
-            border-radius: 50%; background-color: var(--primary-color);
-            transform: translate(-50%, -50%); animation: pulse 1.5s infinite; z-index: -1;
-        }
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
-            70% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
         }
         .card-title {
             font-size: 1.5rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 0.5rem;
@@ -80,36 +64,10 @@
             padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 700;
             cursor: pointer; transition: all 0.2s ease; border: none; font-size: 1.1rem;
             display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            text-decoration: none;
         }
         .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover:not(:disabled) { background-color: #2e5faa; }
-        .btn-primary:disabled { background-color: #93c5fd; cursor: not-allowed; }
-        .btn-secondary { background-color: #e5e7eb; color: var(--secondary-color); font-size: 0.9rem; padding: 0.5rem 1rem; }
-
-        /* Status & Results */
-        .status-area {
-            margin-top: 1.5rem; padding: 0.75rem; border-radius: 0.5rem;
-            font-weight: 600; transition: background-color 0.3s;
-        }
-        .status-info { background-color: #e0f2fe; color: #0c4a6e; }
-        .status-success { background-color: #dcfce7; color: #166534; }
-        .status-error { background-color: #fee2e2; color: #991b1b; }
-        
-        .results-area { margin-top: 1.5rem; text-align: right; }
-        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .results-area h3 { font-weight: 700; }
-        #recordsContainer .record-entry {
-             background-color: #f9fafb; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; margin-bottom: 0.75rem;
-        }
-        #recordsContainer pre {
-            white-space: pre-wrap; word-wrap: break-word; font-family: monospace;
-            direction: ltr; text-align: left; background-color: #e5e7eb; padding: 0.75rem;
-            border-radius: 0.5rem; font-size: 0.9rem;
-        }
-        .compatibility-notice {
-            background-color: #fffbeb; color: #b45309; padding: 1rem;
-            border: 1px solid #fde047; border-radius: 0.5rem; margin-top: 1.5rem;
-        }
+        .btn-primary:hover { background-color: #2e5faa; }
     </style>
 </head>
 <body>
@@ -122,122 +80,18 @@
 
     <div class="content-wrapper">
         <div class="card">
-            <div class="main-icon-wrapper" id="mainIconWrapper"><i class="fas fa-wifi"></i></div>
+            <div class="main-icon-wrapper"><i class="fas fa-wifi"></i></div>
             <h2 class="card-title">قراءة بيانات كروت NFC</h2>
-            <p class="card-description">هذه الميزة تتطلب تطبيق أندرويد بصلاحيات NFC مفعلة.</p>
+            <p class="card-description">
+                لبدء القراءة، سيتم توجيهك إلى متصفح كروم. بعد مسح الكارت بنجاح، ستعود إلى التطبيق تلقائيًا بالبيانات.
+            </p>
             
-            <div id="nfc-ui">
-                <button id="scanButton" class="btn btn-primary">
-                    <i class="fas fa-satellite-dish"></i>
-                    <span id="scanButtonText">ابدأ المسح</span>
-                </button>
-                <div id="statusArea" class="status-area status-info">اضغط على الزر لبدء عملية المسح</div>
-            </div>
-            
-            <div id="compatibilityNotice" class="compatibility-notice" style="display: none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <b>ميزة غير مدعومة:</b> متصفحك أو جهازك لا يدعم تقنية Web NFC.
-            </div>
-
-            <div id="resultsArea" style="display: none;">
-                 <div class="results-header">
-                    <h3>سجل القراءات</h3>
-                    <button id="clearLogButton" class="btn btn-secondary"><i class="fas fa-trash-alt"></i> مسح</button>
-                 </div>
-                <div id="recordsContainer"></div>
-            </div>
+            <a href="https://example.com/nfc_reader.html" target="_blank" id="scanLink" class="btn btn-primary">
+                <i class="fas fa-external-link-alt"></i>
+                <span>فتح القارئ في كروم</span>
+            </a>
         </div>
     </div>
-    
-    <div id="notificationModal" style="display:none;"></div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const scanButton = document.getElementById('scanButton');
-            const scanButtonText = document.getElementById('scanButtonText');
-            const statusArea = document.getElementById('statusArea');
-            const resultsArea = document.getElementById('resultsArea');
-            const recordsContainer = document.getElementById('recordsContainer');
-            const nfcUi = document.getElementById('nfc-ui');
-            const compatibilityNotice = document.getElementById('compatibilityNotice');
-            const mainIconWrapper = document.getElementById('mainIconWrapper');
-            const clearLogButton = document.getElementById('clearLogButton');
-            
-            if (!('NDEFReader' in window)) {
-                nfcUi.style.display = 'none';
-                compatibilityNotice.style.display = 'block';
-                return;
-            }
-
-            scanButton.addEventListener('click', async () => {
-                updateUIState('scanning', 'قرّب الكارت من هاتفك الآن...');
-                try {
-                    const ndef = new NDEFReader();
-                    await ndef.scan();
-                    
-                    ndef.addEventListener('readingerror', () => {
-                        updateUIState('error', 'فشل قراءة الكارت. حاول مرة أخرى.');
-                    });
-
-                    ndef.addEventListener('reading', ({ message }) => {
-                        updateUIState('success', `تمت قراءة ${message.records.length} سجل بنجاح!`);
-                        displayScanResults(message);
-                    });
-
-                } catch (error) {
-                    let errorMessage = `فشل بدء المسح: ${error.name}`;
-                    if (error.name === 'NotAllowedError') {
-                        errorMessage = 'تم رفض الإذن من التطبيق أو المتصفح. تأكد من تفعيل الصلاحيات.';
-                    }
-                    updateUIState('error', errorMessage);
-                    console.error(`خطأ بدء المسح:`, error);
-                }
-            });
-            
-            function displayScanResults(message) {
-                resultsArea.style.display = 'block';
-                clearLogButton.style.display = 'inline-flex';
-                const resultEntry = document.createElement('div');
-                resultEntry.className = 'record-entry';
-                let entryContent = `<h4>قراءة جديدة (${new Date().toLocaleTimeString()})</h4>`;
-                if (message.records.length > 0) {
-                    for (const record of message.records) {
-                        entryContent += '<hr style="margin: 0.5rem 0;">';
-                        let content = '';
-                        if (record.recordType === "text") {
-                            const textDecoder = new TextDecoder(record.encoding);
-                            content = `<b>نص:</b> ${textDecoder.decode(record.data)}`;
-                        } else if (record.recordType === "url") {
-                             const textDecoder = new TextDecoder();
-                             content = `<b>رابط:</b> <a href="${textDecoder.decode(record.data)}" target="_blank" style="color: var(--primary-color);">${textDecoder.decode(record.data)}</a>`;
-                        } else {
-                            const hex = [...new Uint8Array(record.data)].map(b => b.toString(16).padStart(2, '0')).join(' ');
-                            content = `<b>نوع: ${record.recordType}</b><br><pre>${hex}</pre>`;
-                        }
-                        entryContent += `<div>${content}</div>`;
-                    }
-                } else {
-                    entryContent += '<p>الكارت فارغ.</p>';
-                }
-                resultEntry.innerHTML = entryContent;
-                recordsContainer.prepend(resultEntry);
-            }
-
-            function updateUIState(state, message) {
-                scanButton.disabled = state === 'scanning';
-                scanButtonText.textContent = state === 'scanning' ? 'جاري المسح...' : 'ابدأ المسح';
-                mainIconWrapper.classList.toggle('pulsing', state === 'scanning');
-                statusArea.textContent = message;
-                statusArea.className = `status-area status-${state}`;
-            }
-
-            clearLogButton.addEventListener('click', () => {
-                recordsContainer.innerHTML = '';
-                resultsArea.style.display = 'none';
-                clearLogButton.style.display = 'none';
-                updateUIState('info', 'اضغط على الزر لبدء عملية المسح');
-            });
-        });
-    </script>
 </body>
 </html>
