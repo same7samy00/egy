@@ -185,5 +185,128 @@
             });
         });
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // --- 1. إزالة أي شريط قديم ---
+    const oldNav = document.querySelector('.navbar, .top-bar');
+    if (oldNav) {
+        oldNav.remove();
+    }
+
+    // --- 2. إضافة تنسيقات CSS اللازمة إلى رأس الصفحة ---
+    const css = `
+        :root {
+            --primary-color-nav: #3a7bd5;
+            --secondary-color-nav: #2e5faa;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f4f8;
+            padding-top: 60px; /* لإفساح المجال للشريط العلوي الثابت */
+        }
+        .top-bar-injected {
+            background: linear-gradient(135deg, var(--primary-color-nav), var(--secondary-color-nav));
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px; padding: 0 1rem; display: flex; align-items: center;
+            justify-content: space-between; color: white; position: fixed;
+            top: 0; left: 0; right: 0; z-index: 9999;
+        }
+        .icon-container-injected {
+            background-color: rgba(255, 255, 255, 0.15); border-radius: 8px;
+            width: 40px; height: 40px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: white !important; text-decoration: none; flex-shrink: 0;
+        }
+        .icon-container-injected:hover {
+            background-color: rgba(255, 255, 255, 0.25); transform: scale(1.05);
+        }
+        .top-bar-title-injected {
+            font-weight: 700; flex-grow: 1; text-align: center; font-size: 1.1rem;
+        }
+        .notification-modal-injected {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000; transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0; visibility: hidden; direction: rtl;
+        }
+        .notification-modal-injected.active { opacity: 1; visibility: visible; }
+        .notification-content-injected {
+            background-color: #f0f4f8; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            transform: translateY(100%); transition: transform 0.3s ease;
+        }
+        .notification-modal-injected.active .notification-content-injected { transform: translateY(0); }
+        .modal-header-injected {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; border-bottom: 1px solid #e5e7eb;
+            background-color: white; flex-shrink: 0;
+        }
+        .modal-title-injected { font-size: 1.25rem; font-weight: 700; color: #374151; }
+        .close-button-injected { background: none; border: none; font-size: 1.75rem; color: #6b7280; cursor: pointer; }
+    `;
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = css;
+    document.head.appendChild(styleElement);
+    
+    // -- إضافة خط Cairo إذا لم يكن موجوداً --
+    if (!document.querySelector("link[href*='fonts.googleapis.com/css2?family=Cairo']")) {
+        const fontLink = document.createElement('link');
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+    }
+    // -- إضافة Font Awesome إذا لم يكن موجوداً --
+    if (!document.querySelector("link[href*='font-awesome']")) {
+        const faLink = document.createElement('link');
+        faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+        faLink.rel = 'stylesheet';
+        document.head.appendChild(faLink);
+    }
+
+
+    // --- 3. إنشاء وإضافة عناصر HTML الجديدة ---
+    const topBarHTML = `
+        <div class="top-bar-injected">
+            <a href="#" onclick="history.back(); return false;" class="icon-container-injected"><i class="fas fa-arrow-right"></i></a>
+            <div class="top-bar-title-injected">
+                <span>${document.title || 'القائمة الرئيسية'}</span>
+            </div>
+            <div class="icon-container-injected" id="notificationIconGlobal"><i class="fas fa-bell"></i></div>
+        </div>
+    `;
+    const modalHTML = `
+        <div class="notification-modal-injected" id="notificationModalGlobal">
+            <div class="notification-content-injected">
+                <div class="modal-header-injected">
+                    <h2 class="modal-title-injected">الإشعارات</h2>
+                    <button id="closeModalGlobal" class="close-button-injected">&times;</button>
+                </div>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;">
+                    <i class="fas fa-bell-slash" style="color: #9ca3af; font-size: 3.75rem; margin-bottom: 1rem;"></i>
+                    <p style="color: #4b5563; font-size: 1.25rem;">لا توجد إشعارات حالياً</p>
+                    <p style="color: #6b7280; margin-top: 0.5rem;">سيتم إعلامك عند وصول إشعارات جديدة</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('afterbegin', topBarHTML);
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // --- 4. تفعيل أزرار النافذة المنبثقة ---
+    const notificationIcon = document.getElementById('notificationIconGlobal');
+    const notificationModal = document.getElementById('notificationModalGlobal');
+    const closeModalBtn = document.getElementById('closeModalGlobal');
+
+    if (notificationIcon && notificationModal && closeModalBtn) {
+        notificationIcon.addEventListener('click', () => {
+            notificationModal.classList.add('active');
+        });
+        closeModalBtn.addEventListener('click', () => {
+            notificationModal.classList.remove('active');
+        });
+    }
+});
+</script>
 </body>
 </html>
