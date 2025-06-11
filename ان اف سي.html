@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>توجيه لـ Chrome</title>
+    <title>قارئ كروت NFC</title>
 
-    <!-- الخطوط والأيقونات -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -14,7 +13,6 @@
             --primary-color: #3a7bd5;
             --secondary-color: #374151;
             --accent-color: #f0f4f8;
-            --border-color: #e5e7eb;
         }
         * {
             font-family: 'Cairo', sans-serif;
@@ -45,7 +43,7 @@
             font-weight: 700; flex-grow: 1; text-align: center;
         }
         
-        /* === Content Styles === */
+        /* === Compact Content Styles === */
         .content-wrapper {
             display: flex;
             flex-direction: column;
@@ -53,61 +51,64 @@
             align-items: center;
             min-height: calc(100vh - 60px);
             padding: 2rem;
+            text-align: center;
         }
-        .card {
-            background-color: white; padding: 2.5rem; border-radius: 0.75rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center;
-            max-width: 450px;
-            width: 100%;
-        }
-        .main-icon {
-            font-size: 4rem;
+        .main-icon-wrapper {
+            font-size: 2.5rem; /* Smaller icon */
             color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.25rem; /* Smaller title */
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        .card-description {
+            color: #6b7280;
             margin-bottom: 1.5rem;
+            line-height: 1.5;
+            font-size: 0.9rem; /* Smaller text */
+            max-width: 400px;
         }
         .btn {
-            padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 700;
-            cursor: pointer; transition: all 0.2s ease; border: none; font-size: 1.1rem;
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem;
-            width: 100%;
+            padding: 0.6rem 1.2rem; /* Smaller button */
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 1rem; /* Smaller font */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
         }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: #2e5faa; }
-
     </style>
 </head>
 <body>
     
     <div class="top-bar">
         <a href="#" onclick="history.back(); return false;" class="icon-container"><i class="fas fa-arrow-right"></i></a>
-        <div class="top-bar-title">توجيه لـ Chrome</div>
+        <div class="top-bar-title">قارئ NFC</div>
         <div class="icon-container" id="notificationIcon"><i class="fas fa-bell"></i></div>
     </div>
 
-    <main class="content-wrapper" role="main">
-        <div class="card">
-            <i class="fa-solid fa-arrow-up-right-from-square main-icon" aria-hidden="true"></i>
-            <button id="openChrome" class="btn btn-primary" aria-label="توجيه الآن">
-                <i class="fab fa-chrome"></i>
-                <span>توجيه الآن</span>
-            </button>
-        </div>
-    </main>
-
-    <div id="notificationModal" style="display:none;">
-        <!-- Standard notification modal content would be here -->
+    <div class="content-wrapper">
+        <div class="main-icon-wrapper"><i class="fas fa-wifi"></i></div>
+        <h2 class="card-title">قراءة بيانات كروت NFC</h2>
+        <p class="card-description">
+            <b>تلميح:</b> هذه العملية تتطلب فتح متصفح جوجل كروم الخارجي للوصول إلى قارئ NFC في هاتفك.
+        </p>
+        
+        <a href="https://your-website.com/nfc_reader.html" target="_blank" id="scanLink" class="btn btn-primary">
+            <i class="fas fa-external-link-alt"></i>
+            <span>فتح القارئ في كروم</span>
+        </a>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // زر فتح كروم مع إعادة التوجيه للرابط المطلوب
-            document.getElementById('openChrome').addEventListener('click', function () {
-                // The intent URL remains the same as provided by the user
-                window.location.href = "intent://frolicking-kangaroo-52bd63.netlify.app/#Intent;package=com.android.chrome;scheme=https;end";
-            });
-
-            // Notification modal logic can be added here if needed
-        });
-    </script>
 </body>
 </html>
